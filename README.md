@@ -1,2 +1,3 @@
-# felippe-regazio-blog
+# Felippe Regazio Blog
+
 My personal blog

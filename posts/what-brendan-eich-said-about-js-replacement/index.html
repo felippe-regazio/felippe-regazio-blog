@@ -1,0 +1,101 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>O que Brendan Eich disse sobre a hipotese imaginária de substituir o JS por outra linguagem no Front, uma Aula gratuita via Twitter</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta property="og:title" content="O que Brendan Eich disse sobre a hipotese imaginária de substituir o JS por outra linguagem no Front, uma Aula gratuita via Twitter">
+  <meta property="og:type" content="article">
+  <meta property="og:description" content="Perguntei 'Qual linguagem você utilizaria no Front' ao invés JavaScript, e Brendan Eich, criado do JS respondeu (e foi uma aula)">
+  <meta property="og:site_name" content="Felippe Regazio">
+  <meta name="description" content="Perguntei 'Qual linguagem você utilizaria no Front' ao invés JavaScript, e Brendan Eich, criado do JS respondeu (e foi uma aula)">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Felippe Regazio">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="O que Brendan Eich disse sobre a hipotese imaginária de substituir o JS por outra linguagem no Front, uma Aula gratuita via Twitter">
+  <meta name="twitter:description" content="Perguntei 'Qual linguagem você utilizaria no Front' ao invés JavaScript, e Brendan Eich, criado do JS respondeu (e foi uma aula)">
+  <meta name="twitter:image:src" content="https://blogcompleteurl.com/card.jpg">
+  <meta property="og:url" content="https://blogcompleteurl.com/posts/what-brendan-eich-said-about-js-replacement">
+  <meta property="og:image" content="https://blogcompleteurl.com"/>
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>O que Brendan Eich disse sobre a hipotese imaginária de substituir o JS por outra linguagem no Front, uma Aula gratuita via Twitter</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      5/2/2022, 6:34:00 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>
+  Fiz um tweet bobo perguntando em sobre Front: "Qual linguagem vc gostaria que tivesse suporte nativo nos browsers que não fosse JS?"   
+</p>
+
+<p>
+  O <a href="https://twitter.com/ronascentes">@ronascentes</a> marcou o Brendon Eich (criador do JS) e ele respondeu. A questão é que o que ele falou foi bem massa e queria comentar sobre.
+</p>
+
+<p>
+  Aqui está a resposta do Brendan. Tem um fio inteiro na resposta dele que merece ser lido e é BEM bacana, 
+  a resposta inteira não aparece por padrão no card de preview abaixo.
+  Legal notar também que ele teve o cuidado de traduzir a resposta para pt-BR.
+</p>
+
+<blockquote class="twitter-tweet"><p lang="pt" dir="ltr">Você realmente gostaria que o Python da era de 2005 congelasse, como uma mosca no âmbar, e simplesmente evoluísse sem mudanças incompatíveis? sem Python 3, sem sistema operacional ou chamadas de FFI também.</p>&mdash; BrendanEich (@BrendanEich) <a href="https://twitter.com/BrendanEich/status/1478145912174100482?ref_src=twsrc%5Etfw">January 3, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>
+  No tweet eu tinha dito que a linguagem que eu escolheria seria Python. Na resposta o Brendon diz que isso teria prendido python numa armadilha de mosca e teria estragado toda a evolução da linguagem rumo ao que ela é hoje.
+</p>
+
+<p>
+  Isso porque o JS carrega uma forte pressão quanto a "Backward Compatibility", ou seja: Não pode haver Breaking Changes na linguagem. E realmente, se vc pegar Python 3 e comparar com 2, existem varias breaking changes.
+</p>
+
+<p>
+  O Brendon literalmente diz que a pressão relativa a backward compatibility teria sido aplicada no Python. Sendo assim, qualquer linguagem rodando num browser com o fim de "carregar a web nas costas" teria sido massacrada por esse principio.
+</p>
+
+<p>
+  É difícil evoluir uma linguagem a qual vc não pode introduzir NENHUMA breaking change sob o risco de quebrar produtos no mundo inteiro do dia pra noite, ou a curto/medio prazo. É como se fosse uma maldição dos browsers haha.
+</p>
+
+<p>
+  Isso dá uma perspectiva muito interessante sobre como JS sobreviveu ao longo do tempo, e como foi se adaptando e evoluindo: Com Transpilers (TS, Babel) para code safety e automatic backward compatibility entre codebases por exemplo, mas sempre sem alterar seu core.
+</p>
+
+<p>
+  O ponto importante aqui é: muitas pessoas responderam minha pergunta (inclusive eu) com linguagens mais robustas, alguns levantaram até Rust, Haskeell, Ruby...
+</p>
+
+<p>
+  Porém se tivessemos colocado essas linguagens em seus early-stage sob a implicancia de rodar em diferentes browsers de diferentes vendors, carregar toda a web nas costas ao longo da historia e sem quebrar nada, isso teria massacrado boa parte da evolução delas.
+</p>
+
+<p>
+  E talvez linguagens mais rígidas não tivessem resistido bem a ação do tempo sob o principio "dont break the web" e a evolução da internet per si: ou vc sacrifica a evolução da lang ou toda a internet quebra. Ou seja, qualquer lang em early-stage seria "Javascriptizada".
+</p>
+
+<p>
+  Olhando desse ponto, JS é um survivor e criar uma core language que "roda a internet" é como correr dentro de uma loja de cristais sem quebrar nada. Dá também uma perspectiva muito foda de como evoluímos as coisas até aqui, e é um bom parametro pra falarmos menos mal das coisas.
+</p>
+
+  </div>
+</body>
+</html>

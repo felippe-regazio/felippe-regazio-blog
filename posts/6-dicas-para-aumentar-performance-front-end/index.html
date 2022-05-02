@@ -1,0 +1,78 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>6 dicas para aumentar a performance das suas aplicações no Front End, a thread:</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta property="og:title" content="6 dicas para aumentar a performance das suas aplicações no Front End, a thread:">
+  <meta property="og:type" content="article">
+  <meta property="og:description" content="Pra esse post eu considero que vc está desenvolvendo alguma SPA, ou que seu front é dacoplado do backend de qualquer forma. As dicas são agnósticas quanto a frameworks.">
+  <meta property="og:site_name" content="Felippe Regazio">
+  <meta name="description" content="Pra esse post eu considero que vc está desenvolvendo alguma SPA, ou que seu front é dacoplado do backend de qualquer forma. As dicas são agnósticas quanto a frameworks.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Felippe Regazio">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="6 dicas para aumentar a performance das suas aplicações no Front End, a thread:">
+  <meta name="twitter:description" content="Pra esse post eu considero que vc está desenvolvendo alguma SPA, ou que seu front é dacoplado do backend de qualquer forma. As dicas são agnósticas quanto a frameworks.">
+  <meta name="twitter:image:src" content="https://blogcompleteurl.com/card.jpg">
+  <meta property="og:url" content="https://blogcompleteurl.com/posts/6-dicas-para-aumentar-performance-front-end">
+  <meta property="og:image" content="https://blogcompleteurl.com"/>
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>6 dicas para aumentar a performance das suas aplicações no Front End, a thread:</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      5/2/2022, 6:54:43 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<h1 id="1-mantenha-assets-estáticos-no-front">1. Mantenha assets estáticos no Front</h1>
+<p>Tem gente que coloca pastas de imagens no backend e tasca uma rota pra servir estático de lá. Não faça isso, vc tá transformando asset estático em cross-request</p>
+<p>Em tese todo asset (com exceção de base64 e afins) vira uma request, mas uma cross-request (o front pedir algo pra outro domínio ou sub-domínio) demora um pouco mais e tem outras políticas de segurança, cache e afins. Mantenha assets estáticos (imagens, fonts, etc) no front.</p>
+<h1 id="2-mantenha-arquivos-i18n-do-backend-no-backend">2. Mantenha arquivos i18n do backend no backend</h1>
+<p>Pessoal costuma enviar códigos de erro do backend e ter json de tradução pra isso no front. Isso é desenecessário. Eis o que vc tem que fazer:</p>
+<p>Vc precisa colocar uma lib de tradução na sua API. Vc vai receber uma header com o idioma que espera a resposta da API, mantendo a tradução no próprio backend. Para cada código de erro, vc envia um { message } com a mensagem já traduzida.</p>
+<p>Dessa forma o front pode decidir fazer algo checando o código de erro, ou usar sua mensagem diretamente. Ex:</p>
+<p>GET 401 { error_code: &#39;<strong>ACCESS_DENIED</strong>&#39;, message: &#39;Usuário ou senha inválidos&#39; }</p>
+<h1 id="3-configure-um-service-worker">3. Configure um Service Worker</h1>
+<p>Maior parte dos apps que vejam não valorizam o client service worker. Isso é um erro enorme. Esse é um dos seus maiores aliados na performance. Em poucas palavras: podemos usar ele pra &quot;salvar/instalar&quot; o seu front inteiro no browser do usuário.</p>
+<p>Assim, o service worker evita repetir requests, pq o front ta basicamente instalado na maquina da pessoa, é como se vc pedisse o front apenas uma vez pro server e nunca mais até que ele seja atualizado e a versão local invalidada. Esse é apenas um dos usos de um service worker</p>
+<p>Service workers nasceram com o intuito de melhorar performance de aplicações, payloads, heavy process etc. Então se vc quer performance estude service workers. Configura-los e cria-los é bem chatinho, o cache invalidation deles é tenso de configurar, mas vale cada esforço.</p>
+<p>Com um service worker configurado o usuario só requisita as paginas que ele nunca viu da sua aplicação uma única vez ao server, e depois apenas se vc atualizar. Isso alivia MUITO. Frameworks como Vue e React já trazem servicer workers out of the box, não tem motivo pra nao usar.</p>
+<h1 id="4-aprenda-a-utilizar-o-router-dos-frameworks-que-vc-ta-utilizando-vue-react-angular-etc">4. Aprenda a utilizar o Router dos frameworks que vc ta utilizando (Vue, React, Angular, etc)</h1>
+<p>Um router numa SPA não serve somente pra mudar de página, se fosse assim vc poderia usar um <a href=""> somente e pronto. O router na SPA serve pra vc RECICLAR a rota atual.</p>
+<p>Ou seja, vc vai mudar de pagina (ou de view, ou de parte da aplicação) re-aproveitando tudo o que puder da tela, a runtime do framework vai fazer isso pra vc, te fazendo ganhar performance.</p>
+<p>Por ex: vc tem duas rotas de textos: about e terms. Ambas tem layout com header, footer, sidebar e um miolo de texto variável. Se vc usar o router pra transicionar, a runtime só vai trocar o miolo, sem trazer todo o layout novamenet: performance!  </p>
+<h1 id="5-evite-fazer-polling">5. Evite fazer &quot;Polling&quot;</h1>
+<p>Polling é a tecnica de ficar fazendo requests de X em X segundos para algum lugar afim de atualizar uma informação no front end para parecer que ela está em tempo real. Às vezes é necessário, mas há alternativas mais leves.</p>
+<p>Se vc precisa trocar informação com o server (geralmente não é o que ocorre), prefira configurar um socket, vai dar mais trabalho mas vai doer menos no bolso.</p>
+<p>Se vc precisa receber informações do server, prefira utilizar SSE (Server Sent Events) que serve justamente pra isso.</p>
+<h1 id="6-utilize-dns-pre-fetch-e-pre-connect">6. Utilize DNS pre-fetch e pre-connect</h1>
+<p>Sabe quando vc vai trazer uma google font via <link> e ela fica travando a pagina pra carregar? Isso é pq vc tá fazendo um cross-request via link na header. Vc pode evitar isso e outras coisas com dns pre-fetch/connect</p>
+<p>Vc pode ler mais sobre DNS pre-fetch e pre-connect aqui: https://developer.mozilla.org/en-US/docs/Web/Performance/dns-prefetch</p>
+<p>É mais um recurso criado com o inteuito de melhorar a performance. Ele basicamente cacheia os passos (e alguns payloads) de cross-requests pra vc, e faz alguns rodarem em background, liberando a pag.</p>
+<h2 id="conclusão">Conclusão</h2>
+<p>Se vc fizer tudo isso que eu disse aí em cima, sua aplicação vai ter uma boa performance e aposto que um cloudfront ou um heroku bem basico com um cloudflare vai servir ela com velocidade e confiabilidade por muito tempo.</p>
+
+
+  </div>
+</body>
+</html>

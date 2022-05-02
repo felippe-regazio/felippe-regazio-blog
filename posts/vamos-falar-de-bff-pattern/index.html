@@ -1,0 +1,98 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Vamos falar de BFF Pattern?</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta property="og:title" content="Vamos falar de BFF Pattern?">
+  <meta property="og:type" content="article">
+  <meta property="og:description" content="O 'Backend for Frontend' é um pattern/arquitetura que resolve alguns problemas que vc pode estar tendo ou vir a ter">
+  <meta property="og:site_name" content="Felippe Regazio">
+  <meta name="description" content="O 'Backend for Frontend' é um pattern/arquitetura que resolve alguns problemas que vc pode estar tendo ou vir a ter">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Felippe Regazio">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Vamos falar de BFF Pattern?">
+  <meta name="twitter:description" content="O 'Backend for Frontend' é um pattern/arquitetura que resolve alguns problemas que vc pode estar tendo ou vir a ter">
+  <meta name="twitter:image:src" content="https://blogcompleteurl.com/card.jpg">
+  <meta property="og:url" content="https://blogcompleteurl.com/posts/vamos-falar-de-bff-pattern">
+  <meta property="og:image" content="https://blogcompleteurl.com"/>
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Vamos falar de BFF Pattern?</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      5/2/2022, 6:59:05 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>Imagine o cenário: vc tem um produto que é dividido em uma SPA (front) e uma API (back). Seu produto começa a crescer e começa a ter times</p>
+<p>Vc tem o core team que cuida da SPA e da API
+Vc tem agora um time de SRE que cuida da infra
+E um time de Mobile que ta fazendo um app mobo</p>
+<p>Tudo vem dando muito certo e vc cresce ainda mais:</p>
+<p>Vc agora tem um time de Design
+Vc tem um time de front que vai fazer um DS
+Um time de security que ta fazendo um single sign on
+Vc tem um time dedicado ao front da SPA
+Um time de back dedicado a API
+O SRE
+O time Mobile</p>
+<p>Etc</p>
+<p>Massa, seu produto ta indo bem, mas um dia o tech lead do time de backend que cuida da Core API te trás os seguintes problemas</p>
+<p>O time da API ta fazendo muita coisa, todos os outros times endereçam issues ou necessidades pra lá, por ex:</p>
+<ul>
+<li>o time de front spa pede um monte de rotas custom e facilidades (crop images por ex)</li>
+<li>o time de mobile quer usar o cropper que o front pediu pra gerar imagens com width menor ou igual a 760px e pediu novas rotas</li>
+<li>o time de single sign on quer rotas de login especiais e bla bla bla</li>
+</ul>
+<p>O segundo problema relatado pelo lead é: Os times são muito especificos - times só de backend e times só de front end - de forma que parte do horizonte de integração se perdeu e o front gera retrabalho pro back e vice-versa, e as solicitações não são tão acertivas</p>
+<p>O terceiro problema: O diferentes clients expõem a Core API pra todo canto da internet. Tem um monte de tráfego vindo de diferentes direções atraindo bots, ataques, expondo muito a API e tornando os logs uma bagunça só.</p>
+<p>Vc pensa em contratar mais backenders pra resolver o problema 1. mas isso nao resolve o problema 2 e 3. Vc pensa em escalar infra pra resolver o problema 3. mas isso não resolve o 2, vc pensa em envolver o time de security. Na real vc não sabe o que fazer.</p>
+<p>Então vc percebe que foi um erro ter isolado os times de front (pure front). vc contrata novos backs e coloca nos times de front. Esses backs podem fazer PR para a Core API desafogando o time de lá e dando autonomia aos times de front. Vc escala um pouco a infra e pronto!</p>
+<p>Massa, vc resolveu o problema 1, 2 e 3. Tudo vai bem por algumas semanas até que o tech lead do time de backend que cuida da Core API retorna pra vc com outras reclamações:</p>
+<ol>
+<li><p>As equipes client estao subindo muita coisa, muito code review pra fazer, muita demanda especifica, muito crap code, o git da Core API ta confuso</p>
+</li>
+<li><p>O time Core API acha ruim não ter autonomia total do projeto, e está achando o changelog inconsistente pq terceiros o modificam</p>
+</li>
+</ol>
+<p>O techlead diz ainda que ter escalado a infra não adiantou muito, os custos subiram mas a API continua exposta e vcs continuam recebendo ataques. Vc não sabe mais o que fazer... Vc contrata serviços terceiros de segurança, vc escala na AWS, vc ta queimando dinheiro noo 🔥🔥🔥</p>
+<p>Calma, isso é um trabalho para o BFF. Um engenheiro surge do nada e diz:</p>
+<p>Precisamos implementar um &quot;Back For Front&quot;. Cada equipe de front end vai ter um backend proprio pra onde o client delas aponta. A de SPA vai ter um spa-back, a de Mobile um spa-mobile, etc</p>
+<p>Esses backends vão receber as requisições dos clientes e negociar com a Core API. Os BFFs (back for front) não terão acesso direto ao DB, mas sim a uma coleção de rotas genericas da Core API. O time de Core cuida e evolui apenas as rotas genericas e contratos com DB.</p>
+<p>Os times BFF evoluem demandas especificas e não cuidam de nada que envolva DB. Ex: Vc quer croppar imagens on the fly pro seu front? Legal, vc implementar isso no seu BFF (seu proprio backend), o seu BFF trata a imagem e chama a rota da Core API simplesmente pra salvar a imagem</p>
+<p>O time Mobile precisa das imagens que vem na API sempre tratadas pra width menor ou igual a 760px? Ok, eles criam isso no BFF deles, pedem a imagem pra Core API, tratam como quiserem e devolvem pro client.</p>
+<p>Quanto aos problemas de segurança: A Core API será fechada para o mundo e estará disponível via gateways especificios que só os BFFs podem enxergar. Assim, os trafegos externos não sabem que a Core API existem, na pior das situações conseguirão derrubar um BFF, dane-se.</p>
+<p>Cada equipe agora é uma equipe full stack (tem tanto dev front e back e cuida do processo de ponta a ponta) com exceção da Equipe Core API que cuida apenas do core mais pesado e generico de backend/db.</p>
+<p>Pronto: Todos os problemas que o tech lead trouxe foram resolvidos. Foi adicionada uma pequena camada de complexidade e escala ja que tem um novo backend pra cada time, mas se for ver, essa complexidade ja estava granulada e misturada entre os times, ela foi reorganizada.</p>
+<p>É isso que é o BFF pattern pessoal, e esse é um dos cenários possíveis em que vale o trade off de implementar um. O BFF é um front simples que age como I/O entre o seu front end e sua api principal</p>
+<p>Client - BFF - API</p>
+<p>Isso da autonomia aos times, protege sua API, delimita serviços e responsabilidades, desafoga times e torna a arquitetura mais resiliente e distribuida (tem seus trade offs, é claro).</p>
+<p>Se minha explicação foi pobre, abaixo tem um link mto bom explicando BFF Patterns em detalhes.</p>
+<p><a href="https://samnewman.io/patterns/architectural/bff/">https://samnewman.io/patterns/architectural/bff/</a></p>
+<p>Obs: Não estou dizendo que BFF é uma bala de prata, que é a unica solução pros problemas acima, que vc deve ou não usar. Só apresentei um cenário e mostrei como um BFF se encaixa a ele. Como e se vc vai usar its up to you.</p>
+<p>Minha opinião super pessoal: Tenho trabalhado com BFFs e curtido bastante, realmente trás beneficios. Mas tem tradeoffs, tem sidecases tbm é claro (como tudo). Eu acho que não faz sentido BFF pra pequena e media aplicação, mas pode ser massa pra multi-squad giant applications 🙃</p>
+
+
+  </div>
+</body>
+</html>

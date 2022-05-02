@@ -1,0 +1,90 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Arrays em JS são Objetos</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta property="og:title" content="Arrays em JS são Objetos">
+  <meta property="og:type" content="article">
+  <meta property="og:description" content="Você já observou que o tipo de um Array em JS é 'object'?">
+  <meta property="og:site_name" content="Felippe Regazio">
+  <meta name="description" content="Você já observou que o tipo de um Array em JS é 'object'?">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Felippe Regazio">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Arrays em JS são Objetos">
+  <meta name="twitter:description" content="Você já observou que o tipo de um Array em JS é 'object'?">
+  <meta name="twitter:image:src" content="https://blogcompleteurl.com/card.jpg">
+  <meta property="og:url" content="https://blogcompleteurl.com/posts/js-arrays-are-objects">
+  <meta property="og:image" content="https://blogcompleteurl.com"/>
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Arrays em JS são Objetos</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      5/2/2022, 7:03:57 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>Você já observou que o tipo de um Array em JS é &quot;object&quot;?</p>
+<pre><code>typeof [] === typeof {} // true
+typeof []  // &#39;object&#39;
+typeof {} // &#39;object&#39;
+</code></pre>
+<p>Ou seja, um array é um objeto? </p>
+<p>Então: SIM. Segue a thread aqui que eu vou explicar porque isso é assim e como um array funciona na runtime 🤓</p>
+<p>A primeira coisa que precisamos entender é que um Array não é um tipo, ele é uma estrutura de dados.</p>
+<p>Um Array é uma Estrutura de Lista que pode se comportar como LIFO ou FIFO (veja os metodos pop &amp; shift por ex).</p>
+<p>A segunda coisa que precisamos entender é que em JavaScript QUASE tudo é objeto:</p>
+<p>Temos os seguintes tipos primitivos: number , string , boolean , null , undefined , symbol and bigint. Todo o resto é um do tipo complexo: &quot;object&quot;.</p>
+<p>Ou seja um Array não pode ser de tipo primitivo - porque ele é um Array (duhhr nao diga rs). Mas os tipos complexos em JS são sempre objetos, então o Array só pode ser um objeto. E de fato é!</p>
+<p>O array é um Objeto com prototype e metodos que constoem uma estrutura de dados pra vc</p>
+<p>Qdo vc escreve:</p>
+<pre><code>const a = [ &#39;a&#39;, &#39;b&#39;, &#39;c&#39; ];
+</code></pre>
+<p>A runtime entende</p>
+<pre><code>const a = {
+  0: &#39;a&#39;, 
+  1: &#39;b&#39;,
+  2: &#39;c&#39;, 
+  length: 3,
+  __prototype___
+};
+</code></pre>
+<p>Essa estrutura é acoplada ao prototype array que tem getters, setters, metodos como pop, shift, map, etc... pra facilitar sua vida.</p>
+<p>Por exemplo, abaixo está a implementação dummy de um objeto ao estilo Array que tem somente o método push e a propriedade length.</p>
+<p>usamos o Object.create pra definir o prototype dele como quisermos e voilá, temos (grosseiramente falando) um &quot;&quot;&quot;Array&quot;&quot;&quot;:</p>
+<img src="img-1.jpeg" alt="Code image 1">
+
+<p>Ou, se vc quiser ser o espertão/tona e reaproveitar o prototype que o JS deixou pronto, vc cria um objeto e diz que o prototype dele é o mesmo de um Array, e voilá: Vc terá um Array. Juro ó:</p>
+<img src="img-2.jpeg" alt="Code image 2">
+
+<p>Então como saber se um Array é um Array mesmo em JS? Você usa o método:</p>
+<pre><code>Array.isArray([]); // true
+Array.isArray({}); // false
+</code></pre>
+<p>Mas como tal bruxaria é possível? Agora que vc sabe como o maquinario funciona, vc intui que isso é um metodo no prototype que verifica isso pra vc</p>
+<p>Concluindo: Um array é uma estrutura nativa em JS de lista LIFO/FIFO do tipo Objeto que contem em seu prototype metodos e propriedades que facilitam sua vida ao lidar com listas e tudo isso junto é um: Array. Como isso é implementado nativamente, convenciona-se a notação: [].</p>
+
+
+  </div>
+</body>
+</html>

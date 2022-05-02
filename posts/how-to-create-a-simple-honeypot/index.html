@@ -1,0 +1,159 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>How to create a simple Honeypot to protect your Forms against Spammers</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta property="og:title" content="How to create a simple Honeypot to protect your Forms against Spammers">
+  <meta property="og:type" content="article">
+  <meta property="og:description" content="This post describes a simple honeypot technique to prevent form spams">
+  <meta property="og:site_name" content="Felippe Regazio">
+  <meta name="description" content="This post describes a simple honeypot technique to prevent form spams">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Felippe Regazio">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="How to create a simple Honeypot to protect your Forms against Spammers">
+  <meta name="twitter:description" content="This post describes a simple honeypot technique to prevent form spams">
+  <meta name="twitter:image:src" content="https://blogcompleteurl.com/card.jpg">
+  <meta property="og:url" content="https://blogcompleteurl.com/posts/how-to-create-a-simple-honeypot">
+  <meta property="og:image" content="https://blogcompleteurl.com"/>
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>How to create a simple Honeypot to protect your Forms against Spammers</h1>
+    <p><a href="/">← ← ←</a> &nbsp; 5/2/2022, 2:17:45 AM</p>
+
+    
+
+<p>
+  I think this post will be short and useful. The goal here is to demonstrate a simple technique to help 
+  you block spammers and bots that could attack your website forms. This meant to be an extra layer in 
+  spam prevention, not the main resource to. Use it with another tools like reCaptcha, etc. Due its simplicity, 
+  i really recommend you to follow this form pattern, so, lets code:  
+</p>
+
+<p>
+  Imagine you have the following form structure:
+</p>
+
+<pre>
+  <code>
+  &#x3C;form id=&#x22;myformid&#x22; action=&#x22;/myformaction&#x22;&#x3E;
+    &#x3C;label for=&#x22;name&#x22;&#x3E;Your Name&#x3C;/label&#x3E;
+    &#x3C;input type=&#x22;text&#x22; id=&#x22;name&#x22; name=&#x22;name&#x22; placeholder=&#x22;Your name here&#x22; required maxlength=&#x22;100&#x22;&#x3E;
+    &#x3C;label for=&#x22;email&#x22;&#x3E;Your E-mail&#x3C;/label&#x3E;
+    &#x3C;input type=&#x22;email&#x22; id=&#x22;email&#x22; name=&#x22;email&#x22; placeholder=&#x22;Your e-mail here&#x22; required&#x3E;
+  &#x3C;/form&#x3E;
+  </code>
+</pre>
+
+<p>
+  Most of simple bots will search form common patterns, like label common names, input id's, input common attributes, required fields, etc, and than the bot will fill 'em with fake info to try send you, and your customers, spams or some malicious codes. The most common fields to search are fields named like "email, phone, address"...
+</p>
+
+<p>
+  So, lets cheat on that and create a simple honeypot by changing our form structure to:  
+</p>
+
+<pre>
+  <code>
+  &#x3C;style&#x3E;
+      .ohnohoney{
+          opacity: 0;
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 0;
+          width: 0;
+          z-index: -1;
+      }
+  &#x3C;/style&#x3E;
+
+  &#x3C;form id=&#x22;myformid&#x22; action=&#x22;/myformaction&#x22;&#x3E;
+      &#x3C;!-- Real fields --&#x3E;
+      &#x3C;label for=&#x22;nameaksljf&#x22;&#x3E;Your Name&#x3C;/label&#x3E;
+      &#x3C;input type=&#x22;text&#x22; id=&#x22;nameksljf&#x22; name=&#x22;nameksljf&#x22; placeholder=&#x22;Your name here&#x22; required maxlength=&#x22;100&#x22;&#x3E;
+      &#x3C;label for=&#x22;emaillkjkl&#x22;&#x3E;Your E-mail&#x3C;/label&#x3E;
+      &#x3C;input type=&#x22;text&#x22; id=&#x22;emaillkjkl&#x22; name=&#x22;emaillkjkl&#x22; placeholder=&#x22;Your e-mail here&#x22; required&#x3E;
+      &#x3C;!-- H o n e y p o t --&#x3E;
+      &#x3C;label class=&#x22;ohnohoney&#x22; for=&#x22;name&#x22;&#x3E;&#x3C;/label&#x3E;
+      &#x3C;input class=&#x22;ohnohoney&#x22; autocomplete=&#x22;off&#x22; type=&#x22;text&#x22; id=&#x22;name&#x22; name=&#x22;name&#x22; placeholder=&#x22;Your name here&#x22;&#x3E;
+      &#x3C;label class=&#x22;ohnohoney&#x22; for=&#x22;email&#x22;&#x3E;&#x3C;/label&#x3E;
+      &#x3C;input class=&#x22;ohnohoney&#x22; autocomplete=&#x22;off&#x22; type=&#x22;email&#x22; id=&#x22;email&#x22; name=&#x22;email&#x22; placeholder=&#x22;Your e-mail here&#x22;&#x3E;
+  &#x3C;/form&#x3E;    
+  </code>
+</pre>
+
+<p>
+  Lets see the changes:
+</p>
+
+<p>
+  First we created a class to hide things. The .ohnohoney class. Important to point some things now:
+</p>
+
+<p>
+  Dont use display:none, some bots cant access fields with display none, other simply know that they 
+  should'nt fill the display none fields. Dont use "hidden" in the class name, some advanced bots can recognize it.
+</p>
+
+<p>
+  Than we created the "Real fields". This are the visible fields and the ones which must be relevant to 
+  your backend in terms of data. This fields must have the identifications changed to hashes. Commonly i use 
+  the pattern "nameHASH" all together. Dont use "name-hash" or variations of that, a simple split would expose the 
+  real field name. Now, a bot cant recognize what this fields are, they're just know that the form has some fields 
+  which must be filled, maybe following the "type" as pattern.
+</p>
+
+<p>
+  By creating the "h o n e y p o t" fields we will be able to identify the Spammer. Important to: Let the label 
+  empty, use your 'ohnohoney' class to hide all those fake inputs. Turn your fake input the most simple, generic 
+  and attractive as possible. Use simple and common names as "email, phone, name, etc", disable the autocomplete 
+  (so, browser will not fill it), disable rules, but keep the types.
+</p>
+
+<p>
+  Now we have 2 parts in our form: Real fields with our inputs protected by hashes and strange names (you can 
+  implement the hash or strange names as you prefer). And our honeypot (dont write "honeypot", prefer split the letters 
+  to avoid any recognition). Now on your backend:
+</p>
+
+<p>
+  Verify if any of the "h o n e y p o t" fields came filled. If yes, congrats, you trapped a spam. Most of them will 
+  fill all this fields without differentiate them. So, all you have to do is to check if any of your "h o n e y p o t" 
+  fields came filled, if yes, its a spam. If you prefer, you can do this check on the client, in case of an ajax form, 
+  this will avoid use server resources to compute unuseful data (but keep the backend validation anyway). When you catch 
+  a spam, just dont send the data and do whatever you want with it. If names as "email, phone, etc" are important to 
+  your backend, just transcript the names using arrays.  
+</p>
+
+<p>
+  Here is a single-file repo with a simple implementation of this technique:
+  <a href="https://github.com/felippe-regazio/php-honeypot-example">Access the Repo</a>
+</p>
+
+<p>
+  Remember: this is just a simple layer to prevent attacks in a simple way, some technologies can identify even this 
+  patterns, so use all the weapons you can against it. But i believe that this simple pattern can avoid at least 50% 
+  of spams in your webpage.
+</p>
+
+    <p>
+      <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+  </div>
+</body>
+</html>

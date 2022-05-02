@@ -1,0 +1,332 @@
+<!--:::{
+  "post_title": "A Responsive Modal With Flexbox and No Media Queries",
+  "post_description": "How to write a responsive modal using html and css (no bahavior added) using flexbox and no media queries",
+  "post_created_at": "Mon May 02 2022 02:29:26 GMT-0300 (Brasilia Standard Time)"
+}:::-->
+
+<p>
+  No bla bla bla, lets get things done. To a better comprehension of this post would be good for you to know something 
+  about HTML, SCSS and CSS Vars.
+</p>
+
+<p>
+  The ideia is to write a responsive modal front end structure using only flexbox and no media queries. A fluid modal. 
+  I'll try to highlight the key points of the (S)CSS style, anyway this is the result:
+</p>
+
+<iframe 
+  frameborder="0"
+  style="width: 100%; height: 500px;"
+  src="https://codepen.io/felipperegazio/full/LYPvQBe" 
+></iframe>
+
+<p>
+  There is no behavior added on this modal, its Style Only. Do as you prefer or feel free to ask me in the comments 
+  how to add JS functions to open, close, callbacks etc.
+</p>
+
+<p>
+  So, lets start with the modal HTML. We gonna need a wrapper (which will also be our backdrop), and a content div 
+  to hold the header, main content and footer. Because we are using flexbox, this modal will be also dynamic, you 
+  could omit the header or the footer without break anything.
+</p>
+
+<pre>
+  <code>
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;simple-modal&quot; tabindex=&quot;0&quot;&gt;
+          &lt;div class=&quot;simple-modal__content&quot;&gt;
+              &lt;header&gt;
+                  &lt;h4&gt;Title&lt;/h4&gt;
+                  &lt;span&gt;close&lt;/span&gt;
+              &lt;/header&gt;
+              
+              &lt;div class=&quot;modal-main&quot;&gt;
+                  &lt;!-- Content goes here --&gt;
+              &lt;/div&gt;
+
+              &lt;footer&gt;
+                  &lt;button&gt;Ok&lt;/button&gt;
+              &lt;/footer&gt;
+          &lt;/div&gt;
+      &lt;/div&gt;
+  &lt;/div&gt;    
+  </code>
+</pre>
+
+<p>
+  Really simple, huhn? There is no much to say about it. The container could be anything in the page, its for eye 
+  candy purposes only (we'll add a background on it).
+</p>
+
+<p>
+  The modal starts in the .simple-modal div. This will be our wrapper and backdrop. This is also where you apply 
+  the visibility and display rules to show or hide the modal when adding behavior.
+</p>
+
+<p>
+  Then we add the .simple-modal__content div, which will be the content of our modal, containing the header, main-content 
+  and footer.
+</p>
+
+<p>
+  So, lets start defining some CSS vars that we may need:
+</p>
+
+<pre>
+  <code>
+  .simple-modal {
+    --gutter: 14px; // spacing reference
+    --modal-color: #800000; // just color
+    --soft-color: #fafafa; // just another color
+  }    
+  </code>
+</pre>
+
+<p>
+  Then lets do our wrapper/backdrop:
+</p>
+
+<pre>
+  <code>
+  .simple-modal {
+    --gutter: 14px;
+    --modal-color: #800000;
+    --soft-color: #fafafa;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+    position: fixed;
+    background-color: rgba(0,0,0,.7);
+    padding-top: 2%;
+  }    
+  </code>
+</pre>
+
+<p>
+  Key points: the .simple-modal div will be fixed on the screen, so will be where the modal content will be placed. The z-index will keep the modal always on front of the other page elements. The padding-top can be modified, but i think 2 or 3 percent scales really well from desk to mobo, this padding will determine how distant from the page top the modal content will be.
+</p>
+
+<p>
+  Now, lets add the content element, a blank square on the middle.<br/>
+  To do it we gonna use the .simple-modal__content div:
+</p>
+
+<pre>
+  <code>
+  .simple-modal {
+    /* ... previous stuff ... */
+    &__content {
+      width: 95vw;
+      max-width: 600px;
+      height: 90vh;
+      max-height: 700px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+    }
+  }    
+  </code>
+</pre>
+
+<p>
+  Key points: We start given the modal a width: 95vw and max-width: 600px. So, we get a decent content width on 
+  desktop which also fits well on mobile, cuz on < 600px screens, the width will be 95vh, or 95% of the viewport, 
+  given 5% of space to emulate the padding. The height and max-height here will do the same thing with the height.
+</p>
+
+<p>
+  Then at last not least, the display: flex will give a fluid behavior for our modal content elements. But flex is 
+  horizontal driven by default, so we use flex-direction: column to change it to vertical. Now, things will be 
+  vertically stretched on our modal content. Dont forget the margin:0 auto to centralize and overflow:hidden to prevent 
+  unwanted scroll bars.
+</p>
+
+<p>
+  Its time to add the modal elements:<br/>
+  Header, Main Content and Footer
+</p>
+
+<pre>
+  <code>
+  header {
+    min-height: 60px;
+    height: 60px;
+    color: #ffffff;
+    background-color: var(--modal-color);
+    display: grid;
+    padding-left: var(--gutter);
+    align-items: center;
+    grid-template-columns: auto 60px;
+    h4 {
+      margin: 0;
+      text-align: left;
+    }
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      font-size: 20px;
+      opacity: .8;
+      cursor: pointer;
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+  .modal-main {
+    flex: 1;
+    text-align: left;
+    overflow: auto;
+    padding: var(--gutter);
+  }
+  footer {
+    height: auto;
+    text-align: right;
+    border-top: solid 1px #cccccc;
+    padding: var(--gutter);
+    background-color: #ffffff;
+    background-color: var(--soft-color);
+    button, input {
+      margin: 0;
+      &:not(:last-child) {
+        margin-right: var(--gutter);
+      }
+    }
+  }
+  </code>
+</pre>
+
+<p>
+  If you note, this part of the code its almost pure aesthetics. Almost no style behavior added, except for the 
+  flex:1 on the .modal-main.
+</p>
+
+<p>
+  The flex 1 tells to the .modal-main to grow along the parent as much as possible, but it will be stopped by 
+  the &__content div limits. Then we add the min-height on the header. For the footer id prefer to not to given 
+  a height and let the children do it for me, then when the footer is empty, it will became just a cool border on 
+  the bottom.
+</p>
+
+<h2>
+  Conclusion
+</h2>
+
+<p>
+  Because our modal content holder is display:flex with column direction, all the content will be vertically placed 
+  in a way that the main content (flex 1) will grow in a delimited size (&__content height and width) and without 
+  break its header, but will grow. Also important to add the overflow:auto on your main content .modal-main, so you 
+  can have large contents inside the .modal-main.
+</p>
+
+<p>
+  The final code must be like this:
+</p>
+
+<pre>
+  <code>
+  .simple-modal {
+    --gutter: 14px;
+    --modal-color: #800000;
+    --soft-color: #fafafa;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+    position: fixed;
+    background-color: rgba(0,0,0,.7);
+    padding-top: 2%;
+    &__content {
+      width: 95vw;
+      height: 90vh;
+      max-height: 700px;
+      max-width: 600px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      header {
+        min-height: 60px;
+        height: 60px;
+        color: #ffffff;
+        background-color: var(--modal-color);
+        display: grid;
+        padding-left: var(--gutter);
+        align-items: center;
+        grid-template-columns: auto 60px;
+        h4 {
+          margin: 0;
+          text-align: left;
+        }
+        span {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          width: 100%;
+          font-size: 20px;
+          opacity: .8;
+          cursor: pointer;
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+      .modal-main {
+        flex: 1;
+        text-align: left;
+        overflow: auto;
+        padding: var(--gutter);
+      }
+      footer {
+        height: auto;
+        text-align: right;
+        border-top: solid 1px #cccccc;
+        padding: var(--gutter);
+        background-color: #ffffff;
+        background-color: var(--soft-color);
+        button, input {
+          margin: 0;
+          &:not(:last-child) {
+            margin-right: var(--gutter);
+          }
+        }
+      }
+    }
+  }    
+  </code>
+</pre>
+
+<p>
+  You can use the .container div to add a cool background:
+</p>
+
+<pre>
+  <code>
+  // just an eye candy
+  .container {
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url(http://picsum.photos/2000);
+  }
+  </code>
+</pre>
+
+<p>
+  Thats all folks :)
+</p>

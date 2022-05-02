@@ -1,0 +1,59 @@
+<!--:::{
+  "post_title": "A quick and cool CSS real-time editor with HTML & CSS only",
+  "post_description": "A quick and native way to build a CSS editor using style elements and content editor",
+  "post_created_at": "Mon May 02 2022 16:41:52 GMT-0300 (Brasilia Standard Time)"
+}:::-->
+
+<p>
+  For god sake, don't use this snippet on production. Don't use it at all, maybe (?). But anyway, thats pretty cool!
+</p>
+
+<p>
+  You can style style tags 😶 You can add contentEditable to style tags also. So, you can build your native & real-time 
+  CSS editor with that!
+</p>
+
+<p>
+  If you paste this code/element at the end of your body tag, you will have your quick native CSS Editor.
+</p>
+
+<pre>
+  <code>
+  &lt;style 
+    contenteditable=&quot;true&quot;
+    style=&quot;z-index:1;
+    position:fixed;
+    top:0;
+    right:0;
+    width:300px;
+    background:#fff;
+    min-height:100vh;
+    display:block !important;
+    overflow: auto;
+    padding:14px;
+    border-left: solid 1px #cccccc&quot;&gt;
+
+    body {min-height: 100vh;}
+  &lt;/style&gt;
+  </code>
+</pre>
+
+<p>
+  On thing i personally like on this cool snippet is the meta relation between the style and the body, 
+  once the code on the style tag gives the body the right size to show the style tag itself, look at the 
+  body {min-height: 100vh;}.
+</p>
+
+<p>
+  Here's a pen if you prefer:
+</p>
+
+<iframe 
+  frameborder="0"
+  style="width: 100%; height: 500px;"
+  src="https://codepen.io/felipperegazio/full/dyyaeRg" 
+></iframe>
+
+<br>
+
+

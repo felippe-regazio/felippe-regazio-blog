@@ -1,0 +1,178 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Styling native Checkboxes and Radio inputs (CSS Only)</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta property="og:title" content="Styling native Checkboxes and Radio inputs (CSS Only)">
+  <meta property="og:type" content="article">
+  <meta property="og:description" content="How to complete style native checkboxes and radio buttons using only CSS">
+  <meta property="og:site_name" content="Felippe Regazio">
+  <meta name="description" content="How to complete style native checkboxes and radio buttons using only CSS">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Felippe Regazio">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Styling native Checkboxes and Radio inputs (CSS Only)">
+  <meta name="twitter:description" content="How to complete style native checkboxes and radio buttons using only CSS">
+  <meta name="twitter:image:src" content="https://blogcompleteurl.com/card.jpg">
+  <meta property="og:url" content="https://blogcompleteurl.com/posts/styling-native-checkboxes-radio-inputs-css-only">
+  <meta property="og:image" content="https://blogcompleteurl.com"/>
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Styling native Checkboxes and Radio inputs (CSS Only)</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      5/2/2022, 4:48:04 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>
+  So, do you want to style native radio and checkboxes without relying on JavaScript, plugins or dozens of wrappers, 
+  is that right? Well, thats possible :)
+</p>
+
+<p>
+  The provider of all that magic is the appearance css property. The appearance is used to apply or remove a 
+  system-native style to/from a web element.
+</p>
+
+<p>
+  Here's a link to know more about: <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/appearance.">
+    https://developer.mozilla.org/en-US/docs/Web/CSS/appearance.
+  </a>
+</p>
+
+<p>
+  But if you take a look on the 'Can i use' you may note that this property is only well supported when setting 
+  its value to "none", and thats exactly what we need . This is because the different apperance values may show 
+  different results depending on your system and browser engine, but all the browsers suport the appearance:none 
+  very well because there is no secret, it just removes the element native style. So, for that purpose, we have 
+  a good support.
+</p>
+
+<a href="https://caniuse.com/#search=appearance">https://caniuse.com/#search=appearance</a>
+
+<p>
+  Another thing that worth to say: The appearance cares ONLY about the element style. That means that if i set 
+  appearance: none to a checkbox, the element is still a checkbox, but without any appearance (system style). 
+  The opposite is also valid, giving an element appearance: button, for example, will not turn that element in a 
+  button, the element will only have the button appearance.
+</p>
+
+<p>
+  This is how we must use this property.
+</p>
+
+<pre>
+  <code>
+  .element {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+  }    
+  </code>
+</pre>
+
+<h2>Coding</h2>
+
+<p>
+  Now lets code. The idea its very simple, we will remove the checkbox and radio inputs native style and 
+  apply our own. If the browser doesn't support the appearance selector there is no harm, the native checkboxes 
+  and radios will be used instead. This is the result:
+</p>
+
+<iframe 
+  frameborder="0"
+  style="width: 100%; height: 500px;"
+  src="https://codepen.io/felipperegazio/full/vYOpJvb" 
+></iframe>
+
+<p>
+  First lets remove the checkboxes and radios appearance
+</p>
+
+<pre>
+  <code>
+  [type=radio],
+  [type=checkbox] {
+      -webkit-appearance: none;
+      -moz-appearance:    none;
+      appearance:         none;
+  }    
+  </code>
+</pre>
+
+<p>
+  Now we will apply our appearance. You can combine the above properties and this ones in a single selector, 
+  but lets split it to the sake of the post:
+</p>
+
+<pre>
+  <code>
+  [type=radio],
+  [type=checkbox] {
+    width: 20px;
+    height: 20px;
+    border: solid 1px #cccccc;
+    margin-right: 8px;
+    position: relative;
+  }    
+  </code>
+</pre>
+
+<p>
+  Now lets say how we want our elements to be when they are checked. Remember: we removed the appearance, 
+  not the behavior. The ideia here is, when the element is checked we will use a ::before (pseudo-element) 
+  to fill the empty space. Thats why our element is setted to position: relative, because the ::before will 
+  be absolutely placed inside it, giving the "checked" appearance.
+</p>
+
+<pre>
+  <code>
+  [type=radio]:checked::before,
+  [type=checkbox]:checked::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    background-color: #ffa500;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+  }    
+  </code>
+</pre>
+
+<p>
+  And finally, lets round the radio corners to differentiate them from the checkboxes:
+</p>
+
+<pre>
+  <code>
+  [type=radio],
+  [type=radio]:checked::before{
+    border-radius: 100%;
+  }    
+  </code>
+</pre>
+
+  </div>
+</body>
+</html>

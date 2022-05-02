@@ -1,0 +1,594 @@
+<!--:::{
+  "post_title": "CSS Custom Properties (vars) with SASS/SCSS, a practical architecture strategy",
+  "post_description": "A practical strategy to deal with css custom properties on large sass/scss codebases",
+  "post_created_at": "Mon May 02 2022 16:55:20 GMT-0300 (Brasilia Standard Time)"
+}:::-->
+
+<p>
+  If you dont know about CSS Custom Properties yet, you really should learn about. I particularly prefer to 
+  use CSS custom properties instead of SASS variables always when possible, mostly because of its reactivity. 
+  For this post I'll assume that you're already comfortable with CSS Custom Properties and SASS Vars (with SCSS Syntax).
+</p>
+
+<p>
+  Sometimes the use of CSS Custom Properties is not a case of taste, but a necessity. It just fits perfectly 
+  to build themes, dynamic components, configurable pages etc. But as our page grows, also grows the maintenance 
+  complexity of the code base and the risk of create a modules labyrinth.
+</p>
+
+<p>
+  A common approach when dealing with SASS/SCSS variables is to create a _vars file which will hold most of our app 
+  variables, and in the case of CSS Custom Properties, also add a prefix to avoid conflicts. The idea here is the use 
+  of CSS Custom Props, but i think it fits to SASS vars as well. Here is a common pattern:
+</p>
+
+<pre>
+  <code>
+  $prefix: pf;
+
+  :root {
+    --#{$prefix}-primary-color: #000000; 
+    // this will compile to: --pf-primary-color: #000000;
+  }    
+  </code>
+</pre>
+
+<p>
+  Now we use it along the stylesheets:
+</p>
+
+<pre>
+  <code>
+  @import './config/_vars';
+
+  .btn-example {
+    background-color: var(--#{$prefix}-primary-color);
+  }    
+  </code>
+</pre>
+
+<ul>
+  <p>
+    Nice, you are separating concerns, using a prefix to avoid conflicts, maybe adding the _vars on a main 
+    file to keep your variables always available along your stylesheets. Nice, but there are some serious 
+    problems with this approach:
+  </p>
+
+  <ol>
+    <li>
+      When using a prefixed CSS Custom Prop with SCSS you have to add the prefix by typing --#{$prefix}- and 
+      thats annoying. If you are making an attribution to a property, its even worse color: var(--#{$prefix}-color);.
+    </li>
+
+    <li>
+      You'll end up copying and pasting code a lot, and thats increments the error probability on your code base. 
+      Or someone will, eventually, add a hard coded prefix.
+    </li>
+
+    <li>
+      A notation like --#{$prefix}... for a variable is ugly and also a problem for new devs. They can just forget about 
+      the prefix, or they will probably dislike the syntax to just write a simple var, etc. You can think "ok, they will 
+      dislike, who cares...". Well, you should care, but in a practical manner of speaking, if your team don't like what 
+      they are doing, they will end up trying to cheat on that code just to get rid of the task as soon as possible.
+    </li>
+
+    <li>
+      So you decided to separate the concerns. You have the impression that you are separating concerns because you 
+      splitted the variables from your styles, and elements by modules, but you dont. All your variables are on the 
+      same file, so a simple button style is consuming variables from a file related to the entire application.
+    </li>
+
+    <li>
+      Then you say, "ok, ill create a variable collection files for each concern, tadá", and you end up importing all 
+      that files (which is the same), or end up having to open many files on your editor to edit a single property: you 
+      open your button stylesheet, see that the button is imported by a main file which imports some vars - or a 
+      configuration file - go to that configuration file and see that configuration file imports a _btn_vars and that 
+      file uses some helpers imported from... then you go to get a coffee. It will be a long day.
+    </li>
+
+    <li>
+      If you try to split your stylesheets by elements, when trying to separate an element as a module - a _buttons.scss 
+      for example - as it uses some variables you will need to import a _vars file with the entire application variables 
+      just to use some vars in a button.  
+    </li>
+  </ol>
+  
+  <h2>
+    So, what can we do?
+  </h2>
+  
+  <p>
+    I'm not saying that this approach don't fits at all. But for scalable and large applications the above architecture
+     can become a problem very quickly, or in the best scenario it will unnecessarily increase your css files size due 
+     code repetition. So, here is my 2 cents on that subject:
+  </p>
+
+  <p>
+    First of all, define getters and setters for your CSS Custom Properties. Then use your getters and setters to deal 
+    with variables along the app providing a pattern and reliability, now you can really separate the concerns in a solid 
+    architecture. Lets see how to do it:
+  </p>
+  
+  <h1>
+    Declaring Custom Properties
+  </h1>
+  
+  <p>
+    Lets start adding a @mixin to declare a set of CSS Custom Properties. This mixin will be used to prefix our variables 
+    and add them on the code. It will also make our app really scalable and easy to maintain. If you need to modify how 
+    variables work on your app you dont need to open all the files to make changes then keep checking if something has 
+    broken, you just need to tune that mixin. Its also friendly for new devs by avoiding errors when declaring properties 
+    (syntax errors, forgetting the prefix, etc):
+  </p>
+
+  <pre>
+    <code>
+    /**
+      * Use this mixin to declare a set of CSS Custom Properties.
+      * The variables in $css_variables will be properly prefixed.
+      * The use of this mixin is encoraged to keep a good scalability.
+      *
+      * Usage:
+      *
+      * @include cssvars((
+      *  base-font-size: 65.5%,
+      *  font-family: #{"HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif},
+      * 
+      *  primary-color: #33b5e5,
+      *  secondary-color: #ff500a,
+      * ));
+      *
+      * Will result in
+      *
+      * root {
+      *    --prefix-var-name: value;
+      *    --prefix-var-name: value;
+      *    --prefix-var-name: value;
+      * }
+      *
+      */
+     @mixin cssvars($css_variables, $prefix: pf) {
+         :root {
+             @each $name, $value in $css_variables {
+                 --#{$prefix}-#{$name}: #{$value};
+             }
+         }
+     }     
+    </code>
+  </pre>
+</ul>
+
+<p>
+  Now instead of doing and maintain this:
+</p>
+
+<pre>
+  <code>
+  :root {
+    --#{$prefix}-base-font-size: 65.5%;
+    --#{$prefix}-font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  
+    --#{$prefix}-primary-color: #33b5e5;
+    --#{$prefix}-secondary-color: #ff500a;
+  }    
+  </code>
+</pre>
+
+<p>
+  You will do and maintain this:
+</p>
+
+<pre>
+  <code>
+  @include cssvars((
+    base-font-size: 65.5%,
+    font-family: #{"HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif},
+  
+    primary-color: #33b5e5,
+    secondary-color: #ff500a,
+  ));   
+  </code>
+</pre>
+
+<p>
+  The result will be the same:
+</p>
+
+<pre>
+  <code>
+  :root {
+    --pf-base-font-size: 65.5%;
+    --pf-font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --pf-primary-color: #33b5e5;
+    --pf-secondary-color: #ff500a;
+  }    
+  </code>
+</pre>
+
+<p>
+  You can also override the prefix passing another one as the second argument. Note that for all the functions 
+  and mixins showed here, the $prefix will appear as param with a default value. I prefer to use it that way, 
+  but you can put it out and use a single $prefix var if you prefer.
+</p>
+
+<p>
+  Maybe you can add a new argument to override the ":root" selector creating scoped custom properties declarations, 
+  i dont know... You can tweak this mixin to fit your style and needings, the idea here is to have a setter for your 
+  Custom Properties that will allow you to have a pattern and single source of truth when dealing with your variables, 
+  leading to a solid application growth.
+</p>
+
+<h2>
+  Getting a Custom property
+</h2>
+
+<p>
+  Lets create a getter to retrieve our CSS Custom Properties avoiding weird syntax and dense code for simple things:
+</p>
+
+<pre>
+  <code>
+  /**
+    * Retrieve a css variable value with prefix
+    *
+    * Usage
+    *
+    * .selector {
+    *   color: cssva(primary-color);
+    * }
+    *
+    * Will result in
+    *
+    * .selector {
+    *    color: var(--prefix-primary-color);
+    * }
+    */
+   @function cssvar($name, $prefix: pm) {
+       @return var(--#{$prefix}-#{$name});
+   }
+  </code>
+</pre>
+
+<p>
+  Now, instead of this:
+</p>
+
+<pre>
+  <code>
+  :root {
+    --#{$prefix}-button-height: 40px;
+    --#{$prefix}-button-color: #ffffff;
+    --#{$prefix}-button-background: #000000;
+  
+    .button-primary {
+      height: var(--#{$prefix}-button-height);
+      line-height: var(--#{$prefix}-button-height);
+      color: var(--#{$prefix}-button-color);
+      background-color: var(--#{$prefix}-button-background);
+    }
+  }    
+  </code>
+</pre>
+
+<p>
+  We get this:
+</p>
+
+<pre>
+  <code>
+  @include cssvars((
+    button-height: 40px,
+    button-color: #ffffff,
+    button-background: #000000,
+  ));
+  
+  .btn-primary {
+    height: cssvar(button-height);
+    line-height: cssvar(button-height);
+    color: cssvar(button-color);
+    background-color: cssvar(button-background);
+  }    
+  </code>
+</pre>
+
+<p>
+  Which will result in this:
+</p>
+
+<pre>
+  <code>
+  :root {
+    --pm-button-height: 40px;
+    --pm-button-color: #ffffff;
+    --pm-button-background: #000000;
+  }
+  
+  .btn-primary {
+    height: var(--pm-button-height);
+    line-height: var(--pm-button-height);
+    color: var(--pm-button-color);
+    background-color: var(--pm-button-height);
+  }    
+  </code>
+</pre>
+
+<p>
+  The syntax, readability and maintainment where improved. Also be aware that when we talk about prefix here, 
+  we are talking about prefixes for variable names like --prefix-color:blue, not css native properties like -moz-*.  
+</p>
+
+<h2>
+  Updating a Custom Property
+</h2>
+
+<p>
+  Lets say we want to add a big button now. Simple, we just override the value of our button-height var to a bigger 
+  one in a class. So, we will need a mixin that updates (overrides) a custom property value. To do it in a clean way, 
+  add this mixin:
+</p>
+
+<pre>
+  <code>
+  @mixin cssvar ($name, $value: '', $prefix: pm) {
+    --#{$prefix}-#{$name}: #{$value};
+  }  
+  </code>
+</pre>
+
+<p>
+  Now, instead of this:
+</p>
+
+<pre>
+  <code>
+  @include cssvars((...));
+
+  .btn-primary {
+    height: cssvar(button-height);
+    line-height: cssvar(button-height);
+    color: cssvar(button-color);
+    background-color: cssvar(button-background);
+    &--big {
+      // ** LOOK HERE **
+      --#{$prefix}-button-height: 56px;
+    }
+  }    
+  </code>
+</pre>
+
+<p>
+  We get this:
+</p>
+
+<pre>
+  <code>
+  @include cssvars((...));
+
+  .btn-primary {
+    height: cssvar(button-height);
+    line-height: cssvar(button-height);
+    color: cssvar(button-color);
+    background-color: cssvar(button-background);
+    &--big {
+      // ** LOOK HERE **
+      @include cssvar(button-height, 56px);
+    }
+  }    
+  </code>
+</pre>
+
+<p>
+  With the following result:
+</p>
+
+<pre>
+  <code>
+  :root { ...vars }
+
+  .btn-primary {
+    height: var(--pm-button-height);
+    line-height: var(--pm-button-height);
+    color: var(--pm-button-color);
+    background-color: var(--pm-button-height);
+  }
+  
+  .btn-primary--big {
+    --pm-button-height: 56px;
+  }    
+  </code>
+</pre>
+
+<p>
+  Now we have a powerful toolset :)
+</p>
+
+<h2>
+  An organization proposal
+</h2>
+
+<p>
+  Now that we have a cool set of helpers, lets use it! Here is my tip:
+</p>
+
+<ol>
+  <li>
+    Create a _helpers file with the function and mixins showed here, allowing you to deal with the CSS 
+    Custom Properties easily.
+  </li>
+
+  <li>
+    Create a _config file to hold you application global custom properties, the ones that concerns to the entire 
+    application, like primary and secondary colors, font-family, base-font-size, container-width, etc.
+  </li>
+
+  <li>
+    Now Create single stylesheets by concern, and keep them as autonomous universes. For example, to buttons you must 
+    create a _buttons.scss that holds all the variables, selectors, properties, styles, etc. If you have a large set 
+    of buttons, put the files in a "buttons" folder and split the variations in new files joining them in a main file 
+    on the buttons folder. Same for Forms, Typography, etc etc.
+  </li>
+
+  <li>
+    Call your _helpers, _config, and all the application modules (buttons, forms, typo...) in a main file. You can also 
+    create a core.css that holds only the _helpers and _config, then compile the modules stylesheets separately, then you 
+    add the core and the modules you want.
+  </li>
+</ol>
+
+<p>
+  At the end you will have a folder/file tree almost like that:
+</p>
+
+<pre>
+  <code>
+  styles
+    config
+        _helpers.scss
+        _config.scss
+    modules
+        _buttons.scss
+        _form.scss
+        _typography.scss
+        _tables.scss
+    main.scss 
+  </code>
+</pre>
+
+<p>
+  At runtime, as we are talking about CSS Custom Properties, once declared in the :root {}, all variables 
+  will be globally available in its context. You can use them anywhere without myriads of @imports. They are 
+  just available. Of course this is sometimes a bad thing depending on your codebase size and can harm your 
+  performance - or if you dont need dynamic vars you can use SASS vars, but keeping them in its right place. 
+  What i mean is that you can easily tweak this architecture to scope your custom props.
+</p>
+
+<p>
+  Our main.scss would be something almost like that:
+</p>
+
+<pre>
+  <code>
+  @import './config/_helpers';
+  @import './config/_config';
+  
+  @import './modules/_typography';
+  @import './modules/_buttons';
+  @import './modules/_form';
+  @import './modules/_tables';
+  
+  // etc    
+  </code>
+</pre>
+
+<p>
+  And this would be a module:
+</p>
+
+<pre>
+  <code>
+  @include cssvars((
+      btn-primary-text-color: #ffffff,
+      btn-secondary-text-color: #ffffff,
+      btn-border-radius: 4px,
+      btn-text-transform: uppercase,
+      btn-font-size: 12px,
+      btn-font-weight: 600,
+      btn-height: 40px,
+      btn-padding: 0 30px,
+  ));
+  
+  .button, button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+          // { hard coded properties }
+      height: cssvar(btn-height);
+      padding: cssvar(btn-padding);
+      line-height: cssvar(btn-height);
+      font-size: cssvar(btn-font-size);
+      font-weight: cssvar(btn-font-weight);
+      letter-spacing: cssvar(btn-font-weight);
+      color: cssvar(primary-color);
+      border-radius: cssvar(btn-border-radius);
+      border: 1px solid cssvar(primary-color);
+      text-transform: cssvar(btn-text-transform);
+      &.focus, &:focus,
+      &.hover, &:hover {
+          // { ... whatever you want }
+      }
+      &.button-block {
+          display: block;
+          width: 100%;
+      }
+      &.button-primary {
+          color: cssvar(btn-primary-text-color);
+          background-color: cssvar(primary-color);
+          border-color: cssvar(primary-color);
+      }
+      &.button-secondary {
+          color: cssvar(btn-secondary-text-color);
+          background-color: cssvar(secondary-color);
+          border-color: cssvar(secondary-color);
+      }
+      &.button--big {
+          @include cssvar(btn-height, 56px);
+      }
+  }  
+  </code>
+</pre>
+
+<p>
+  This is just an example. A button can be far more complex. But note that all the things the button 
+  needs is in itself. And when imported, its Custom Properties will be globally available on the context. 
+  Also look that we are using our helpers to provide a pattern and reliability.
+</p>
+
+<h2>
+  How that solves the first 6 Problems
+</h2>
+
+<p>
+  At the beginning of this post i talked about 6 common problems in SCSS code bases. Here is how that 
+  approach will solve them:
+</p>
+
+<p>
+  Now that we have a nice and clean syntax to deal with prefixed props there is no need to copy paste codes 
+  to gain speed, its easy and fast to use our helpers, change and maintain our css props is really fun and they 
+  are also prefixed and standardized.
+</p>
+
+<p>
+  Its easy and safe to onboard new devs on the code base. When talking about vars we basically have 3 functions 
+  to deal with variables and to explain to them. The _config file holds the app globals and the another vars are 
+  on the module itself:
+</p>
+
+<pre>
+  <code>
+  // setter
+  @include cssvars((...));
+  
+  // updater
+  @include cssvar(name, value);
+  
+  // getter fn
+  prop: cssvar(name);    
+  </code>
+</pre>
+
+<p>
+  There is a real separation of concerns. We keep any module as a single universe, declaring everything there and only 
+  providing the output. If we need to split a module, it will become a folder with a main exporter file, no need to keep 
+  fishing files on the project trying to discover where are all the peaces.
+</p>
+
+<h2>
+  Conclusion
+</h2>
+
+<p>
+  The function and mixins showed here are a demonstration of how to provide an architecture to a solid growth. 
+  But there is no silver bullet, you can of course change it to fit your needings, change names, arguments, its just 
+  a spark of an idea, you can adapt as you need, the idea is help application to expand without pain :)
+</p>

@@ -1,0 +1,91 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>10 Dicas de Segurança para Projetos Front End</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta property="og:title" content="10 Dicas de Segurança para Projetos Front End">
+  <meta property="og:type" content="article">
+  <meta property="og:description" content="Algumas dicas comuns e incomuns para melhorar a segurança em projetos front end">
+  <meta property="og:site_name" content="Felippe Regazio">
+  <meta name="description" content="Algumas dicas comuns e incomuns para melhorar a segurança em projetos front end">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Felippe Regazio">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="10 Dicas de Segurança para Projetos Front End">
+  <meta name="twitter:description" content="Algumas dicas comuns e incomuns para melhorar a segurança em projetos front end">
+  <meta name="twitter:image:src" content="https://blogcompleteurl.com/card.jpg">
+  <meta property="og:url" content="https://blogcompleteurl.com/posts/10-dicas-seguranca-projetos-front">
+  <meta property="og:image" content="https://blogcompleteurl.com"/>
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>10 Dicas de Segurança para Projetos Front End</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      5/2/2022, 6:27:16 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<h2 id="1-evite-guardar-tokens-jwt-ou-tokens-importantes-na-local-storage">1. Evite guardar tokens JWT (ou tokens importantes) na local storage</h2>
+<p>A LS é vulneravel a ataques XSS. O ideal é setar tokens num Http Only Signed Cookie, ou procurar outros meios de sessão afim de evitar a local storage pra guardar informações sensiveis.</p>
+<p>Referencia de leitura para o item 1:</p>
+<p><strong>Here&#39;s why storing JWT in local host storage is a great mistake</strong>: <a href="https://medium.com/kanlanc/heres-why-storing-jwt-in-local-storage-is-a-great-mistake-df01dad90f9e">https://medium.com/kanlanc/heres-why-storing-jwt-in-local-storage-is-a-great-mistake-df01dad90f9e</a></p>
+<h2 id="2-dados-que-serao-interpretados-como-objetos-ou-html-devem-ser-sanitizados-e-ou-escapados">2. Dados que serao interpretados como objetos ou HTML devem ser sanitizados e/ou escapados</h2>
+<p>Qualquer input/output vindo de wysiwyg, rich editor, markdown editor por exemplo. Isso evita ataque XSS (e roubo de tokens da storage rs)</p>
+<p>Referencia de leitura para o item 2:</p>
+<p><strong>Dont sanitize, do escape!</strong> <a href="https://benhoyt.com/writings/dont-sanitize-do-escape/">https://benhoyt.com/writings/dont-sanitize-do-escape/</a></p>
+<h2 id="3-valida-es-de-input-devem-ocorrer-no-front-e-no-backend">3. Validações de input devem ocorrer no front e no backend</h2>
+<p>Jamais uma validação critica ou de regra de negocio deve ser front only. Ex: input de email valida se a str é email? Valide no front e no back. No front pra evitar request desnecessária, no back pra evitar ataques ao DB.</p>
+<p>Referencia de leitura sobre o item 3:</p>
+<p><strong>What is No-SQL Injection</strong> <a href="https://www.invicti.com/blog/web-security/what-is-nosql-injection/">https://www.invicti.com/blog/web-security/what-is-nosql-injection/</a></p>
+<h2 id="4-n-o-trafegue-informa-es-sensiveis-via-query-param-na-url">4. Não trafegue informações sensiveis via query param na URL</h2>
+<p>Exemplo: <a href="https://yoursite.com?token={important_token}">https://yoursite.com?token={important_token}</a> - Se um atacante estiver assistindo o trafego da vitima ou fazendo sniffing, esse token nao sera criptografado e sera exposto numa conexão http-only. Caso vc esteja em uma conexao SSL, a query string estará resguardada na body, porem ainda sim estará exposta em server logs, historico do browser e JS history object num possivel XSS.</p>
+<p>Referencia de leitura sobre o item 4:</p>
+<p><strong>Session token in URL - Vulnerability</strong> <a href="https://www.acunetix.com/blog/web-security-zone/session-token-in-url-vulnerability/">https://www.acunetix.com/blog/web-security-zone/session-token-in-url-vulnerability/</a></p>
+<h2 id="5-evite-retornar-consumir-um-array-json-diretamente-via-api">5. Evite retornar/consumir um Array JSON diretamente via API</h2>
+<p>Tipo:</p>
+<p>RESPONSE: &quot;[{ ... }]&quot;</p>
+<p>Juro, isso expoe uma vulnerabilidade chamada &quot;Primitive Object Override Attack&quot; em que um atacante faz override de metodos de arrays. Pra saber mais, leia o link abaixo</p>
+<p>Referencia de leitura sobre o item 5</p>
+<p><strong>Why Facebook&#39;s API starts with a for loop?</strong> <a href="https://dev.to/antogarand/why-facebooks-api-starts-with-a-for-loop-1eob">https://dev.to/antogarand/why-facebooks-api-starts-with-a-for-loop-1eob</a></p>
+<blockquote>
+	<p>Essa issue ja foi completamente corrigida em todos os browsers modernos há alguns anos. Vc nao precisa se preocupar com isso a menos que ofereça suporte para &quot;old browsers&quot;</p>
+</blockquote>
+<h2 id="6-evite-setar-innerhtml-diretamente-em-elementos-no-dom">6. Evite setar innerHTML diretamente em elementos no DOM</h2>
+<p>Evite muito setar innerHTML no codigo principalmente se o valor passou por algum input de usuario. Se precisar, procure sanitizar ou escapar o conteudo. Sempre que possivel, prefira utilizar innerText/textContent.</p>
+<p>Referencia de leitura sobre o item 6:</p>
+<p><strong>DOM Manipulation and the dangers of innerHTML</strong> <a href="https://betterprogramming.pub/dom-manipulation-the-dangers-of-innerhtml-602f4119d905">https://betterprogramming.pub/dom-manipulation-the-dangers-of-innerhtml-602f4119d905</a></p>
+<h2 id="7-evite-permitir-ao-usuario-fazer-o-input-de-url-ou-load-de-svg">7. Evite permitir ao usuario fazer o input de URL ou load de SVG</h2>
+<p>Por ex: usuario inputar url a ser usado numa tag IMG. Diversos ataques podem acontecer, desde XSS via SVG ou PDF, ou Sniffing ao apontar o GET pra uma URL maliciosa Referencia de leitura sobre o item 7 (embora fale sobre svg, a dinamica pra outros artefatos eh parecida: algo vem junto seja via request ou binary).</p>
+<p><strong>Do you allow user to load SVG? You have XSS</strong> <a href="https://research.securitum.com/do-you-allow-to-load-svg-files-you-have-xss/">https://research.securitum.com/do-you-allow-to-load-svg-files-you-have-xss/</a></p>
+<h2 id="8-utilize-noreferrer-e-noopener-para-links-cross-origin-de-outro-dominio-">8. Utilize noreferrer e noopener para links cross-origin (de outro dominio)</h2>
+<p>Quando vc abre uma nova aba, a depender do contexto o browser pode enviar o objeto window da anterior para o novo endereço, permitindo assim umas bizarrices, vide link abaixo. Referencia de leitura sobre o item 8:</p>
+<p><strong>External anchors and the rel noopener</strong> <a href="https://web.dev/external-anchors-use-rel-noopener/">https://web.dev/external-anchors-use-rel-noopener/</a></p>
+<h2 id="9-adicione-a-header-x-frame-options-deny-ao-seu-front-se-possivel">9. Adicione a Header &quot;X-Frame-Options: DENY&quot; ao seu front se possivel</h2>
+<p>Isso evita que pessoas embedem seu serviço num iframe e pratiquem ataques como &quot;click highjack&quot; em que um site é posto num iframe, e uma div eh inserida por cima pra interceptar o comportamento.</p>
+<p>Referencia de leitura sobre o item 9:</p>
+<p><strong>Application Security: Clickjacking Attack</strong> <a href="https://www.imperva.com/learn/application-security/clickjacking/">https://www.imperva.com/learn/application-security/clickjacking/</a></p>
+<h2 id="10-essa-a-mais-simples-de-todas">10. Essa é a mais simples de todas</h2>
+<p>Procure manter as dependencias atualizadas e ficar esperto com as vulnerabilidades que sao reportadas em pacotes NPM.</p>
+
+  </div>
+</body>
+</html>

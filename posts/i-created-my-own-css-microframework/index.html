@@ -1,0 +1,274 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>I created my own Pure CSS Micro-Framework, a tale </title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta property="og:title" content="I created my own Pure CSS Micro-Framework, a tale ">
+  <meta property="og:type" content="article">
+  <meta property="og:description" content="A story about how i created my CSS micro-framework">
+  <meta property="og:site_name" content="Felippe Regazio">
+  <meta name="description" content="A story about how i created my CSS micro-framework">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Felippe Regazio">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="I created my own Pure CSS Micro-Framework, a tale ">
+  <meta name="twitter:description" content="A story about how i created my CSS micro-framework">
+  <meta name="twitter:image:src" content="https://blogcompleteurl.com/card.jpg">
+  <meta property="og:url" content="https://blogcompleteurl.com/posts/i-created-my-own-css-microframework">
+  <meta property="og:image" content="https://blogcompleteurl.com"/>
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>I created my own Pure CSS Micro-Framework, a tale </h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      5/2/2022, 5:15:21 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<h2>
+  But Why?
+</h2>
+
+<p>
+  Ok, thats a Funny story. But, first of all, here is the link in case you are curious about the 
+  result: <a href="https://felippe-regazio.github.io/plume-css/">https://felippe-regazio.github.io/plume-css/</a>. 
+  I called it Plume-CSS. You can install it using NPM, Yarn or you can just download the package and load the styles 
+  on your document, check the link to know more about. On this post i want to talk about how i started writing some 
+  basic styles and features and ended up with a micro-framework S:
+</p>
+
+<h2>
+  Plume-CSS?
+</h2>
+
+<p>
+  I started to build this micro-framework as a personal study. But things scaled very fast as i got more and more 
+  excited while coding it. The original idea was to create a Basic CSS file to use as a tiny framework when starting 
+  simple and small projects, or just as a fast start point to grow solid. Something like Skeleton and Milligram, or 
+  even small.
+</p>
+
+<p>
+  Just pure CSS and a basic set of directly styled elements, nothing more. No bunch of classes, no JS. The only 
+  difference is that Plume would be scoped, the styles should be applied under a main class. Plume should also style a 
+  larger set of elements, as progress, meter, checkboxes, radio, fieldsets, etc. And i quickly made it, but i didn't stop.
+</p>
+
+<p>
+  I styled a large set of native HTML elements (almost all of them) with a clean and basic style. The styles were applied 
+  under the class plume. In this same week i wrote the post CSS Custom Properties (vars) with SASS/SCSS, a practical 
+  architecture strategy exposing some ideas in SASS architecture for themeable projects.
+</p>
+
+<p>
+  So i thought "Hey, Plume should be themeable too. I should apply the ideas described on my last post on this study".
+</p>
+
+<h2>
+  Getting Themeable
+</h2>
+
+<p>
+  So i turned my tiny css framework into a themeable tiny framework. I mapped the main characteristics of a basic css 
+  design project and turned into a set off CSS Custom Properties on the :root. Then i used this custom properties to 
+  style the elements.
+</p>
+
+<p>
+  Also i used the custom properties to define the elements specific styles as Buttons, Checkboxes and Radio, and to 
+  create pseudo inputs as the Input Toggle, for example (Yes, pure CSS). I ended up with a set of 70+ CSS Custom Props 
+  working together to build the framework default appearance. If you are familiarized with CSS Custom Props, you know 
+  that represents a high customization power.
+</p>
+
+<p>
+  Then i thought "Its annoying to code the themes while creating them, we change things a lot and have to keeping 
+  overriding a lot of props on the code and checking if its all ok. Would be cool to have a Theme Editor with a live 
+  visual feedback.
+</p>
+
+<h2>
+  Theme Editor
+</h2>
+
+<p>
+  That was the hardest part. Basically its an UI-Kit (all styled elements putted on a same page - as a demo) and a side 
+  menu containing a Form.
+</p>
+
+<p>
+  Every input on the form controls a different CSS Custom Property. So, as you tune the properties using the Theme Editor,
+   the property is overrided and the page style is automatically updated, giving you an immediate visual feedback.
+</p>
+
+<p>
+  That was tricky because the binding between the input and the properties are not hard coded. The Theme Editor extracts 
+  the Plume-CSS from the page style, then extract all the CSS Custom Properties on the :root scope, converts them it into 
+  a JSON and use this Json to build a Form. You can also see the auto generated theme source code, or download it.
+</p>
+
+<p>
+  After all, i had to persist the Theme somewhere. As im using GitHub pages, i have no database, and Local Storage would 
+  be a bad idea (what if i want to show my theme to a friend?). The solution was to persist the theme in the URL:
+</p>
+
+<p>
+  For each theme changing event, the Theme Editor will save its state on the URL by converting the current form into a 
+  Query String (GET Style), compressing it using lz-string compression, and attaching it to the URL. When i load the page, 
+  i just invert process: i get the URL, decode it and use the result to fill the form. Now, Themes are stored in the URL.
+</p>
+
+<p>
+  You can check the Theme Editor by visiting the Plume link on the beginning of this article and clicking on the top left 
+  button. The bottom left button is a list of already-made Themes that you can load.
+</p>
+
+<h2>
+  The Prefixer
+</h2>
+
+<p>
+  At this point i was like "man, i need to stop tuning this thing, i already made a lot compared to my initial idea". 
+  But then a concern popped in my mind:
+</p>
+
+<p>
+  If i want this micro-framework to be fully-scoped, i cant just use a wrapper class. I'll need to prefix all the classes, 
+  data-properties and other selectors to really avoid collision. As the styles are applied on bare elements, all the 
+  classes and data-properties are just atomic utilities, its better to prefix it.
+</p>
+
+<p>
+  Also, the prefix must be configurable. In this cases, the most common approach is to prefix directly on the .scss files. 
+  With this in mind, i had 2 options:
+</p>
+
+<ol>
+  <li>
+    Define mixins and functions that output the selectors already prefixed
+  </li>
+
+  <li>
+    Define just a $prefix var and use along the code
+  </li>
+</ol>
+
+<p>
+  The two approaches was bad for me. First because introduces a new law on my code, modifying an important common 
+  way to do something. Thats bad. Second because would be a very, very, very ugly code.
+</p>
+
+<p>
+  So, the solution was: prefix at compile time. Im using gulp to put the peaces together on this project. So, i could 
+  use it to prefix the resultant CSS: with this in mind, i built a prefixer, and then turned my prefixer into a 
+  gulp-prefixer. The ideia was:
+</p>
+
+<p>
+  Code the sass normally, compile the entire code to css, and use the prefixer to parse the stream prefixing everything 
+  in compile time. Then finally save the output.
+</p>
+
+<p>
+  And it worked. This led me to create a plume.config.js as a simple manner to configure everything.
+</p>
+
+<h2>
+  A Configuration File
+</h2>
+
+<p>
+  So, i decided to not hard code anything. To do it, a simple plume.config.js was introduced, containing the 
+  following options:
+</p>
+
+<pre>
+  <code>
+  module.exports = {
+    superclass: 'plume',
+    outputStyle: 'compressed',
+    targetDirName: 'lib',
+    prefixer: {
+      prefix: 'pm-',
+      ignore: ['.plume'],
+    }
+  }    
+  </code>
+</pre>
+
+<p>
+  The superclass will be injected on the beginning of the sass files as a variable: $superclass. A sass mixin on 
+  the project will use this variable to scope the modules on the plume class, by default. So, this is the wrapper class.
+</p>
+
+<p>
+  The outputStyle is how the sass processor must output the files. The targetDirName is obvious: where everything will 
+  be saved. And then, the prefixer.
+</p>
+
+<p>
+  You choose your prefix, and pass selectors to the ignore list (there are advanced options as prefix only classes, 
+  or only data-attributes). You can also set prefix: false and nothing will be prefixed. The docs also consumes this 
+  file and the package.json while being builded to get dynamic information. Now just run a simple npm run build-all 
+  and the Micro-Framework and docs will be generated.
+</p>
+
+<h2>
+  We're done!
+</h2>
+
+<p>
+  Uow, that was a lot. One thing led to another, and as i was very excited while coding all the ideas, so i just 
+  kept coding. Most of this concepts and strategies are not new, but it was - in first of all - a study case. Was 
+  very cool to implement everything from the scratch.
+</p>
+
+<p>
+  The result was better then i ever could imagine, and i think it could be useful for the community, not only as a 
+  CSS Micro-Framework (we have a lot of them), but as a reference, start point, study example, etc.
+</p>
+
+<p>
+  At the end i got a light, highly themeabe, flexible, completely scoped CSS Micro-Framework. And, as i said, i called 
+  it Plume-CSS.
+</p>
+
+<p>
+  Plume is availabe under GPL License. The code lives on Here:
+</p>
+
+<a href="https://github.com/felippe-regazio/plume-css">https://github.com/felippe-regazio/plume-css</a>
+
+<p>
+  Installation and usage docs can be found here:
+</p>
+
+<a href="https://felippe-regazio.github.io/plume-css/">https://felippe-regazio.github.io/plume-css/</a>
+
+<p>
+  I also put an effort to documenting everything. You will find the docs on the GitHub Page. Technical and Development 
+  documentation on the Repository README.md. Feel free to use it as you want, or to contribute.
+</p>
+
+  </div>
+</body>
+</html>

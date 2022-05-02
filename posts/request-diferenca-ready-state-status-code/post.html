@@ -1,0 +1,52 @@
+<!--:::{
+  "post_title": "Requests: A Diferença entre Ready State e Status Code",
+  "post_description": "Por vezes os conceitos de ready state e status code são erroneamente misturados. Então bora separar o joio do trigo",
+  "post_created_at": "Mon May 02 2022 18:17:20 GMT-0300 (Brasilia Standard Time)"
+}:::-->
+
+<p>
+  Em se tratando de APIs algumas pessoas ainda podem confundir "Status Code" com "Ready State". Então vamo lá desembaraçar esse fio:
+</p>
+
+<p>
+  Toda request que retorna uma resposta (seja 200x, 300x, 500x, ...) é uma request bem sucedida do ponto de vista do browser. A request PER SI foi feita: ela saiu do seu browser, bateu no server e te devolveu algo, ainda que a resposta não seja a que vc esperava.
+</p>
+
+<p>
+  Essa verificação de "estado de requisição" é a Ready State. Isso não tem a ver se foi 200, 400, 500. Quando falamos de estados, estamos dizendo que a comunicação entre o browser e o server seguiu todos os seus estágios perfeitamente: algo foi enviado, e uma uma resposta foi dada.
+</p>
+
+<p>
+  Aqui vc pode ler um pouco sobre Ready States. Embora ela esteja atrelada a doc do XMLHttpRequest, a anatomia das Requests States são basicamente a mesma pra fetch e derivados (vc pode querer ver sobre preflight tbm): <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState">https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState</a>
+</p>
+
+<p>
+  Esse é o motivo de não devermos mandar Status Code 200 com { error: true } na body da resposta. Mas então se a Ready State define o estado de tráfego da requisição, pra que o Status Code?
+</p>
+
+<p>
+  O Status Code informa o posicionamento do Server referente a sua request. Ou seja: vc pediu algo, o server te entregou junto com um bilhete dizendo o que aconteceu lá.
+</p>
+
+<p>
+  Assim, se vc retorna um 200, vc não está dizendo que a REQUEST EM SI foi bem sucedida. O browser já sabe disso através do Ready State. Um 200 está dizendo que o server vai entregar o que ele deveria entregar.
+</p>
+
+<p>
+  Ou seja, o Status Code determina o STATUS da sua resposta, e não o ESTADO da requisição. Por isso vc deve retornar os status corretos para cada resposta.
+</p>
+
+<p>
+  Retornar 200 com { error: true } seria o mesmo que dizer: ta tudo bem, só que não.
+</p>
+
+<h2>
+  Concluindo
+</h2>
+
+<p>
+  Ready State: Determina se tudo correu bem na request referente a comunicação do browser com o server e o recebimento da resposta.
+</p>
+
+Status Code: Determina a natureza da resposta dada pelo server. É o motivo abreviado da resposta dada e deve ter peso semantico.
+

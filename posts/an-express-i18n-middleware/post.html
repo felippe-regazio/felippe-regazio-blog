@@ -1,0 +1,40 @@
+<!--:::{
+  "post_title": "Why i created my own Express i18n Middleware to internationalize REST APIs",
+  "post_description": "Why i created my own Express i18n Middleware to internationalize REST APIs and some thoughts about it",
+  "post_created_at": "Mon May 02 2022 18:03:16 GMT-0300 (Brasilia Standard Time)"
+}:::-->
+
+<p>
+  Yep, i created my ow Express i18n Middleware for REST APIs, and published it as a npm package. It has only 16kb, 
+  super easy usage, no-dependency and its well tested.
+</p>
+
+<p>
+  You can check the package on that link: <a href="https://www.npmjs.com/package/express-rest-i18n">https://www.npmjs.com/package/express-rest-i18n</a>
+</p>
+
+<p>
+  You can check the sources on that link: <a href="https://github.com/felippe-regazio/express-rest-i18n">https://github.com/felippe-regazio/express-rest-i18n</a>
+</p>
+
+<p>
+  If you need to internationalize your REST API, you can consider use it, its FOSS. I have searching for some 
+  alternatives to REST APIs Internationalization and all of them (related to Express) where intended to be very 
+  general solutions, bringing a lot of built-in features that i didnt want to, or i simply disliked the API. So, 
+  i decided to write my own, the smaller and simplest as possible.
+</p>
+
+<p>
+  That made me think about something: The trade offs of creating very general tools VS a set of small single-purpose 
+  tools. I think this concern is not new, of course. We've been trying to solve this question in some different levels 
+  of development with module patterns, components, tree-shaking, graphs etc. So, this should be a packagist level question 
+  also, right? When you decide to start something, maybe you should ask yourself about this (?).
+</p>
+
+<p>
+  See, im not telling that the other tools i saw are bad or criticizing the options available, or telling that i created 
+  a better one, is not that. I dont even consider myself a good programmer as the guys that created such awesome tools 
+  like those i saw out there. My concern was purely: the weight of some modules to solve such small tasks on my project. 
+  Purely a trade off. Now, im just questioning how good or how bad can be to write a general VS single-purpose solutions.
+</p>
+

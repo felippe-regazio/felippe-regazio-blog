@@ -68,7 +68,7 @@
 <p>Service workers nasceram com o intuito de melhorar performance de aplicações, payloads, heavy process etc. Então se vc quer performance estude service workers. Configura-los e cria-los é bem chatinho, o cache invalidation deles é tenso de configurar, mas vale cada esforço.</p>
 <p>Com um service worker configurado o usuario só requisita as paginas que ele nunca viu da sua aplicação uma única vez ao server, e depois apenas se vc atualizar. Isso alivia MUITO. Frameworks como Vue e React já trazem servicer workers out of the box, não tem motivo pra nao usar.</p>
 <h1 id="4-aprenda-a-utilizar-o-router-dos-frameworks-que-vc-ta-utilizando-vue-react-angular-etc">4. Aprenda a utilizar o Router dos frameworks que vc ta utilizando (Vue, React, Angular, etc)</h1>
-<p>Um router numa SPA não serve somente pra mudar de página, se fosse assim vc poderia usar um <a href=""> somente e pronto. O router na SPA serve pra vc RECICLAR a rota atual.</p>
+<p>Um router numa SPA não serve somente pra mudar de página, se fosse assim vc poderia usar um a[href] somente e pronto. O router na SPA serve pra vc RECICLAR a rota atual.</p>
 <p>Ou seja, vc vai mudar de pagina (ou de view, ou de parte da aplicação) re-aproveitando tudo o que puder da tela, a runtime do framework vai fazer isso pra vc, te fazendo ganhar performance.</p>
 <p>Por ex: vc tem duas rotas de textos: about e terms. Ambas tem layout com header, footer, sidebar e um miolo de texto variável. Se vc usar o router pra transicionar, a runtime só vai trocar o miolo, sem trazer todo o layout novamenet: performance!  </p>
 <h1 id="5-evite-fazer-polling">5. Evite fazer &quot;Polling&quot;</h1>

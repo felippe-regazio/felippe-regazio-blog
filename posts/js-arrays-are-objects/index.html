@@ -73,10 +73,10 @@ typeof {} // &#39;object&#39;
 <p>Essa estrutura é acoplada ao prototype array que tem getters, setters, metodos como pop, shift, map, etc... pra facilitar sua vida.</p>
 <p>Por exemplo, abaixo está a implementação dummy de um objeto ao estilo Array que tem somente o método push e a propriedade length.</p>
 <p>usamos o Object.create pra definir o prototype dele como quisermos e voilá, temos (grosseiramente falando) um &quot;&quot;&quot;Array&quot;&quot;&quot;:</p>
-<img src="img-1.jpeg" alt="Code image 1">
+<img src="img-1.jpeg" alt="Code image 1" style="max-width: 100%">
 
 <p>Ou, se vc quiser ser o espertão/tona e reaproveitar o prototype que o JS deixou pronto, vc cria um objeto e diz que o prototype dele é o mesmo de um Array, e voilá: Vc terá um Array. Juro ó:</p>
-<img src="img-2.jpeg" alt="Code image 2">
+<img src="img-2.jpeg" alt="Code image 2" style="max-width: 100%">
 
 <p>Então como saber se um Array é um Array mesmo em JS? Você usa o método:</p>
 <pre><code>Array.isArray([]); // true

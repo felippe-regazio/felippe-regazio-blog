@@ -23,7 +23,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   $prefix: pf;
 
   :root {
@@ -38,7 +38,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @import './config/_vars';
 
   .btn-example {
@@ -122,7 +122,7 @@
   </p>
 
   <pre>
-    <code>
+    <code class="language-scss">
     /**
       * Use this mixin to declare a set of CSS Custom Properties.
       * The variables in $css_variables will be properly prefixed.
@@ -163,7 +163,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   :root {
     --#{$prefix}-base-font-size: 65.5%;
     --#{$prefix}-font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -179,7 +179,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @include cssvars((
     base-font-size: 65.5%,
     font-family: #{"HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif},
@@ -195,7 +195,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   :root {
     --pf-base-font-size: 65.5%;
     --pf-font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -227,7 +227,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   /**
     * Retrieve a css variable value with prefix
     *
@@ -254,7 +254,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   :root {
     --#{$prefix}-button-height: 40px;
     --#{$prefix}-button-color: #ffffff;
@@ -275,7 +275,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @include cssvars((
     button-height: 40px,
     button-color: #ffffff,
@@ -296,7 +296,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   :root {
     --pm-button-height: 40px;
     --pm-button-color: #ffffff;
@@ -328,7 +328,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @mixin cssvar ($name, $value: '', $prefix: pm) {
     --#{$prefix}-#{$name}: #{$value};
   }  
@@ -340,7 +340,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @include cssvars((...));
 
   .btn-primary {
@@ -361,7 +361,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @include cssvars((...));
 
   .btn-primary {
@@ -382,7 +382,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   :root { ...vars }
 
   .btn-primary {
@@ -440,7 +440,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   styles
     config
         _helpers.scss
@@ -467,7 +467,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @import './config/_helpers';
   @import './config/_config';
   
@@ -485,7 +485,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @include cssvars((
       btn-primary-text-color: #ffffff,
       btn-secondary-text-color: #ffffff,
@@ -565,7 +565,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   // setter
   @include cssvars((...));
   

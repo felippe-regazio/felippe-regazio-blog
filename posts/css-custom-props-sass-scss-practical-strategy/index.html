@@ -29,6 +29,7 @@
   <link rel="icon" href="../../favicon.png">
   <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
   <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   
   <style>
     :root {
@@ -73,7 +74,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   $prefix: pf;
 
   :root {
@@ -88,7 +89,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @import './config/_vars';
 
   .btn-example {
@@ -172,7 +173,7 @@
   </p>
 
   <pre>
-    <code>
+    <code class="language-scss">
     /**
       * Use this mixin to declare a set of CSS Custom Properties.
       * The variables in $css_variables will be properly prefixed.
@@ -213,7 +214,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   :root {
     --#{$prefix}-base-font-size: 65.5%;
     --#{$prefix}-font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -229,7 +230,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @include cssvars((
     base-font-size: 65.5%,
     font-family: #{"HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif},
@@ -245,7 +246,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   :root {
     --pf-base-font-size: 65.5%;
     --pf-font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -277,7 +278,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   /**
     * Retrieve a css variable value with prefix
     *
@@ -304,7 +305,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   :root {
     --#{$prefix}-button-height: 40px;
     --#{$prefix}-button-color: #ffffff;
@@ -325,7 +326,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @include cssvars((
     button-height: 40px,
     button-color: #ffffff,
@@ -346,7 +347,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   :root {
     --pm-button-height: 40px;
     --pm-button-color: #ffffff;
@@ -378,7 +379,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @mixin cssvar ($name, $value: '', $prefix: pm) {
     --#{$prefix}-#{$name}: #{$value};
   }  
@@ -390,7 +391,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @include cssvars((...));
 
   .btn-primary {
@@ -411,7 +412,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @include cssvars((...));
 
   .btn-primary {
@@ -432,7 +433,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   :root { ...vars }
 
   .btn-primary {
@@ -490,7 +491,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   styles
     config
         _helpers.scss
@@ -517,7 +518,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @import './config/_helpers';
   @import './config/_config';
   
@@ -535,7 +536,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   @include cssvars((
       btn-primary-text-color: #ffffff,
       btn-secondary-text-color: #ffffff,
@@ -615,7 +616,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   // setter
   @include cssvars((...));
   
@@ -644,5 +645,9 @@
 </p>
 
   </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
 </body>
 </html>

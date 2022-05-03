@@ -29,6 +29,7 @@
   <link rel="icon" href="../../favicon.png">
   <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
   <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   
   <style>
     :root {
@@ -92,7 +93,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-scss">
   .element {
     appearance: none;
     -moz-appearance: none;
@@ -120,7 +121,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-html">
   [type=radio],
   [type=checkbox] {
       -webkit-appearance: none;
@@ -136,7 +137,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-html">
   [type=radio],
   [type=checkbox] {
     width: 20px;
@@ -156,7 +157,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-html">
   [type=radio]:checked::before,
   [type=checkbox]:checked::before {
     content: "";
@@ -175,7 +176,7 @@
 </p>
 
 <pre>
-  <code>
+  <code class="language-html">
   [type=radio],
   [type=radio]:checked::before{
     border-radius: 100%;
@@ -184,5 +185,9 @@
 </pre>
 
   </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
 </body>
 </html>

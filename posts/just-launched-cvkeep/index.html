@@ -65,20 +65,20 @@
 <p>The project was completely done by me, end to end. At the time I wanted to study some technologies and create a SAAS from scratch.</p>
 <p>Also worth to mention: <strong>This project is a FOSS - Free and Open Source Software</strong>. You can use for anything your want, download the sources, put your own service up (even for commercial use) - since you don&#39;t use the same brand, you do not owe me anything.</p>
 <p>In the next lines i will talk about technical aspects of the platform. That said, here are some useful links:</p>
-<p>Official documentation: <a href="https://cv-keep.github.io/cvkeep-docs/">https://cv-keep.github.io/cvkeep-docs/</a></p>
+<p>Official documentation: <a href="https://cv-keep.github.io/cvkeep-docs/">Cv Keep Docs</a></p>
 <p>GitHub with all sources + docs: <a href="https://github.com/Cv-Keep">https://github.com/Cv-Keep</a></p>
 <h2 id="stack">Stack</h2>
 <p>The project was done using a MEVN Stack: Mongo, Express, Vue and Node. It uses Vue-CLI 3 for Front End and no framework for styling.</p>
 <p>Actually, the styling framework for this project was handcrafted and gave birth to a CSS Microframework made by me, and a Dev post here on DEV about SCSS architecture:</p>
-<p>CSS custom properties with SASS/SCSS: A practical architecture strategy: <a href="https://dev.to/felipperegazio/css-custom-properties-vars-with-sass-scss-a-practical-architecture-strategy-1m88">https://dev.to/felipperegazio/css-custom-properties-vars-with-sass-scss-a-practical-architecture-strategy-1m88</a></p>
-<p>Plume CSS Microframework: <a href="https://felippe-regazio.github.io/plume-css/">https://felippe-regazio.github.io/plume-css/</a></p>
+<p>CSS custom properties with SASS/SCSS: A practical architecture strategy: <a href="https://dev.to/felipperegazio/css-custom-properties-vars-with-sass-scss-a-practical-architecture-strategy-1m88">A practical architecture strategy for big CSS/SCSS projects</a></p>
+<p>Plume CSS Microframework: <a href="https://felippe-regazio.github.io/plume-css/">Plume-CSS Page</a></p>
 <h2 id="architecture">Architecture</h2>
 <p>The front talks to an independent RESTFul API, and both the Front and the API are modularized.</p>
 <p>Still on the front, the project is a SPA/PWA with a service worker that delivers the app in a SUPER functional and light way, easy to convert to a mobile app.</p>
 <h2 id="i18n">i18n</h2>
 <p>The project is already internationalized between <code>pt-br</code> and <code>en</code>. It is very simple to translate, there is a section in the documentation dedicated to explaining how to add new languages.</p>
 <p>The internationalization is independent between the Back End and Front End. In the Front I used Vue-i18n. In the Back I built an i18n lib dedicated to the project, called Express-REST-i18n, so that the API already delivers the content in the language that the front asks for based on Language headers, avoiding saving Back End matter in the front.</p>
-<p>Here is the Express Rest i18n Middleware: <a href="https://github.com/felippe-regazio/express-rest-i18n">https://github.com/felippe-regazio/express-rest-i18n</a></p>
+<p>Here is the Express Rest i18n Middleware: <a href="https://github.com/felippe-regazio/express-rest-i18n">GitHub: express-rest-i18n</a></p>
 <h2 id="host">Host</h2>
 <p>This project was optimized to the maximum i could do, so the cost is ridiculous. Today I run my instance with this infra:</p>
 <p>A 7 dollars Heroku App A Mongo Atlas (Free Tier) A CloudFlare Free Tier</p>

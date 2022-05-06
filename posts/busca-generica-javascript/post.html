@@ -1,0 +1,429 @@
+<!--:::{
+  "post_title": "Criando uma funcionalidade de Busca Genérica com JavaScript",
+  "post_description": "Vamos ver como criar uma funcionalidade de busca utilizando JavaScript",
+  "post_created_at": "Thu May 05 2022 22:08:42 GMT-0300 (Brasilia Standard Time)"
+}:::-->
+
+<p>
+  Vamos imaginar que você tem uma lista de tags no seu sistema:
+</p>
+
+<pre>
+  <code class="language-javascript">
+  const tags = [
+    "Produto comum",
+    "Produto diferentão",
+    "Produto de dia das mães",
+    "Produtos para caçar fantasmas",
+    "Produtos ilícitos",
+    "Frios",
+    "Aves",
+    "Congelados",
+    "Biscoitos",
+    "Temperos",
+    "Hortaliças",
+    "Carne Bovina",
+    "Carne suína",
+    "Bebidas Alcoolicas",
+    "Refrigerantes",
+    "Padaria",
+    "Alimentos (cereais e grãos)",
+    "Congelados e frios",
+    "Hortifruti",
+    "Produtos de limpeza",
+    "Higiene pessoal",
+    "Papelaria"
+  ];
+  </code>
+</pre>
+
+<p>
+  A lsita está grande o bastante pra impor custo cognitivo ao tagear algo nela, você tem que ficar "procurando" visualmente,
+  porém é pequena demais pra merecer paginação from backend. Existem diversas formas de solucionar esse problema de range, 
+  mas vamos imaginar essa situação em específico:
+</p>
+
+<p>
+  É custoso para o usuário ler tag por tag pra decidir se marca ou não alguma seja lá o que for que o usuário vai fazer com isso.
+  É necessário então colocar um pequeno input de busca/filtro no Front, esse input deve filtrar os itens que se aproximem
+  dos termos digitados pelo usuário, os critérios são:
+</p>
+
+<ul>
+  <li>Quando não houver criterio de busca, retorne todas as tags</li>
+  <li>O usuário pode digitar mais de uma palavra como critério de busca</li>
+  <li>A busca pode retornar nenhum, um ou mais itens</li>
+  <li>A busca leva em consideração todos os termos buscados</li>
+  <li>Um item deve conter ao menos um termo buscado para ser considerado um resultado</li>
+</ul>
+
+<p>
+  Ou seja, se eu digitasse <mark>"comum diferentão"</mark> na minha busca, ela retornaria os itens tags[0] e tags[1],
+  mais especificamente: ela retornaria um Array filtrado igual este:
+</p>
+
+<pre>
+  <code class="language-javascript">
+  // buscou em tags por "comum diferentão", o retorno:
+
+  [
+    "Produto comum",
+    "Produto diferentão",
+  ]    
+  </code>
+</pre>
+
+<p>
+  Então como transformar isso em código?
+</p>
+
+<h2>Definindo o que é termo de busca</h2>
+
+<p>
+  Primeiro precisamos definir o que é considerado um <mark>termo</mark> para nossa busca. No nosso caso,
+  se olharmos os criterios o usuário pode digitar uma ou mais palavras, e a tag precisa conter no mínimo
+  uma dessas palavras pra ser considerada um resultado. Ou seja: Nosso termo é <mark>Cada palavra de tud que foi buscado</mark>
+</p>
+
+<p>
+  Caso o usuário busque por "Congelados e Hortaliças", nosso critério de busca deve ser as palavras que compõem
+  a frase digita, porem excluindo pronomes obliquos: me, mim, ti, lhe, os, si, vós, etc... Então já temos nosso critério:
+</p>
+
+<blockquote>
+  Um termo de busca deve conter mais do que 3 caracteres (para evitarmos pronomes obliquos ou termos pequenos e genericos demais)
+  e deve ser uma palavra individual.
+</blockquote>
+
+<p>
+  Assim, para a busca "Congelados e Hortaliças" nossos termos de busca serão:
+</p>
+
+<pre>
+  <code class="language-javascript">
+  [
+    "Congelados",
+    "Hortaliças"
+  ]
+  </code>
+</pre>
+
+<p>
+  Mas temos outra coisa a se considerar: existem diversas formas de se escrever <mark>Congelados e Hortaliças</mark>:
+</p>
+
+<p>
+  congelados e hortalicas, congelados e horta, CONGELADOS e HOrtaLiçAs, etc
+</p>
+
+<p>
+  Então precismaos "normalizar" cada termo de busca de forma que eles sejam sempre minúsculos e não tenham nenhum caractere 
+  especial ou acento, assim temos um novo critério do que é um termo de busca para nossa feature: 
+</p>
+
+<blockquote>
+  Um termo de busca deve conter mais do que 3 caracteres (para evitarmos pronomes obliquos ou termos pequenos e genericos demais)
+  e deve ser uma palavra individual, deve ser normalizada para lowercase (em minúsculo) e não deve conter nenhum caractere especial
+  ou acento.
+</blockquote>
+
+<p>
+  Assim, para a busca "Congelados e Hortaliças" nossos termos de busca agora serão:
+</p>
+
+<pre>
+  <code class="language-javascript">
+  [
+    "congelados",
+    "hortalicas"
+  ]
+  </code>
+</pre>
+
+<p>
+  Agora que temos nosso termo de busca, precisamos definir também que: <mark>A mesma normalização sofrida pelos termos de busca deve
+    ser aplicada nos termos buscados</mark>. Isso garante que teremos normalizado todas as palavras de forma que as comparações sejam
+    mais assertivas.
+</p>
+
+<h2>Implementação</h2>
+
+<p>
+  Vamos então criar o código de-facto que faça a busca/filtro de acordo com todos os critérios acima. Para tal continuemos
+  a imaginar que o usuário buscou por <mark>Congelados e Hortaliças</mark>
+</p>
+
+<p>
+  Para nossa implementação vamos fazer o seguinte: uma função chamada <mark>searchOnArray</mark> que deve receber
+  a palavra-frase buscada e retornar os itens filtrados que foram encontrados para tal palavra-frase em nosso array. 
+  Nossa função terá então a seguinte assinatura:
+</p>
+
+<pre>
+  <code>
+  function searchOnArray(phrase: string, list: string[]): array
+  </code>
+</pre>
+
+<p>
+  Embora pareça, o código acima não é TS, é apenas uma assinatura comum de função. Para nossos exemplos vamos usar
+  JS puro. Nesse caso vemos que nossa função deve receber a frase buscada, receber um array de strings e retornar esse
+  array filtrado de acordo com a frase e nossos critérios de busca. Então de início teremos:
+</p>
+
+<pre>
+  <code class="language-javascript">
+  /*
+    Veja o array de tags presentes no primeiro exemplo desse 
+    post para evitar-mos reescreve-las aqui
+  */
+  const tags = [...];
+
+  /*
+    Imagine que foi isso que o usuario digitou no input
+    de busca e vc coletou para uma constante no contexto atual
+  */
+  const phrase = 'Congelados e Hortaliças';
+
+  /*
+    Chamamos nossa função passando o que foi buscado e nossa
+    lista de tags, e esperaremos um array de volta
+  */
+  const results = searchOnArray(phrase, list);
+  </code>
+</pre>
+
+<p>
+  Ok, temos a parte de input (entrada de dados), agora precisamos fazer nosso output (saída). Ou seja:
+  vamos escrever a função que executa o filtro. Esse é o código completo, dê uma lida sem panico, ele
+  será explicado tim tim por tim tim aqui:
+</p>
+
+<pre>
+  <code class="language-javascript">
+  function searchOnArray(phrase, list) {
+    const hasPhrase = phrase && typeof phrase === 'string';
+    const hasList = Array.isArray(list) && list.length;
+
+    if (!hasPhrase || !hasList) {
+      return [];
+    }
+
+    const terms = phrase.split(' ')
+      .filter(term => term.length > 3)
+      .map(term => normalize(term));
+
+    const normalizedList = list
+      .filter(term => term.length > 3)
+      .map(term => normalize(term));
+
+    if (!terms.length || !normalizedList.length) {
+      return [];
+    }
+
+    return normalizedList.filter(item => {
+      return terms.some(term => item.includes(term));
+    });
+  }
+
+  function createTerms(words) {
+    return arr
+      .filter(word => word.length > 3)
+      .map(word => normalize(word));
+  }
+
+  function normalize(str) {
+    return str
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+  </code>
+</pre>
+
+<h2>Utilizando a função searchOnArray</h2>
+
+<p>
+  Utilizar nossa função é bem simples, você passa a frase a ser buscada e os itens para filtro.
+</p>
+
+<pre>
+  <code class="language-javascript">
+  const tags = [
+    "Produto comum",
+    "Produto diferentão",
+    "Produto de dia das mães",
+    "Produtos para caçar fantasmas",
+    "Produtos ilícitos",
+    "Frios",
+    "Aves",
+    "Congelados",
+    "Biscoitos",
+    "Temperos",
+    "Hortaliças",
+    "Carne Bovina",
+    "Carne suína",
+    "Bebidas Alcoolicas",
+    "Refrigerantes",
+    "Padaria",
+    "Alimentos (cereais e grãos)",
+    "Congelados e frios",
+    "Hortifruti",
+    "Produtos de limpeza",
+    "Higiene pessoal",
+    "Papelaria"
+  ];
+
+  const filteredTags = searchOnArray('Congelados e Hortaliças', tags);
+  // filteredTags: (3) ['congelados', 'hortalicas', 'congelados e frios']
+  </code>
+</pre>
+
+<h1>Entendendo a função searchOnArray</h1>
+
+<p>
+  Vamos entender nossa função pedacinho por pedacinho. Para fazer isso, começaremos dos helpers.
+  Começaremos com a <mark>normalizeStr</mark>:
+</p>
+
+<pre>
+  <code class="language-javascript">
+  /*
+    Esta função utiliza a prototype chain para chamar
+    diversos metodos para um string (str). Primeiro passamos
+    a string para lower case (minúscula) com o metodo toLowerCase(),
+    depois normalizamos a string para remover acentos e caracteres
+    compostos, depois removemos diacriticos via regex limitando
+    o range de caracteres que a string deve utilizar. Você encontra
+    uma explicação detalhada desse método neste
+    <a href="https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript" target="_blank">LINK</a>
+  */
+  function normalize(str) {
+    return str
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }    
+  </code>
+</pre>
+
+<p>
+  Agora vamos ver o que faz a <mark>createTerms</mark>:
+</p>
+
+<pre>
+  <code class="language-javascript">
+  /*
+    Esta função recebe um array de strings e filtra
+    esse array mantendo apenas palavras maiores que
+    3 caracteres (.filter), depois mapeia os itens 
+    resultantes normalizando cada um através da nossa
+    função <mark>normalize</mark>
+  */
+  function createTerms(words) {
+    return arr
+      .filter(word => word.length > 3)
+      .map(word => normalize(word));
+  }    
+  </code>
+</pre>
+
+<p>E por fim, a mágica:</p>
+
+<pre>
+  <code class="language-javascript">
+  function searchOnArray(phrase, list) {
+    /*
+      Inicialmente verificamos se a frase passada é valida,
+      depois também verificamos se a lista para filtro é
+      realmente um array e se tem algo nela. Caso alguma
+      dessas condições não seja verdadeira, é inviável fazer
+      a busca, então já retornamos um []. O nome dessa tecnica
+      é "early return"
+    */
+    const hasPhrase = phrase && typeof phrase === 'string';
+    const hasList = Array.isArray(list) && list.length;
+
+    if (!hasPhrase || !hasList) {
+      return [];
+    }
+
+    /*
+      Agora nós criamos nossa lista de termos que utilizaremos
+      pra filtrar a lista e itens. Primeiro fazemos um split
+      em nossa string passando ' ' (espaço) como delimitador,
+      assim convertemos a string num array de palavras. Depois
+      filtramos este array mantendo apenas os itens dele que
+      tenham mais do que 3 caracteres, e finalmente mapeamos
+      cada item do nosso array de palavras normalizando a string
+      com nossa função normalize
+    */
+    const terms = phrase.split(' ')
+      .filter(term => term.length > 3)
+      .map(term => normalize(term));
+
+    /*
+     A mesma coisa que fizemos acima vamos fazer com cada item
+     da lista de itens a ser filtrada. É importante dizer que esses
+     métodos não modificam os dados originais, ele retornam novos
+     dados, assim estamos seguindo um princípio de imutabilidade.
+     Após filtrar e normalizar nossa lista de itens, temos tanto
+     terms quato normalizedList prontos para serem comparados e
+     filtrados
+    */
+    const normalizedList = list
+      .filter(term => term.length > 3)
+      .map(term => normalize(term));
+
+    /*
+      Fazemos então uma nova verificação, precisamos saber se os
+      termos que geramos retornou alguma coisa no array após serem
+      tratados, e se normalizedList também retornou algo. Se algum
+      desses estiver vazio, a busca é inviável e retornamos um []
+    */
+    if (!terms.length || !normalizedList.length) {
+      return [];
+    }
+
+    /*
+      Aqui é onde a mágica acontece, vamos primeiro filtrar os
+      itens em normalizedItens. Se vc notar, criamos uma função
+      para fazer esse filtro, dentro dessa função está nosso
+      critério de filtro:
+    */
+    return normalizedList.filter(item => {
+      /*
+        Aqui é o critério do nosso filtro, se essa condição retornar true
+        o item permanece no array resultanto, do contrario ele é removido.
+        A condição é a seguinte: Ao menos um item em terms (.some) deve
+        ser true para a condição item.includes(term), essa segunda condição
+        verifica se o term em questão existe na string sendo comparada.
+        Confuso né? Em outras palavras, essa linha passa termo por termo em
+        terms verificando se o term (item atual) existe dentro do item de
+        normalizedList, se ao menos um termo existir, temos um match.
+      return terms.some(term => item.includes(term));
+    });
+  }
+  </code>
+</pre>
+
+<h2>Algoritmo final</h2>
+
+<p>Para cumprir todos os nossos criterios, temos então</p>
+
+<pre>
+  <code class="language-javascript">
+  cosnt tags = [ /* imagine  a lista de tags aqui pra economizar espaço visual */ ];
+  const phrase = 'Congelados e Hortaliças';
+
+  /*
+    Funcão simples que verifica a frase passada e uma lista de tags,
+    caso a frase exista filtramos o array de tags, do contrário retornamos 
+    todas as tags pois um dos critérios é que uma busca vazia retornaria 
+    todos os itens. 
+  */
+  function filterTags(phrase, tags) {  
+    return phrase ? searchOnArray(phrase, tags) : tags;
+  }
+  </code>
+</pre>

@@ -1,0 +1,227 @@
+<!--:::{
+  "post_title": "O Que é WebAssembly e como isso pode mudar o ecossistema de desenvolvimento Front End e Back End nos próximos anos",
+  "post_description": "Este post permeará alguns assuntos conceituais a respeito de WASM",
+  "post_created_at": "Tue May 17 2022 13:58:04 GMT-0300 (Brasilia Standard Time)"
+}:::-->
+
+<p>
+  Web Assembly é uma linguagem Low Level voltada para o ecossistema Web. Web Assembly difere de JS em basicamente todos os aspectos e pode mudar completamente o ecossistema web e a maneira que entendendo performance e escalabilidade no front e no backend.
+</p>
+
+<p>
+  Existe muita info truncada e mal entendimento de WASM por aí. Algumas das premissas que ficarão implícitas na thread:
+
+</p>
+
+<ul>
+  <li>WASM não é conteinerização</li>
+  <li>WASM não é inimigo ou substituto pra JS</li>
+  <li>WASM não é human-readable a princípio</li>
+  <li>WASM não é a mesma coisa que uma VM/JVM</li>
+</ul>
+
+<p>
+  Para entender WASM precisamos antes entender algumas coisas
+</p>
+
+<h2>Linguagens Interpretadas</h2>
+
+<p>
+  JS é uma linguagem Top Level, human-readable e Interpretada. Isso significa que vc escreve JS de maneira humana e amigável e o MESMO código que vc escreve será lido pela máquina que o interpretará, converterá em outros formatos, otimizará e o executará. Quem faz isso é a Runtime.
+</p>
+
+<p>
+  Por conta disso, JS sofreu muito com falta de padronização: browsers implementavam diferentes engines pra js, ou seja: diferentes maneiras de interpretar um mesmo código. Com o tempo isso foi melhorando, veio V8, Babel, WebPack e melhorias na governança da linguagem (TC39).
+</p>
+
+<p>
+  Essa natureza aberta do JS casa bem com a natureza web: é fácil de implementar, leve de reproduzir no browser, vc pode até mesmo mudar um código on the fly e rodar (interpretar) novamente sem reload de página. Porém isso tudo é feito para rodar pequenos e médios chunks de código
+</p>
+
+<p>
+  Porém conforme a web avança com apps cada vez mais complexos, necessidade de performance, smart optimization e times cada vez maiores, essa natureza do JS começa a ser um problema para alguns produtos e é custoso ter que "corrigir" e manter padrão e/ou otimização pura na unha
+</p>
+
+<p>
+  Aqui estão os passos executados quando um código JS é interpretado. Isso tem custo de processamento, e por vezes leva a diferentes comportamentos a depender do ambiente:
+</p>
+
+<img src="./v8steps.jpeg" alt="V8 Javascript Interpretation Steps">
+
+<p>
+  Viu que existe um ciclo que se forma ali? Aqui vive o  seu código rs, basicamente a runtime de fato interpretando as coisas. Esses passos são repetidos em todas as maquinas. Se vc quiser saber sobre esse assunto a fundo, aqui está um 
+  <a href="https://bashiralhanshali.medium.com/javascript-v8-engine-9682c216d89f">ótimo link pra isso</a>
+</p>
+
+<p>
+  Logo não é possível garantir a integridade de um código JS dadas as diferenças de runtime e o problema de backward compatibility (dont break the web). A natureza interpretada, single threaded e weak typed em JS leva a incertezas e uma performance meh...
+  Algns aspectos dessa natureza do JS foram explanados no post 
+  <a href="/posts/what-brendan-eich-said-about-js-replacement">O que Brendan Eich disse sobre a hipotese imaginária de substituir o JS por outra linguagem no Front, uma Aula gratuita via Twitter</a>
+</p>
+
+<p>
+  Essa natureza do JS é irrelevante pra algumas aplicações, mas quando começamos a falar de uma web mais complexa, isso começa a ser um verdadeiro empecilho. No backend a coisa é ainda mais complicada: como o ecossistema pode alterar o output (interpretação) em langs interpretadas 
+  o backend faz um custoso snapshot de todo o ecossistema que vai rodar o código. Tem diveeeeersos outros motivos pra fazer isso, mas integridade de interpretação é com certeza um deles. É aí que entra o Docker e os containers: integridade e padronização.
+</p>
+
+<h2>Linguagens Compiladas</h2>
+
+<p>
+  Agora vamos pensar em uma linguagem Low Level e compilada: C
+</p>
+
+<p>
+  Vc escreve seu código e o compila, isso significa que o código que vc escreveu não é o mesmo código que será executado. Ele passará antes por verificações, otimizações e transformações que gerarão um intermediário
+</p>
+
+<p>
+  Seu código será transformado num código assembly (código de montagem) que é bem low level e um tanto inóspito para seres humanos normais rs. O assembly code é altamente padronizado e dele derivará o Object Code -> Byte Code que é de fato interpretado pela máquina:
+</p>
+
+<img src="./csteps.png" alt="C Compiler Steps">
+
+<p>
+  Para garantir a alta padronização do processo de compiling, vc tem alguns extras
+</p>
+
+<ul>
+  <li>
+    Code Safety: A linguagem geralmente é strong typed e tem runtime type checking. Resumindo: tem tipos
+  </li>
+  
+  <li>
+    Targets: Vc precisa especificar para onde vc ta compilando, ou seja: onde isso vai rodar?
+  </li>
+</ul>
+
+<p>
+  Após compilado um código é um pacote pronto para ser executado. Diferente das linguagens interpretadas, todo processo de otimização e checagem acontece uma vez e o resultado é empacotado, não há repetição, apenas execução direta, ou seja: performance e confiabilidade.
+</p>
+
+<p>
+  Isso trás um ecossistema extremamente confiável: o código é extremamente robusto, padronizado e a saída extremamente controlada e parametrizada. Isso garante muita confiabilidade, x código gerou x executável que vai rodar em x ambiente sempre, não tem firula, não tem crise.
+</p>
+
+<p>
+  Aí vc deve estar pensando: então porque não compilamos coisas pra web invés de usar JS? R: Porque é impossível. Lembra que compilar necessita um target? (quem vai rodar o código?). Um app web roda numa infinidade de devices (pc, celular, relogio, geladeira, etc)
+</p>
+
+<p>
+  Vc teria que compilar uma versão do seu código para cada target (device) que diferisse em arquitetura de processamento. É simplesmente inviável. Mas se vc pensou assim, vc bateu na trave. Lembra do código Assembly?
+</p>
+
+<p>
+  O Assembly é um meio termo: não é nem top level, e não tá 100% compilado ainda. Volta na imagem do C lá e veja que ele está no middle-step de compilação. Ele também é altamente confiável e padronizavel. Daí vc pensa: Ótimo, vamos faze o browser entender assembly!
+</p>
+
+<p>
+  Tá esquentando! O problema é que o assembly geralmente é especifico (geralmente para desktop environments) e roda o compilado diretamente num server ou client, não dá pra rodar isso dentro do browser.
+</p>
+
+<p>
+  Mesmo se vc fizesse umas gambiarras, a maneira de um Assembly Code ser montado não seria reconhecida pelo browser. Mesmo se vc injetasse um assembler no browser, a maneira dele acessar a memória e o garbage collecting introduziriam violação de acesso (acesso a memoria indevida)
+</p>
+
+<p>
+  É AÍ QUE ENTRA O WASM!!!
+</p>
+
+<h2>O WASM</h2>
+
+<p>
+  O WASM é um assembly code criado para rodar dentro de um browser (mais especificamente dentro de um host wasm que pode até estar no backend, mas isso é outro assunto). É uma espécie de código intermediário low level pré-compilado pronto pra ser executado
+</p>
+
+<p>
+  Ou seja, no middle-step de compilação, ao invés de montar o código para Assembly comum, vc diz ao compilador para montar um código WASM (daí o nome: Web ASSEMBLY). Vc está dizendo: "hey, isso nao vai rodar num desk comum, vai rodar na web (wasm-host), otimiza e deixa pronto aí".
+</p>
+
+<p>
+  O correto seria dizer que seu código compilado para WASM vai rodar num Wasm-Host, ou: uma pequena runtime feita para executar WASM, e essa runtime é distribuída junto com os browsers, os benefícios são tanto que já se fala em distribuir essa runtime no backend
+</p>
+
+<p>
+  Isso impactaria o conceito de serverless e conteinerização como mostrado no video abaixo.
+</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/vqBtoPJoQOE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<p>
+  O wasm-host (runtime) tbm resolve  problema dos targets pq o seu target de compilação é sempre o Wasm-Host (vc compila pra rodar dentro de um host wasm), novamente daí o nome: WEB-Assembly rs. O Wasm-Host está embutido no browser e vai rodar igual em todo device :D
+</p>
+
+<p>
+  Quais os benefícios?
+</p>
+
+<ul>
+  <li>
+    Vc pode usar qualquer linguagem que saiba compilar pra Wasm, ou seja: vc colhe benefícios de linguagens robustas
+    e tem mais liberdade. Hoje em dia vc pode compilar pra wasm usando C, Rust, Go, Python, etc...
+  </li>
+
+  <li>
+    Como o Assemlby Code está a 1 step da machine code, vc tem "near native performance" com WASM
+  </li>
+
+  <li>
+    Padronização: Muito esforço está sendo colocado na documentação e padronização WASM, fora que utilizar linguagens compiladas mais robustas e rígidas já trás ótimos benefícios at all
+  </li>
+
+  <li>
+    Performance: como um Assembly Code é altamente otimizado, vc não tem todos aqueles steps de interpretação, o código ta pronto pra rodar e todas as otimização estão cravadas ali, o acesso a memória tbm é diferente, ou seja: FUCKING MAIS RAPIDO E PERFORMATICO
+  </li>
+</ul>
+
+<p>
+  Logo a web tambem ficará mais rica, será possível dispender mais processamento e mais otimização para games, processamento gráfico em geral, VPNs etc. Abaixo alguns produtos que vc provavelmente utiliza que rodam em Wasm
+</p>
+
+<ul>
+  <li>Figma</li>
+  <li>Miro</li>
+  <li>Google Earth</li>
+  <li>Shopify</li>
+</ul>
+
+<p>
+  Isso nao significa que Wasm substituirá JS em apps comuns. Wasm não tem acesso direto ao DOM, logo vc precisa de workers intermediários pra fazer a comunicação entre o Front e o Wasm rodando em background, logo JS e WASM são COMPLEMENTARES e não concorrentes.
+</p>
+
+<p>
+  Vc pode inclusive portar codigo antigo de outras linguagens pra rodar dentro do browser. Por exemplo, veja esse port do 
+  <a href="https://github.com/ffmpegwasm/ffmpeg.wasm">ffmpeg pra rodar client side no browser via WASM</a>.
+</p>
+
+<p>
+  Tudo isso está nascendo agora, vem sendo amplamento discutido e é tudo muito experimental, mas já dá pra brincar bastante. Por incrivel que pareça isso foi uma breve introdução, o assunto é denso e minuscioso. Vamos ver o que o futuro nos reserva...
+</p>
+
+<p>
+  Caso vc esteja se perguntando sobre a padronização e distribuição de uma runtime standard para o Wasm, vc pode ler sobre o WASI, que é justamente isso. O Wasi está sendo criado e documentado com o apoio de big techs e da comunidade,
+  aqui está a <a href="https://wasi.dev">DOC do WASI</a>
+</p>
+
+<p>
+  Obs: Wasm é BEM DIFERENTE de uma JVM. A JVM interpreta "Java Bytecode" que é transformado em assembly de acordo com o env e depois em Machine Code
+</p>
+
+<p>
+  Wasm não tem nada disso, ele É assembly per si. É mais low level, simples e performático.
+</p>
+
+<p>
+  JVM:  Java Byte Code (.class) -> Checking -> Assembly -> Machine Code
+</p>
+
+<p>
+  Wasm: Wasm Code (assembly) -> Machine Code
+</p>
+
+<p>
+  Todos os outros steps rodam em "compiling time" no Wasm.
+</p>
+
+<p>
+  Você pode saber mais sobre isso <a href="https://stackoverflow.com/questions/58131892/why-the-jvm-cannot-be-used-in-place-of-webassembly#:~:text=WebAssembly%20was%20designed%20with%20the,for%20a%20single%20language%2C%20Java.">Aqui</a>
+</p>

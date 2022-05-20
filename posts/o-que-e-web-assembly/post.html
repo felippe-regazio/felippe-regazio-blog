@@ -46,7 +46,7 @@
   Aqui estão os passos executados quando um código JS é interpretado. Isso tem custo de processamento, e por vezes leva a diferentes comportamentos a depender do ambiente:
 </p>
 
-<img src="./v8steps.jpeg" alt="V8 Javascript Interpretation Steps">
+<img style="max-width: 100%" src="./v8steps.jpeg" alt="V8 Javascript Interpretation Steps">
 
 <p>
   Viu que existe um ciclo que se forma ali? Aqui vive o  seu código rs, basicamente a runtime de fato interpretando as coisas. Esses passos são repetidos em todas as maquinas. Se vc quiser saber sobre esse assunto a fundo, aqui está um 
@@ -78,7 +78,7 @@
   Seu código será transformado num código assembly (código de montagem) que é bem low level e um tanto inóspito para seres humanos normais rs. O assembly code é altamente padronizado e dele derivará o Object Code -> Byte Code que é de fato interpretado pela máquina:
 </p>
 
-<img src="./csteps.png" alt="C Compiler Steps">
+<img style="max-width: 100%" src="./csteps.png" alt="C Compiler Steps">
 
 <p>
   Para garantir a alta padronização do processo de compiling, vc tem alguns extras

@@ -1,0 +1,244 @@
+<!--:::{
+  "post_title": "Function Overload em JavaScript",
+  "post_description": "Function Overload é a tecnica de manter varias funções com o mesmo nome mas diferentes implementações",
+  "post_created_at": "Tue Aug 02 2022 10:22:33 GMT-0300 (Brasilia Standard Time)"
+}:::-->
+
+<style>img { display: block; max-width: 100% }</style>
+
+<p>Function Overload é a tecnica de manter varias funções com o mesmo nome mas diferentes implementações.</p>
+
+<p>Ela se comporta diferente dependendo de como vc chama. Em JS não podemos ter funções com o mesmo nome: a ultima declaração vai sobrepôr. </p>
+
+<p>Então como fazer Overload em JS? </p>
+
+<p>
+  Para que possamos fazer overload em JS nós precisamos de umas coisas:
+</p>
+
+<ol>
+  <li>Uniqueness: Uma unica função com um nome unico no contexto, ou seja, vc só pode declarar uma função.</li>
+  <li>Introspection: Nossa função deve ser capaz de analisar a si mesma e descobrir o que fazer.</li>
+</ol>
+
+<p>
+  Bora lá:
+</p>
+
+<p>
+  Existem algumas maneiras de fazer isso, e eu vou mostrar algumas delas. No entanto todas baseiam-se numa mesma premissa: condicional via diferenciação de argumentos.
+</p>
+
+<p>
+  Nossa função vai agir de forma diferente de acordo com o tipo e/ou numero de argumentos que passamos pra ela.
+</p>
+
+<p>
+  Vamos fazer isso de forma escalar. Imagine a seguinte função: vc passa dois parametros, ela junta os dois e retorna em formato string:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    function concat(a, b) {
+      return `${a} ${b}`;
+    }
+  </code>
+</pre>
+
+<p>
+  Simples né?
+</p>
+
+<img src="./overload-1.png" alt="Overload function image 1">
+
+<p>
+  Mas temos um bug: se eu não passar nenhum argumento ou passar apenas o primeiro ela me devolve `undefined` no meio da string. Sem problemas: vamos pre-inicializar os argumentos e adicionar um trim() no resultado:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    function concat(a, b) {
+      return `${a} ${b}`.trim();
+    }
+  </code>
+</pre>
+
+<p>
+  Deboas...
+</p>
+
+<img src="./overload-2.png" alt="Overload function image 2">
+
+<p>
+  Agora imaginemos que precisamos refatorar nossa função pra que ela seja capaz de concatenar um numero infinito de parametros. Sem problemas:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    function concat(...args) {
+      return args.join(' ').trim();
+    }
+  </code>
+</pre>
+
+<img src="./overload-3.png" alt="Overload function image 3">
+
+<p>
+  Mas aí alguem faz isso: concat([ 'fizz', 'buzz' ]); e obtem como resultado isso: 'fizz,buzz'.
+</p>
+
+<p>
+  A pessoa diz: poxa vem uns arrays do backend, eu queria poder passar um array para a concat direto tbm e ela se comportar normalmente.
+</p>
+
+<h2>Overload to the rescue</h2>
+
+<p>
+  Nesse caso vamos fazer um overload da implementação da função: quando receber um array como primeiro parametro faça x coisa de x maneira. As coisas ficarão um pouco teoricas:
+</p>
+
+<p>
+  Nossa função tem a seguinte assinatura até então:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    function concat(...args: string): string
+  </code>
+</pre>
+
+<p>
+  Quando dizemos que ela tbm pode ter um array como primeiro parametro, temos duas assinaturas para a mesma função, porem o mesmo output:
+</p>
+
+<ol>
+  <li>function concat(...args: string): string</li>
+  <li>function concat(arg: string[]): string</li>
+</ol>
+
+<p>
+  Nós fizemos um OVERLOAD e mexemos na Aridade da função.
+</p>
+
+<p>
+  Vc deve ta pensando: "overload NO QUE?". Aridade (arity) é o numero de parametros (ou operandos) que uma função leva. 
+</p>
+
+<p>
+  Basicamente é isso: nossa função 1 tem aridade diferente da função 2 porque sofreu overload, mas elas são a "mesma" função.
+</p>
+
+<p>
+  Tá, mas como implementamos isso?
+</p>
+
+<p>
+  Assim:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    function concat(...args) {
+      if (Array.isArray(args[0])) {
+        return args[1].join(' ').trim();
+      }
+    
+      return args.join(' ').trim();
+    }
+  </code>
+</pre>
+
+<p>
+  O que fizemos na função acima foi verificar se o primeiro parametro passado pra ela (args[0]) é do tipo array (arity check), e se for assim retornamos o concat apenas desse array e ignoramos o resto (behavior change).
+</p>
+
+<p>
+  E por isso temos um overload. Embora o output seja o mesmo, a assinatura e o comportamento (implementação) diferem na função de mesmo nome. 
+</p>
+
+<p>
+  No caso da nossa função ela ainda ta meio dummy, ela repete o comportamento do output e reimplementa a logica. Podemos melhorar isso.
+</p>
+
+<p>
+  Quando vc ta fazendo overload mas o output não vai mudar, ao inves de criar ifs e diversos returns, pode apenas normalizar os parametros e chama a função novamente de dentro dela mesma, evitando reimplementar a mesma logica dentro de ifs. Assim:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    function concat(...args) {
+      if (Array.isArray(args[0])) {
+        return concat(...args[0]);
+      }
+    
+      return args.join(' ').trim();
+    }
+  </code>
+</pre>
+
+<p>
+  Temos o "Overloaded Behavior" esperado sem repetição de lógica. O ...args[0] faz spread do array em forma de parametros pra mesma função:
+</p>
+
+<img src="./overload-4.jpeg" alt="Overload function image 4">
+
+<p>
+  Mas aí alguem chega e fala: Muito legal tudo isso mas eu queria que quando o primeiro e o segundo parametro fossem um numero a função retornasse a soma e não o str concat.
+</p>
+
+<p>
+  E daí vc manda a pessoa a merda, tira a camiseta e foge pras colinas correndo...
+</p>
+
+<p>
+  Brincadeira. Vc Implementa. Novamente:
+</p>
+
+<p>
+  Overload to the rescue!
+</p>
+
+<p>
+  Mas agora vc já tem mais experiencia e vai fazer isso da seguinte maneira:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    function concat(...args) {
+      if (Array.isArray(args[0])) {
+        return concat(...args[0]);
+      }
+    
+      if (typeof args[0] === 'number' && typeof args[1] === 'number') {
+        return args[0] + args[1];
+      }
+    
+      return args.join(' ');
+    }
+  </code>
+</pre>
+
+<p>
+  O que fizemos no segundo if foi dizer o seguinte: Se o primeiro e o segundo parametro são do tipo numerico, vc ignora tudo e devolve a soma dos dois. 
+</p>
+
+<p>
+  Novamente: Function Overload. Diferentes implementações para diferentes aridades.
+</p>
+
+<img src="./overload-5.jpeg" alt="Overload function image 5">
+
+<p>
+  É isso. Após aprendermos overload, nossa função terminou com 2 outputs e 3 assinaturas:
+</p>
+
+<ol>
+  <li>function concat(...args: string): string</li>
+  <li>function concat(arg: string[]): string</li>
+  <li>function concat(a: number, b: number): number</li>
+</ol>
+
+<p>
+  Exemplos meramente ilustrativos, claro. Bons estudos!
+</p>
+

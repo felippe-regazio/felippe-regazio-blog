@@ -1,0 +1,141 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Como fazer 'Dynamic Type Checking de Tipos Primitivos' (checar tipos em runtime) em JavaScript puro</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="Algumas tecnicas de checagem de tipos primitivos em runtime (tipos sao verificados enquanto o programa ta rodando)">
+  <meta property="og:title" content="Como fazer 'Dynamic Type Checking de Tipos Primitivos' (checar tipos em runtime) em JavaScript puro">
+  <meta property="og:description" content="Algumas tecnicas de checagem de tipos primitivos em runtime (tipos sao verificados enquanto o programa ta rodando)">
+  <meta property="og:site_name" content="Felippe Regazio">
+  <meta property="og:url" content="https://felipperegazio.com/posts/dynamic-type-checking-vanilla-js">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Felippe Regazio">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Como fazer 'Dynamic Type Checking de Tipos Primitivos' (checar tipos em runtime) em JavaScript puro">
+  <meta name="twitter:description" content="Algumas tecnicas de checagem de tipos primitivos em runtime (tipos sao verificados enquanto o programa ta rodando)">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Como fazer 'Dynamic Type Checking de Tipos Primitivos' (checar tipos em runtime) em JavaScript puro</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      8/2/2022, 11:15:48 AM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>
+  As vezes vc vai escrever uma lib pequena, algo simples e quer usar uma forma funcional e dinamica, mas sem precisar de trocentas dependencias, nem iniciar nenhum tipo de estrutura. Vc só quer escrever seu JS, mas ao mesmo tempo checar alguns tipos e amarrar umas regras:
+</p>
+
+<p>
+  Se esse é seu caso, eu vou mostrar algumas tecnicas de checagem de tipos primitivos em runtime (tipos sao verificados enquanto o programa ta rodando). Claro que essa tecnica não alcança a abrangencia de um TS, são cenarios diferentes, se alguem comparar não vou nem responder.
+</p>
+
+<p>
+  O que vamos fazer será apenas um type hint primitivo: ou seja, vamos verificar os tipos dos valores, e caso algum esteja errado vamos avisar o erro mas permitir que o programa continue. Se vc quiser parar o programa basta dar um throw no lugar de console.warn.
+</p>
+
+<p>
+  Essa é a função que fará isso pra nós:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    function typed(t, ...args) {
+      args.forEach(value => {
+        const typeMatch = t === 'array' ? Array.isArray(value) : typeof value === t;
+    
+        if (!typeMatch) {
+          /**
+           * Você pode fazer o que quiser aqui. Se quiser parar a runtime,
+           * vc pode lançar um erro (throw new Error()). No nosso caso apenas
+           * vamos avisar que tipos estão diferindo mas deixar o programa
+           * continuar. Usamos console.warn + new Error inves de console trace
+           * porque esse ultimo vem em formato de mensagem simples.
+           */
+          console.warn(new Error(`Type mismatch for value: ${value}. Expected it to be: "${t}"`));
+        }
+      });
+    }    
+  </code>
+</pre>
+
+<p>
+  É um exemplo o mais simples possível para que você possa adequar aos seu uso: adicionar for-of ao invés do forEach para micro otimização de performance, ou fazer um type-map ao invés de checar apenas primitivos... enfim, você manda. Continuando...
+</p>
+
+<p>
+  O uso da nossa função é simples: Vc passa o primeiro argumento como sendo o tipo esperado para todos os outros valores que quer verificar. Depois do primeiro argumento vc pode passar quantos valores quiser para checagem. Exemplo:
+</p>
+
+<img src="./dynamics-1" alt="Dynamic type image 1">
+<img src="./dynamics-2" alt="Dynamic type image 2">
+<img src="./dynamics-3" alt="Dynamic type image 3">
+
+<p>
+  Os valores possiveis para verificar os tipos são todos os tipos reconhecidos pelo verificador "typeof" e um tipo especial "array" criado por nós, sendo assim:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    typed(<t>, ...args);
+  </code>
+</pre>
+
+<p>
+  onde t pode ser: undefined, null, boolean, number, bigint, string, symbol, function, array.
+</p>
+
+<p>
+  Mas como isso é util? Simplesmente pra dar type hint de qualquer variavel, valor ou argumento no seu código. Exemplo:
+</p>
+
+<img src="./dynamics-4" alt="Dynamic type image 4">
+<img src="./dynamics-5" alt="Dynamic type image 5">
+<img src="./dynamics-6" alt="Dynamic type image 6">
+
+<p>
+  Para os casos acima, se ao inves de hint (console.warn) estivessemos dando um throw, o software sequer continuaria rodando com os tipos diferindo. É isso. Outro dia se pintar a vontade eu posto um sobre como fazer isso com tipos customizáveis ou estruturais.
+</p>
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

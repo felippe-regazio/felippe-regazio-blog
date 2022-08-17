@@ -1,0 +1,291 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Construindo uma 'Method Chain' em JavaScript</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="Sabe quando você vê aquelas correntes de métodos em libs tipo: lib.process(...).watch(...).task(...).end()? Isso se chama 'method chain'">
+  <meta property="og:title" content="Construindo uma 'Method Chain' em JavaScript">
+  <meta property="og:description" content="Sabe quando você vê aquelas correntes de métodos em libs tipo: lib.process(...).watch(...).task(...).end()? Isso se chama 'method chain'">
+  <meta property="og:site_name" content="Felippe Regazio">
+  <meta property="og:url" content="https://felipperegazio.com/posts/construindo-method-chain-js">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Felippe Regazio">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Construindo uma 'Method Chain' em JavaScript">
+  <meta name="twitter:description" content="Sabe quando você vê aquelas correntes de métodos em libs tipo: lib.process(...).watch(...).task(...).end()? Isso se chama 'method chain'">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Construindo uma 'Method Chain' em JavaScript</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      8/16/2022, 11:28:50 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>
+  Primeiro vamos as definições: Method Chaining (Métodos Encadeados) envolve dois importantes design patterns:
+</p>
+
+<ul>
+  <li>Creational Pattern (padrão conceitual)</li>
+  <li>Method Chaining Pattern (padrão arquitetural)</li>
+</ul>
+  
+<p>
+  Vc pode pesquisar mais sobre esses termos se quiser se aprofundar. Você também pode procurar sobre method chain pesquisando por "The builder" design pattern.
+</p>
+
+<p>
+  Uma Method chain é definida por: métodos que podem ser invocados linearmente sem a necessidade de um objeto/valor intermediário. jQuery é um exemplo
+</p>
+
+<pre>
+  <code class="language-javascript">
+    $(...).height().scrollTo().remove()...
+  </code>
+</pre>
+
+<p>
+  O objeto vai sendo criado (creational pattern) usando uma corrente de ações (method chain)
+</p>
+
+<p>
+  Em JS, para criar nossa Method Chain temos que seguir dois princípios simples:
+</p>
+
+<ol>
+  <li>A corrente precisa compartilhar o mesmo contexto</li>
+  <li>Todo método deve sempre retornar o contexto</li>
+</ol>
+
+<p>
+  Na prática isso fica assim:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    class Person {
+      constructor(bodyParts) {
+        this.bodyParts = bodyParts;
+      }
+    
+      addHead(n) {
+        this.bodyParts.head = n;
+        return this;
+      }
+    
+      addLegs(n) {
+        this.bodyParts.legs = n;
+        return this;
+      }
+    
+      addArms(n) {
+        this.bodyParts.arms = n;
+        return this;
+      }
+    }    
+  </code>
+</pre>
+
+<p>
+  Veja que recebemos um objeto inicializador (bodyParts) e definimos ele como uma propriedade nossa. 
+</p>
+
+<p>
+  Depois criamos nossa chain: cada metodo manipula a propriedade bodyParts e depois retorna o contexto inteiro de volta (this). Eis a chain:
+</p>
+
+<p>
+  Você pode usar assim:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    // simple usage
+    const henry = new Person().addHead(1).addArms(2).addLegs(2);
+
+    // initializing with object
+    const mia = new Person({ head: 1 }).addArms(2).addLegs(2);
+
+    // creatign an alien
+    const alien = new Person().addHead(2).addArms(4).addLegs(6);
+  </code>
+</pre>
+
+<p>
+  E o resultado seria esse. Veja que cada "Pessoa" foi construída a partir da nossa chain, e o resultado foi a composição de um objeto utilizando creational pattern.
+</p>
+
+<pre>
+  <code class="language-javascript">
+    const henry = new Person().addHead(1).addArms(2).addLegs(2);
+    // { head: 1, arms: 2, legs: 2 }
+
+    const mia = new Person({ head: 1 }).addArms(2).addLegs(2);
+    // { head: 1, arms: 2, legs: 2 }
+
+    const alien = new Person().addHead(2).addArms(4).addLegs(6);
+    // { head: 2, arms: 4, legs: 6 }
+  </code>
+</pre>
+
+<p>
+  Essa mesma técnica poderia ser usada utilizando apenas notação de função (you might not need classes in javascript) da seguinte maneira:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    function Person(bodyParts = {}) {
+      return {
+        bodyParts,
+    
+        addHead(n) {
+          this.bodyParts.head = n;
+          return this;
+        },
+      
+        addLegs(n) {
+          this.bodyParts.legs = n;
+          return this;
+        },
+      
+        addArms(n) {
+          this.bodyParts.arms = n;
+          return this;
+        },
+      }
+    }
+  </code>
+</pre>
+
+<p>
+  Você pode usar a função como construtora:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    const henry = new Person({ ... }).addLegs(n).addArms(n)...
+  </code>
+</pre>
+
+<p>
+  Ou com notação de função mesmo:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    const mia = Person({ ... }).addLegs(n).addArms(n)...
+  </code>
+</pre>
+
+<p>
+  Ambos terão o getter:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    henry.bodyParts // { arms, legs }
+    mia.bodyParts // { arms, legs }
+  </code>
+</pre>
+
+<p>
+  De qualquer forma, se vc é mais perfecionista, deve observar que ao retornar um objeto como sendo uma chain faz com que ele venha "sujo" de metodos herdados da prototype e também tenha em seu retorno seus metodos expostos. Se você serializasse o valor
+  gerado poderia ter problemas:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    const p = new Person();
+    // {bodyParts: {}, addHead: ƒ, addLegs: ƒ, addArms: ƒ}
+  </code>
+</pre>
+
+<p>
+  Podemos evitar essa "sujeira" fazendo com que nossa chain seja na verdade o prototype do nosso objeto manipulado:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    function Person(bodyParts = {}) {
+      const chain = Object.create({
+        addHead(n) {
+          this.bodyParts.head = n;
+          return this;
+        },
+      
+        addLegs(n) {
+          this.bodyParts.legs = n;
+          return this;
+        },
+      
+        addArms(n) {
+          this.bodyParts.arms = n;
+          return this;
+        },
+      });
+    
+      chain.bodyParts = bodyParts;
+      return chain;
+    }    
+  </code>
+</pre>
+
+<p>
+  Da forma acima assinamos a nossa chain como um objeto tendo nossos metodos como prototype. E após isso assimos ao objeto gerado a propriedade bodyParts. Agora:
+</p>
+
+<pre>
+  <code class="language-javascript">
+    const p = new Person();
+    // {bodyParts: {}}
+  </code>
+</pre>
+
+<p>
+  Parabéns, você acaba de aprender o "Method Chaining Design Pattern". Eu usei exemplos bem dummy pra tentar simplificar a explicação, mas com um pouquinho de tecnica e criatividade vc consegue fazer variações e obter resultados muito legais com ele.
+</p>
+
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

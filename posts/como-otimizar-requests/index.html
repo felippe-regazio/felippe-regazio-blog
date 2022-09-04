@@ -1,0 +1,172 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Como otimizar requests - front e back - para diminuir custos e ganhar performance</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="Algumas dicas simples e universais de otimização de requests (para front e backend)">
+  <meta property="og:title" content="Como otimizar requests - front e back - para diminuir custos e ganhar performance">
+  <meta property="og:description" content="Algumas dicas simples e universais de otimização de requests (para front e backend)">
+  <meta property="og:site_name" content="Felippe Regazio">
+  <meta property="og:url" content="https://felipperegazio.com/posts/como-otimizar-requests">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Felippe Regazio">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Como otimizar requests - front e back - para diminuir custos e ganhar performance">
+  <meta name="twitter:description" content="Algumas dicas simples e universais de otimização de requests (para front e backend)">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Como otimizar requests - front e back - para diminuir custos e ganhar performance</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      9/3/2022, 12:14:53 AM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>
+  Neste post não pretendo dar dicas de ferramentas, são dicas que podem ser aplicadas em qualquer 
+  ferramenta/server/linguagem. Sem mais delongas, vamos ao assunto:
+</p>
+
+<h2>Traga apenas o necessário</h2>
+
+<p>
+  Procure não trazer informação que não será imediatamente útil no contexto (ou ao menos não tão logo). Se vc precisa trazer o payload de profile financeiro inteiro pra pegar os 4 primeiro digitos do cartão, crie uma rota /get-card-first-digits
+</p>
+
+<p>
+  Fique esperto/a se os payloads que vc envia no backend não enviando sujeira (dados inseriros pelo ORM/Framework/DB etc). 
+</p>
+
+<p>
+  Limpe aqueles campos __parent, __active, __class e qualquer possivel lixo que ferramentas incluam no retorno (nem sempre isso acontece, mas acontece)
+</p>
+
+<h2>Comprima as requests</h2>
+
+<p>
+  Se vc tem APIs que retornam JSON, utilize um GZIP no server pra comprimi-los (geralmente isso está configurado automaticamente, se não estiver adicione). Lembre-se: serviços de hosting cobram por numero de requests e por tamanho de payload.
+</p>
+
+<h2>O que puder ser feito no front: Faça no Front</h2>
+
+<p>
+  Vamos supor que vc cria um snippet/embed que mostra mapas na tela. E toda vez que o user cria um desses vc salva esse snippet em formato string no DB e devolve via request depois.
+</p>
+
+<p>
+  A tecnica acima tem dois problemas:
+</p>
+
+<ol>
+  <li>Vc salva um snippet inteiro sendo que poderia salvar apenas os parametros e reconstruir o snippet no front, aliviando as request</li>
+  <li>Se o snippet mudar os anteriores ficarão deprecados, ou vc terá um trabalhao de update pra fazer.</li>
+</ol>
+
+<p>
+  Ou seja: se algo pode pode ser processado no front, não salve o resultado inteiro do processamento: salve os parametros, troque parametros via requests e reprocesse no front - te custará menos.
+</p>
+
+<p>
+  Outro ponto importante: Faça validações no backend (por segurança) e no frontend para economizar requests. A ideia é garantir ao máximo que uma request é feita apenas se todos os dados e requisitos
+  estivem ok.
+</p>
+
+<h2>Configure Cache</h2>
+
+<p>
+  Pare de ter medo de cache. Configure um bom service-worker no front se vc usa SPA/PWA, aprenda a usar as headers de cache e politicas de cache da sua API. Pare de ficar desligando cache atoa, vc ta rasgando dinheiro. Não precisa correr, mas cuide disso.
+</p>
+
+<h2>Não trafegue tokens via body</h2>
+
+<p>
+  Serviços cobram por tamanho de body trafegado via requests tbm. Muitas vezes um token (seja JWT ou de qualquer outra coisa) tem centenas de bytes. Prefira utilizar uma header propria (ou custom) pra isso: Bearer Tokens, X-API-Token, etc
+</p>
+
+<h2>Filtre sempre no backend primeiro</h2>
+
+<p>
+  Se são dados estáticos que necessitam filtro + paginação: traga-os sempre filtrados do backend. A regre deve ser
+</p>
+
+<ol>
+  <li>Filtre primeiro no DB (query)</li>
+  <li>Processe o resto SE PRECISAR</li>
+</ol>
+
+<p>Filtrar no front significa quase sempre enviar dado inutil</p>
+
+<h2>Use um BFF (Back for Front)</h2>
+
+<p>
+  Se vc precisa mudar o shape de retornos de requests, otimizar politicas de cache, segurança etc mas seu front conversa com uma API grande e dificil de refatorar, crie um BFF.
+</p>
+
+<p>
+  <a href="/posts/vamos-falar-de-bff-pattern/" target="_blank">Sugestão de leitura: Post - Vamos falar de BFF Patten</a>
+</p>
+
+<h2>Considere parceiros externos</h2>
+
+<p>
+  Essa nem sempre é uma boa, deve ser analisada com muito cuidado, implica em estrategia, politica de segurança e privacidade, etc etc. Massss por vezes terceirizar o serviço pesado pode ser uma boa (e mais barato). Tem que analisar com cuidado.
+</p>
+
+<h2>Aprenda a utilizar Server Sent Events, Streams e Sockets</h2>
+
+<p>
+  Se vc precisa verificar dados em tempo real, trazer grandes montantes de dados ou compor remotamente um retorno de algo, ficar fazendo trocentas requests por min (polling) é má ideia e custa caro em varios contextos.
+</p>
+
+<p>
+  Para o contexto acima pode caber um estudo das tecnicas apresentadas no titulo e quem sabe até mesmo algumas outras relacionadas a esse tipo de dado.
+</p>
+
+<h2>Tudo depende</h2>
+
+<p>
+  As dicas que apresentei não são pra serem aplicadas cegamente. São só um norte para uma ANALISE. Muitas vezes uma otimização custa caro pro mantenimento e diminui pouco o custo, transferindo esse mesmo custo pra mantenimento de equipe. Analise com cuidado :)
+</p>
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

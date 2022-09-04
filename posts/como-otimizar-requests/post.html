@@ -1,0 +1,111 @@
+<!--:::{
+  "post_title": "Como otimizar requests - front e back - para diminuir custos e ganhar performance",
+  "post_description": "Algumas dicas simples e universais de otimização de requests (para front e backend)",
+  "post_created_at": "Sat Sep 03 2022 00:14:53 GMT-0300 (Brasilia Standard Time)"
+}:::-->
+
+<p>
+  Neste post não pretendo dar dicas de ferramentas, são dicas que podem ser aplicadas em qualquer 
+  ferramenta/server/linguagem. Sem mais delongas, vamos ao assunto:
+</p>
+
+<h2>Traga apenas o necessário</h2>
+
+<p>
+  Procure não trazer informação que não será imediatamente útil no contexto (ou ao menos não tão logo). Se vc precisa trazer o payload de profile financeiro inteiro pra pegar os 4 primeiro digitos do cartão, crie uma rota /get-card-first-digits
+</p>
+
+<p>
+  Fique esperto/a se os payloads que vc envia no backend não enviando sujeira (dados inseriros pelo ORM/Framework/DB etc). 
+</p>
+
+<p>
+  Limpe aqueles campos __parent, __active, __class e qualquer possivel lixo que ferramentas incluam no retorno (nem sempre isso acontece, mas acontece)
+</p>
+
+<h2>Comprima as requests</h2>
+
+<p>
+  Se vc tem APIs que retornam JSON, utilize um GZIP no server pra comprimi-los (geralmente isso está configurado automaticamente, se não estiver adicione). Lembre-se: serviços de hosting cobram por numero de requests e por tamanho de payload.
+</p>
+
+<h2>O que puder ser feito no front: Faça no Front</h2>
+
+<p>
+  Vamos supor que vc cria um snippet/embed que mostra mapas na tela. E toda vez que o user cria um desses vc salva esse snippet em formato string no DB e devolve via request depois.
+</p>
+
+<p>
+  A tecnica acima tem dois problemas:
+</p>
+
+<ol>
+  <li>Vc salva um snippet inteiro sendo que poderia salvar apenas os parametros e reconstruir o snippet no front, aliviando as request</li>
+  <li>Se o snippet mudar os anteriores ficarão deprecados, ou vc terá um trabalhao de update pra fazer.</li>
+</ol>
+
+<p>
+  Ou seja: se algo pode pode ser processado no front, não salve o resultado inteiro do processamento: salve os parametros, troque parametros via requests e reprocesse no front - te custará menos.
+</p>
+
+<p>
+  Outro ponto importante: Faça validações no backend (por segurança) e no frontend para economizar requests. A ideia é garantir ao máximo que uma request é feita apenas se todos os dados e requisitos
+  estivem ok.
+</p>
+
+<h2>Configure Cache</h2>
+
+<p>
+  Pare de ter medo de cache. Configure um bom service-worker no front se vc usa SPA/PWA, aprenda a usar as headers de cache e politicas de cache da sua API. Pare de ficar desligando cache atoa, vc ta rasgando dinheiro. Não precisa correr, mas cuide disso.
+</p>
+
+<h2>Não trafegue tokens via body</h2>
+
+<p>
+  Serviços cobram por tamanho de body trafegado via requests tbm. Muitas vezes um token (seja JWT ou de qualquer outra coisa) tem centenas de bytes. Prefira utilizar uma header propria (ou custom) pra isso: Bearer Tokens, X-API-Token, etc
+</p>
+
+<h2>Filtre sempre no backend primeiro</h2>
+
+<p>
+  Se são dados estáticos que necessitam filtro + paginação: traga-os sempre filtrados do backend. A regre deve ser
+</p>
+
+<ol>
+  <li>Filtre primeiro no DB (query)</li>
+  <li>Processe o resto SE PRECISAR</li>
+</ol>
+
+<p>Filtrar no front significa quase sempre enviar dado inutil</p>
+
+<h2>Use um BFF (Back for Front)</h2>
+
+<p>
+  Se vc precisa mudar o shape de retornos de requests, otimizar politicas de cache, segurança etc mas seu front conversa com uma API grande e dificil de refatorar, crie um BFF.
+</p>
+
+<p>
+  <a href="/posts/vamos-falar-de-bff-pattern/" target="_blank">Sugestão de leitura: Post - Vamos falar de BFF Patten</a>
+</p>
+
+<h2>Considere parceiros externos</h2>
+
+<p>
+  Essa nem sempre é uma boa, deve ser analisada com muito cuidado, implica em estrategia, politica de segurança e privacidade, etc etc. Massss por vezes terceirizar o serviço pesado pode ser uma boa (e mais barato). Tem que analisar com cuidado.
+</p>
+
+<h2>Aprenda a utilizar Server Sent Events, Streams e Sockets</h2>
+
+<p>
+  Se vc precisa verificar dados em tempo real, trazer grandes montantes de dados ou compor remotamente um retorno de algo, ficar fazendo trocentas requests por min (polling) é má ideia e custa caro em varios contextos.
+</p>
+
+<p>
+  Para o contexto acima pode caber um estudo das tecnicas apresentadas no titulo e quem sabe até mesmo algumas outras relacionadas a esse tipo de dado.
+</p>
+
+<h2>Tudo depende</h2>
+
+<p>
+  As dicas que apresentei não são pra serem aplicadas cegamente. São só um norte para uma ANALISE. Muitas vezes uma otimização custa caro pro mantenimento e diminui pouco o custo, transferindo esse mesmo custo pra mantenimento de equipe. Analise com cuidado :)
+</p>

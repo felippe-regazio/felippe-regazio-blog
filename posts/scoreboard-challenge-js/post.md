@@ -146,7 +146,7 @@ function scoreboard(initialPeople) {
 No exemplo acima nós declaramos um valor no escopo de `scoreboard` e retornamos uma função que manipula esse valor. Se executarmos esse código, teremos o seguinte comportamento:
 
 ```js
-const score = scoreboard({});
+var score = scoreboard({});
 
 // como scoreboard retorna uma função, score é uma function
 score();
@@ -189,7 +189,7 @@ Depois disso verificamos se existe uma chave com o nome passado em nosso objeto,
 
 
 ```js
-const score = scoreboard({});
+var score = scoreboard({});
 
 score('Felippe', 1);
 ``` 
@@ -223,7 +223,7 @@ function scoreboard(initialPeople) {
 Acima então criamos a função `score` que retorna "fizz", e adicionamos a ela a propriedade `customProp` cuja chave é homonima (customProp) e o valor é '1'. Veja:
 
 ```js
-const score = scoreboard({});
+var score = scoreboard({});
 
 score(); // -> "fizz"
 console.log(score.customProp); // 1
@@ -250,7 +250,7 @@ function scoreboard(initialPeople) {
 Acima nossa função score retorna `fizz`, e possui o método `myMethod` que retorna `buzz`:
 
 ```js
-const score = scoreboard({});
+var score = scoreboard({});
 
 score(); // -> "fizz"
 score.myMethod(); // -> "buzz"
@@ -343,7 +343,7 @@ function scoreboard(initialPeople) {
 Pronto, ufa! Agora parece estar tudo certo. Temos nosso método `add` e podemos testá-lo:
 
 ```js
-const score = scoreboard({});
+var score = scoreboard({});
 
 score(); // void
 score.add("felippe", 2); // void
@@ -425,7 +425,7 @@ function scoreboard(initialPeople) {
 O que dissemos na função score então é o seguinte: para cada `key: value` no objeto `people` execute um `console.log`. A saída seria:
 
 ```js
-const score = scoreboard({ felippe: 0 });
+var score = scoreboard({ felippe: 0 });
 
 score.add("lorenzo", 2);
 
@@ -525,7 +525,7 @@ function scoreboard(initialPeople) {
 Observe acima que adicionamos as duas funções de manipulação de strings ao nosso modulo, e depois chamamos a função `ucFirst` na saída do método `score`. Agora temos:
 
 ```js
-const score = scoreboard({ felippe: 0 });
+var score = scoreboard({ felippe: 0 });
 
 score.add("lorenzo", 2);
 
@@ -631,7 +631,7 @@ Veja que a execução é bem simples: Se a pessoa recebendo pontos não existir,
 Para testar:
 
 ```js
-const score = scoreboard({ felippe: 0 });
+var score = scoreboard({ felippe: 0 });
 
 score.add("lorenzo", 2);
 score();
@@ -963,7 +963,7 @@ Você pode rodar os casos abaixo para testar:
 
 
 ```js
-const score = scoreboard({ felippe: 0, lorenzo: 0 });
+var score = scoreboard({ felippe: 0, lorenzo: 0 });
 
 score.point('felippe');
 score.point('lorenzo', 2);
@@ -981,17 +981,17 @@ score();
 Você pode rodar os casos baixo para testar verificações de error:
 
 ```js
-const score = scoreboard({});
+var score = scoreboard({});
 // VM394:3 Uncaught Error: You need at least two people to start
 // at scoreboard (<anonymous>:3:11)
 // at <anonymous>:1:15
 
-const score = scoreboard({ felippe: 0 });
+var score = scoreboard({ felippe: 0 });
 // VM441:3 Uncaught Error: You need at least two people to start
 // at scoreboard (<anonymous>:3:11)
 // at <anonymous>:1:15
 
-const score = scoreboard({ felippe: 0, lorenzo: 0 });
+var score = scoreboard({ felippe: 0, lorenzo: 0 });
 score.point('joana', 10)
 // VM472:9 There is no person named 'Joana' in the game.
 // false

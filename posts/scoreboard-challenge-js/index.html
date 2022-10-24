@@ -146,7 +146,7 @@ Joana: 2
 }
 </code></pre>
 <p>No exemplo acima nós declaramos um valor no escopo de <code>scoreboard</code> e retornamos uma função que manipula esse valor. Se executarmos esse código, teremos o seguinte comportamento:</p>
-<pre><code class="language-js">const score = scoreboard({});
+<pre><code class="language-js">var score = scoreboard({});
 
 // como scoreboard retorna uma função, score é uma function
 score();
@@ -181,7 +181,7 @@ score(10);
 </code></pre>
 <p>Está feita nossa função. Veja que assinamos os parametros em <code>initialPeople</code> para uma nova variável <code>people</code>. Fazemos isso porque vamos modificar os valores originais, e é uma boa prática não modificar diretamente os parametros da função.</p>
 <p>Depois disso verificamos se existe uma chave com o nome passado em nosso objeto, se sim, avisamos e não fazemos nada. Se não, adicionamos a chave com um novo valor ao objeto. Se nenhum ponto foi passado, a pessoa começa com 0. Se testarmos:</p>
-<pre><code class="language-js">const score = scoreboard({});
+<pre><code class="language-js">var score = scoreboard({});
 
 score(&#39;Felippe&#39;, 1);
 </code></pre>
@@ -207,7 +207,7 @@ score.add(&#39;Joana&#39;, 2);
 }
 </code></pre>
 <p>Acima então criamos a função <code>score</code> que retorna &quot;fizz&quot;, e adicionamos a ela a propriedade <code>customProp</code> cuja chave é homonima (customProp) e o valor é &#39;1&#39;. Veja:</p>
-<pre><code class="language-js">const score = scoreboard({});
+<pre><code class="language-js">var score = scoreboard({});
 
 score(); // -&gt; &quot;fizz&quot;
 console.log(score.customProp); // 1
@@ -228,7 +228,7 @@ console.log(score.customProp); // 1
 }
 </code></pre>
 <p>Acima nossa função score retorna <code>fizz</code>, e possui o método <code>myMethod</code> que retorna <code>buzz</code>:</p>
-<pre><code class="language-js">const score = scoreboard({});
+<pre><code class="language-js">var score = scoreboard({});
 
 score(); // -&gt; &quot;fizz&quot;
 score.myMethod(); // -&gt; &quot;buzz&quot;
@@ -309,7 +309,7 @@ score.myMethod(); // -&gt; &quot;buzz&quot;
 }
 </code></pre>
 <p>Pronto, ufa! Agora parece estar tudo certo. Temos nosso método <code>add</code> e podemos testá-lo:</p>
-<pre><code class="language-js">const score = scoreboard({});
+<pre><code class="language-js">var score = scoreboard({});
 
 score(); // void
 score.add(&quot;felippe&quot;, 2); // void
@@ -379,7 +379,7 @@ score.add(&quot;felippe&quot;, 2); // void
 }
 </code></pre>
 <p>O que dissemos na função score então é o seguinte: para cada <code>key: value</code> no objeto <code>people</code> execute um <code>console.log</code>. A saída seria:</p>
-<pre><code class="language-js">const score = scoreboard({ felippe: 0 });
+<pre><code class="language-js">var score = scoreboard({ felippe: 0 });
 
 score.add(&quot;lorenzo&quot;, 2);
 
@@ -463,7 +463,7 @@ score();
 }
 </code></pre>
 <p>Observe acima que adicionamos as duas funções de manipulação de strings ao nosso modulo, e depois chamamos a função <code>ucFirst</code> na saída do método <code>score</code>. Agora temos:</p>
-<pre><code class="language-js">const score = scoreboard({ felippe: 0 });
+<pre><code class="language-js">var score = scoreboard({ felippe: 0 });
 
 score.add(&quot;lorenzo&quot;, 2);
 
@@ -554,7 +554,7 @@ score();
 </code></pre>
 <p>Veja que a execução é bem simples: Se a pessoa recebendo pontos não existir, avisa e não faz nada. Se a pessoa existir pega os pontos atuais dela e soma aos novos pontos passados no argumento <code>points</code>. Se não foi passado um valor para points, soma 1 ponto. Pega os novos pontos e assina como sendo o novo valor para a pessoa no objeto <code>people</code>.</p>
 <p>Para testar:</p>
-<pre><code class="language-js">const score = scoreboard({ felippe: 0 });
+<pre><code class="language-js">var score = scoreboard({ felippe: 0 });
 
 score.add(&quot;lorenzo&quot;, 2);
 score();
@@ -842,7 +842,7 @@ feliPpe
 }
 </code></pre>
 <p>Você pode rodar os casos abaixo para testar:</p>
-<pre><code class="language-js">const score = scoreboard({ felippe: 0, lorenzo: 0 });
+<pre><code class="language-js">var score = scoreboard({ felippe: 0, lorenzo: 0 });
 
 score.point(&#39;felippe&#39;);
 score.point(&#39;lorenzo&#39;, 2);
@@ -857,17 +857,17 @@ score();
 // Joana: 3
 </code></pre>
 <p>Você pode rodar os casos baixo para testar verificações de error:</p>
-<pre><code class="language-js">const score = scoreboard({});
+<pre><code class="language-js">var score = scoreboard({});
 // VM394:3 Uncaught Error: You need at least two people to start
 // at scoreboard (&lt;anonymous&gt;:3:11)
 // at &lt;anonymous&gt;:1:15
 
-const score = scoreboard({ felippe: 0 });
+var score = scoreboard({ felippe: 0 });
 // VM441:3 Uncaught Error: You need at least two people to start
 // at scoreboard (&lt;anonymous&gt;:3:11)
 // at &lt;anonymous&gt;:1:15
 
-const score = scoreboard({ felippe: 0, lorenzo: 0 });
+var score = scoreboard({ felippe: 0, lorenzo: 0 });
 score.point(&#39;joana&#39;, 10)
 // VM472:9 There is no person named &#39;Joana&#39; in the game.
 // false

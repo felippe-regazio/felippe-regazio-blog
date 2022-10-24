@@ -1,0 +1,890 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Resolvendo e explicando um desafio intermediário de JavaScript, passo a passo</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="Resolução passo a passo de um desafio JavaScript intermediário e fornecimento de contexto a respeito da história e evolução do ecossistema JS">
+  <meta property="og:title" content="Resolvendo e explicando um desafio intermediário de JavaScript, passo a passo">
+  <meta property="og:description" content="Resolução passo a passo de um desafio JavaScript intermediário e fornecimento de contexto a respeito da história e evolução do ecossistema JS">
+  <meta property="og:site_name" content="Web Development & anything else">
+  <meta property="og:url" content="https://felipperegazio.com/posts/scoreboard-challenge-js">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Web Development & anything else">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Resolvendo e explicando um desafio intermediário de JavaScript, passo a passo">
+  <meta name="twitter:description" content="Resolução passo a passo de um desafio JavaScript intermediário e fornecimento de contexto a respeito da história e evolução do ecossistema JS">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Resolvendo e explicando um desafio intermediário de JavaScript, passo a passo</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      10/21/2022, 11:56:40 AM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<h2 id="o-desafio">O Desafio</h2>
+<p>Imagine que estou apostando corrida de carrinhos Hot Wheels com meu filho, e preciso de uma função JS pra registrar o placar. </p>
+<p>O problema é que eu só tenho o Internet Explorer de 2010 pra fazer essa função, então tenho algumas regras</p>
+<ul>
+<li>não posso utilizar let nem const</li>
+<li>não posso manipular o escopo externo</li>
+<li>não posso utilizar nenhum mock</li>
+<li>devo utilizar vanilla js pra construir</li>
+<li>devo utilizar UMA função global</li>
+<li>não posso utilizar frameworks</li>
+<li>não posso utilizar transpilers</li>
+</ul>
+<p>O comportamento esperado é:</p>
+<pre><code class="language-js">var score = scoreboard({ felippe: 0, lorenzo: 0 });
+
+score();
+</code></pre>
+<p>output:</p>
+<pre><code>Felippe: 0
+Lorenzo: 0
+</code></pre>
+<p>Para marcar pontos precisaremos de um metodo</p>
+<pre><code class="language-js">score.point(&#39;felippe&#39;);
+
+score();
+</code></pre>
+<p>output:</p>
+<pre><code>Felippe: 1
+Lorenzo: 0
+</code></pre>
+<p>E eu posso marcar mais de um ponto se preciso, basta usar um segundo parametro para incrementar mais de um ponto</p>
+<pre><code class="language-js">score.point(&#39;lorenzo&#39;, 3);
+
+score();
+</code></pre>
+<p>output:</p>
+<pre><code>Felippe: 1
+Lorenzo: 3
+</code></pre>
+<p>E a qualquer momento da brincadeira nós podemos adicionar novas pessoas:</p>
+<pre><code class="language-js">score.add(&#39;flavia&#39;);
+
+score();
+</code></pre>
+<p>output:</p>
+<pre><code>Felippe: 1
+Lorenzo: 3
+Flavia: 0
+</code></pre>
+<p>E também podemos adicionar essa pessoa com uma pontuação inicial se preciso:</p>
+<pre><code class="language-js">score.add(&#39;Joana&#39;, 2);
+
+score();
+</code></pre>
+<p>output:</p>
+<pre><code>Felippe: 1
+Lorenzo: 3
+Flavia: 0
+Joana: 2
+</code></pre>
+<h3 id="mais-regras">Mais regras</h3>
+<p>Eu posso inicializar o score com mais de 2 pessoas mas nunca somente com uma</p>
+<p>Eu não posso somar pontos para uma pessoa que não existe no placar</p>
+<p>Você pode ter uma única função global, mas pode ter quantas funções quiser dentro dela</p>
+<h3 id="bonus-opcional">Bonus (opcional):</h3>
+<p>As manipulações que requerem que nomes sejam passados devem ser case INSENSITIVE, e o output deve ser escrito em lowercase com a primeira letra do nome maiúscula.</p>
+<p>ex:</p>
+<p>score.point(&#39;FeLiPPe&#39;); // ponto pra felippe</p>
+<h3 id="dicas">Dicas</h3>
+<p><a href="https://stackoverflow.com/questions/20705063/javascript-object-keys-method-alternative-for-compatibility-with-ie8">https://stackoverflow.com/questions/20705063/javascript-object-keys-method-alternative-for-compatibility-with-ie8</a></p>
+<p><a href="https://stackoverflow.com/questions/690251/what-happened-to-console-log-in-ie8">https://stackoverflow.com/questions/690251/what-happened-to-console-log-in-ie8</a></p>
+<p>Boa sorte!</p>
+<h2 id="resolução">Resolução</h2>
+<p>Primeiramente temos que considerar que faremos um código vanilla JS para IE10. Sendo assim muitas das funcionalidades modernas e syntax sugar do JS não estarão mais a mão. A primeira coisa que perdemos ao pensar logo de cara no código: <code>classes</code>. Mas peraí, <code>classes</code> em JS são em grande parte syntax sugar para funções. Então podemos começar criando nossa main function:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  //
+}
+</code></pre>
+<p>De acordo com a especificação do desafio, a função <code>scoreboard</code> recebe um objeto com a estrutura <code>{ [key: string]: number }</code> e retorna uma nova função que controla este objeto. Portanto <code>scoreboard</code> é uma <code>HOF: Higher Order Function</code>. Funções que manipulam outras funções (seja recebendo como parametro ou retornando funções) são chamadas de <code>HOF</code>. Em JavaScript quando você cria uma dessas, o escopo da função mãe é preservado mesmo após retornamos outra função, e é dessa tecnica que vamos nos beneficiar. Isso significa o seguinte:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var value = 0;
+
+  return function(n) {
+    value += (n || 0);
+    console.log(&quot;Value is now: &quot;+value);
+  }
+}
+</code></pre>
+<p>No exemplo acima nós declaramos um valor no escopo de <code>scoreboard</code> e retornamos uma função que manipula esse valor. Se executarmos esse código, teremos o seguinte comportamento:</p>
+<pre><code class="language-js">const score = scoreboard({});
+
+// como scoreboard retorna uma função, score é uma function
+score();
+// Value is now: 0
+score(3);
+// Value is now: 3
+score(2);
+// Value is now: 5
+score(10);
+// Value is now: 15
+</code></pre>
+<p>Como observado, scoreboard é uma HOF que retorna uma função. A função retornada permanece ligada ao escopo da função mãe. Assim podemos manipular <code>value</code> de forma cumulativa, pois o escopo é preservado. Isso é justamente a ideia central da nossa <code>scoreboard</code>. </p>
+<p>Pensando nisso, vamos então fazer um dos primeiros requisitos do nosso desafio: a função que adiciona uma pessoa nova ao jogo. Basicamente significa que vamos adicionar uma nova chave com um novo valor ao que foi passado em <code>initialPeople</code>. Como sabemos o funcionamento de uma HOF, isso agora fica fácil. Os passos são:</p>
+<ul>
+<li>Verífica se pessoa já existe</li>
+<li>Se existe: gera warn e retorna false</li>
+<li>Se não existe adiciona</li>
+</ul>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = initialPeople;
+
+  return function(person, points) {
+    if (people[person]) {
+      console.log(&quot;A person named &#39;&quot; + person + &quot;&#39; is already playing.&quot;);
+
+      return false;
+    }
+
+    people[person] = (points || 0);
+  }
+}
+</code></pre>
+<p>Está feita nossa função. Veja que assinamos os parametros em <code>initialPeople</code> para uma nova variável <code>people</code>. Fazemos isso porque vamos modificar os valores originais, e é uma boa prática não modificar diretamente os parametros da função.</p>
+<p>Depois disso verificamos se existe uma chave com o nome passado em nosso objeto, se sim, avisamos e não fazemos nada. Se não, adicionamos a chave com um novo valor ao objeto. Se nenhum ponto foi passado, a pessoa começa com 0. Se testarmos:</p>
+<pre><code class="language-js">const score = scoreboard({});
+
+score(&#39;Felippe&#39;, 1);
+</code></pre>
+<p>Bom, de cara você já deve ter visto o problema: a notação da nossa função está errada. Se voltarmos aos requisitos do desafio, ele espera que para adicionar uma nova pessoa façamos o seguinte:</p>
+<pre><code class="language-js">score.add(&#39;flavia&#39;);
+score.add(&#39;Joana&#39;, 2);
+</code></pre>
+<p>Para fazermos isso precisamos saber de outra questão conceitual: funções são objetos em javascript. Um objeto pode conter uma chave e um valor, logo uma função também. Quando aplicarmos uma chave e um valor a uma função como se ela fosse um objeto, chamamos esse par <code>chave: valor</code> de propriedade. Por exemplo, se quisermos adicionar uma propriedade a nossa função score precisamos antes:</p>
+<ul>
+<li>criar nossa função com um nome</li>
+<li>assinar novas propriedades a função</li>
+</ul>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = initialPeople;
+
+  function score(person, points) {
+    return &quot;fizz&quot;;
+  }
+
+  score.customProp = 1;
+
+  return score;
+}
+</code></pre>
+<p>Acima então criamos a função <code>score</code> que retorna &quot;fizz&quot;, e adicionamos a ela a propriedade <code>customProp</code> cuja chave é homonima (customProp) e o valor é &#39;1&#39;. Veja:</p>
+<pre><code class="language-js">const score = scoreboard({});
+
+score(); // -&gt; &quot;fizz&quot;
+console.log(score.customProp); // 1
+</code></pre>
+<p>Podemos assinar diferentes tipos de valores a uma propriedade, inclusive uma função. Quando criamos uma propriedade em uma função e o valor dessa propriedade será outra função, nós temos um <code>método</code>:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = initialPeople;
+
+  function score(person, points) {
+    return &quot;fizz&quot;;
+  }
+
+  score.myMethod = function() {
+    return &quot;buzz&quot;
+  };
+
+  return score;
+}
+</code></pre>
+<p>Acima nossa função score retorna <code>fizz</code>, e possui o método <code>myMethod</code> que retorna <code>buzz</code>:</p>
+<pre><code class="language-js">const score = scoreboard({});
+
+score(); // -&gt; &quot;fizz&quot;
+score.myMethod(); // -&gt; &quot;buzz&quot;
+</code></pre>
+<p>Sabendo disso, agora podemos arrumar nossa função <code>scoreboard</code> para ter o método <code>add</code> que adiciona pessoas ao objeto inicial:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = initialPeople;
+
+  function score() {
+    //
+  }
+
+  score.add = function(person, points) {
+    if (people[person]) {
+      console.log(&quot;A person named &#39;&quot; + person + &quot;&#39; is already playing.&quot;);
+
+      return false;
+    }
+
+    people[person] = (points || 0);    
+  }
+
+  return score;
+}
+</code></pre>
+<p>Pronto, agora temos um método add. Mas ainda temos dois problemas: verificações diretas como <code>people[person]</code> poderiam ser inseguras em determinadas versões do IE. Como não sabemos se o IE sofre disso mas somos precavidos, vamos criar um método que verifica se uma chave existe em dado objeto e usar ele pra fazer essa verificação em <code>add</code>. Como antigamente também não tínhamos a global <code>Object</code> para manipularmos objetos, vamos ter que usar o método <code>hasOwnProperty</code> diretamente. O método <code>hasOwnProperty</code> verifica justamente se determinada propriedade existe em um determinado objeto.</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = initialPeople;
+
+  function keyExists(key, obj) {
+    return hasOwnProperty.call(obj, key);
+  }
+
+  function score() {
+    //
+  }
+
+  score.add = function(person, points) {
+    if (keyExists(person, people)) {
+      console.log(&quot;A person named &#39;&quot; + person + &quot;&#39; is already playing.&quot;);
+
+      return false;
+    }
+
+    people[person] = (points || 0);    
+  }
+
+  return score;
+}
+</code></pre>
+<p>E temos um segundo problema: Algumas versões do IE só permitiam que usássemos <code>console.log</code> quando o inspector estivesse aberto no browser, do contrário a função não existiria no escopo global gerando um erro no código. Pra mitigar esse problema podemos criar uma função <code>log</code> nossa que faz um <code>try</code>. Ou seja: ela tenta usar <code>console.log</code>, se der tudo bem (é porque o inspector estava aberto), mas se não der tudo bem também hahaha (IE Rules):</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = initialPeople;
+
+  function log(s) {
+    try { console.log(s) } catch {};
+  }
+
+  function keyExists(key, obj) {
+    return hasOwnProperty.call(obj, key);
+  }
+
+  function score() {
+    //
+  }
+
+  score.add = function(person, points) {
+    if (keyExists(person, people)) {
+      log(&quot;A person named &#39;&quot; + person + &quot;&#39; is already playing.&quot;);
+
+      return false;
+    }
+
+    people[person] = (points || 0);    
+  }
+
+  return score;
+}
+</code></pre>
+<p>Pronto, ufa! Agora parece estar tudo certo. Temos nosso método <code>add</code> e podemos testá-lo:</p>
+<pre><code class="language-js">const score = scoreboard({});
+
+score(); // void
+score.add(&quot;felippe&quot;, 2); // void
+</code></pre>
+<p>Mas como vamos saber se está tudo funcionando sem ver como está nosso objeto <code>{people}</code>? Poderíamos usar a nossa função <code>log</code> pra inspecionar, mas seria melhor se tivéssemos mesmo uma função que mostra o placar, né? Problema é que quando chamamos a função <code>score()</code>, ela que deveria mostrar o placar ainda não faz nada. Então vamos fazer a função que mostra o placar:</p>
+<h2 id="mostrando-o-placar">Mostrando o placar</h2>
+<p>Para mostrar o placar nós precisaremos:</p>
+<ul>
+<li>de um objeto válido</li>
+<li>passar item por item desse objeto</li>
+<li>printar a chave + valor do objeto</li>
+</ul>
+<p>Ou seja, precisaremos de iteração. Iteração é a arte de passar item por item de um dado conjunto. No nosso caso vamos passar item por item do nosso objeto. Se estivessemos numa versão mais recente de JavaScript poderíamos utilizar <code>Object.keys</code>, <code>Object.values</code>, <code>Object.entries</code>, etc. para iterar propriedades de um objeto. Porém não estamos, então teremos que escrever nosso próprio iterador.</p>
+<p>Para criar nosso iterador utilizaremos o loop <code>for in</code>, que é compatível com IE:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  /* (...) */
+
+  function objEntries(obj, callback) {
+    for (key in obj) {
+      if (keyExists(key, obj)) {
+        callback(key, obj[key]);
+      }
+    }
+  }  
+  /* (...) */
+
+  return score;
+}
+</code></pre>
+<p>Observe que no código acima criamos a função <code>objEntries</code>. Esta função passa item por item de um objeto, assegura que a chave realmente existe e chama um callback passando <code>chave, valor</code> como argumentos. Ou seja: é basicamente um <code>forEach</code>. Vamos então utiliza-la para printar nosso objeto como solicitado na especificação do desafio:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = initialPeople;
+
+  function log(s) {
+    try { console.log(s) } catch {};
+  }
+
+  function keyExists(key, obj) {
+    return hasOwnProperty.call(obj, key);
+  }
+
+  function objEntries(obj, callback) {
+    for (key in obj) {
+      if (keyExists(key, obj)) {
+        callback(key, obj[key]);
+      }
+    }
+  }  
+
+  function score() {
+    objEntries(people, function(key, value) {
+      log(key + &quot;: &quot; + value);
+    });
+  }
+
+  score.add = function(person, points) {
+    if (keyExists(person, people)) {
+      log(&quot;A person named &#39;&quot; + person + &quot;&#39; is already playing.&quot;);
+
+      return false;
+    }
+
+    people[person] = (points || 0);    
+  }
+
+  return score;
+}
+</code></pre>
+<p>O que dissemos na função score então é o seguinte: para cada <code>key: value</code> no objeto <code>people</code> execute um <code>console.log</code>. A saída seria:</p>
+<pre><code class="language-js">const score = scoreboard({ felippe: 0 });
+
+score.add(&quot;lorenzo&quot;, 2);
+
+score();
+
+// felippe: 0
+// lorenzo: 2
+</code></pre>
+<p>Ótimo, agora podemos ver nossas funções em ação. Mas se observarmos, os nomes estão no padrão que foram escritos na chave do objeto. O ideal seria se normalizássemos para o padrão: Primeira letra maiúscula, o resto em minúsculo.</p>
+<h2 id="normalizando-strings">Normalizando Strings</h2>
+<p>Vamos agora fazer uma função que converte uma string para o padrão &quot;Primeira letra maiúscula, o resto em minúscula`, ou seja: Capitaliza uma string.</p>
+<p>Pode não parecer mas nesse caso temos duas tarefas, e seria ideal que usassemos funções diferentes para cada uma delas.</p>
+<ol>
+<li>Deixar uma string toda em minúsculo</li>
+<li>Deixar apenas a primeira letra maiúscula</li>
+</ol>
+<p>Então mãos a obra. Faremos primeiro a função que converte uma string para lowercase:</p>
+<pre><code class="language-js">function lc(str) {
+  if (!str) return &quot;&quot;;
+  
+  return str.toLowerCase();
+}
+</code></pre>
+<p>Simples assim: veríficamos se a string existe, se não retorna string vazia, do contrário chama <code>toLowerCase</code>. Basicamente criamos uma sintax sugar. Agora vamos usar isso para criar uma função <code>ucFirst</code>, que capitalizará uma string pra nós:</p>
+<pre><code class="language-js">function ucFirst(str) {
+  if (!str) return &quot;&quot;;
+
+  return str.charAt(0).toUpperCase() + lc(str.slice(1));
+}
+</code></pre>
+<p>Pronto. Utilizamos <code>charAt</code> para compatibilidade com IE. Pegamos o caractere de index zero (primeiro caractere) e passamos pra uppercase, e utilizamos nossa lc para noramlizar o resto pra lower case.</p>
+<p>Agora vamos acoplar nossas funções na nossa lib, e usar elas pra normalizar o output do método <code>score</code>:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = initialPeople;
+
+  function log(s) {
+    try { console.log(s) } catch {};
+  }
+
+  function keyExists(key, obj) {
+    return hasOwnProperty.call(obj, key);
+  }
+
+  function objEntries(obj, callback) {
+    for (key in obj) {
+      if (keyExists(key, obj)) {
+        callback(key, obj[key]);
+      }
+    }
+  }
+
+  function lc(str) {
+    if (!str) return &quot;&quot;;
+    
+    return str.toLowerCase();
+  }
+
+  function ucFirst(str) {
+    if (!str) return &quot;&quot;;
+
+    return str.charAt(0).toUpperCase() + lc(str.slice(1));
+  }
+
+  function score() {
+    objEntries(people, function(key, value) {
+      log(ucFirst(key) + &quot;: &quot; + value);
+    });
+  }
+
+  score.add = function(person, points) {
+    if (keyExists(person, people)) {
+      log(&quot;A person named &#39;&quot; + ucFirst(person) + &quot;&#39; is already playing.&quot;);
+
+      return false;
+    }
+
+    people[person] = (points || 0);    
+  }
+
+  return score;
+}
+</code></pre>
+<p>Observe acima que adicionamos as duas funções de manipulação de strings ao nosso modulo, e depois chamamos a função <code>ucFirst</code> na saída do método <code>score</code>. Agora temos:</p>
+<pre><code class="language-js">const score = scoreboard({ felippe: 0 });
+
+score.add(&quot;lorenzo&quot;, 2);
+
+score();
+
+// Felippe: 0
+// Lorenzo: 2
+</code></pre>
+<p>Não importa o quão fora de padrão um nome seja adicionado a nossa coleção de pessoas, a saída dele será sempre normalizada.</p>
+<h2 id="organização-importa">Organização importa</h2>
+<p>Se você olhar para o código que escrevemos até aqui, perceberá que temos funções de duas naturezas diferentes nele:</p>
+<ol>
+<li>Funções internas, que não são facilmente acessíveis</li>
+<li>Funções externas, facilmente acessíveis</li>
+</ol>
+<p>A primeira opção damos o nome de <code>métodos privados</code>. Alguém utilizando nossa lib não conseguiria acesso fácil as funções internas delas, como por exemplo as recém criadas <code>lc</code> e <code>ucFirst</code>. Estas funções dizem respeito ao maquinário interno do nosso módulo e não tem porque alguém acessá-las.</p>
+<p>Por outro lado temos a função <code>score</code> que é retornada, e que possui varios métodos próprios. Esta por sua vez é uma função publica. Também é comum chamar esse tipo de retorno de <code>API Pública do Módulo</code>. Dizemos isso porque é através dessa função que o módulo oferece funcionalidades e são essas funções que estarão a mão para o consumer.</p>
+<p>Para facilitar a compreensão e melhorar a organização do nosso código, vamos adicionar um comentário que demarcará uma fronteira entre <code>privado x público</code></p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = initialPeople;
+
+  function log(s) {
+    try { console.log(s) } catch {};
+  }
+
+  function keyExists(key, obj) {
+    return hasOwnProperty.call(obj, key);
+  }
+
+  function objEntries(obj, callback) {
+    for (key in obj) {
+      if (keyExists(key, obj)) {
+        callback(key, obj[key]);
+      }
+    }
+  }
+
+  function lc(str) {
+    if (!str) return &quot;&quot;;
+    
+    return str.toLowerCase();
+  }
+
+  function ucFirst(str) {
+    if (!str) return &quot;&quot;;
+
+    return str.charAt(0).toUpperCase() + lc(str.slice(1));
+  }
+
+  // ------ Public ------
+
+  function score() {
+    objEntries(people, function(key, value) {
+      log(ucFirst(key) + &quot;: &quot; + value);
+    });
+  }
+
+  score.add = function(person, points) {
+    if (keyExists(person, people)) {
+      log(&quot;A person named &#39;&quot; + ucFirst(person) + &quot;&#39; is already playing.&quot;);
+
+      return false;
+    }
+
+    people[person] = (points || 0);    
+  }
+
+  return score;
+}
+</code></pre>
+<h2 id="incrementando-a-pontuação">Incrementando a pontuação</h2>
+<p>Agora vamos fazer uma função que adiciona pontos para uma pessoa. Se observarmos, essa função é uma variação simples do nosso método de add, porém os concerns dela são:</p>
+<ol>
+<li>Verifica se a pessoa existe</li>
+<li>Se sim, soma os pontos passados aos pontos da pessoa</li>
+</ol>
+<p>Vamos adicionar logo após a função <code>score.add</code> uma nova função: <code>score.point</code>. Logo temos:</p>
+<pre><code class="language-js">score.point = function(person, points) {
+  if (!keyExists(person, people)) {
+    log(&quot;There is no person named &#39;&quot; + ucFirst(person) + &quot;&#39; in the game.&quot;);
+
+    return false;
+  }
+
+  var newValue = (people[person] || 0) + (points || 1);
+  people[person] = newValue;
+}
+</code></pre>
+<p>Veja que a execução é bem simples: Se a pessoa recebendo pontos não existir, avisa e não faz nada. Se a pessoa existir pega os pontos atuais dela e soma aos novos pontos passados no argumento <code>points</code>. Se não foi passado um valor para points, soma 1 ponto. Pega os novos pontos e assina como sendo o novo valor para a pessoa no objeto <code>people</code>.</p>
+<p>Para testar:</p>
+<pre><code class="language-js">const score = scoreboard({ felippe: 0 });
+
+score.add(&quot;lorenzo&quot;, 2);
+score();
+
+// Felippe: 0
+// Lorenzo: 2
+
+score.point(&#39;felippe&#39;, 1);
+score();
+
+// Felippe: 0
+// Lorenzo: 2
+
+score.point(&#39;joana&#39;, 3);
+// There is no person named &#39;Joana&#39; in the game.
+</code></pre>
+<h2 id="quase-lá">Quase lá</h2>
+<p>A esta altura já concluímos quase todos os requisitos do desafio. Então temos duas pendencias de bonus para concluir:</p>
+<ol>
+<li>Nomes passados como parametro devem ser case-insensitive</li>
+<li>Não podemos inicializar um <code>scoreboard</code> com zero ou uma pessoa</li>
+</ol>
+<h3 id="aplicando-case-insenstive-inputs">Aplicando Case-Insenstive Inputs</h3>
+<p>A ideia aqui é que as operações com nomes sejam case insensitive para que evitemos nomes duplicados escritos de forma diferente, por ex:</p>
+<pre><code>Felippe
+FeLIPPE
+FELIPPE
+feliPpe
+</code></pre>
+<p>Para a nossa lib, todos os nomes acima devem ser o mesmo: <code>felippe</code>. Para isso temos que seguir um princípio: Todo input e comparação entre strings devem ser normalizadas. Você pode normalizar como quiser desde que sempre utilize a mesma normalização. No nosso caso vamos usar <code>lowercase</code>, e temos 3 pontos mapeados onde devemos normalizar nossas strings de forma a deixar a lib case-insenstive:</p>
+<ol>
+<li>Parametro <code>initialPeople</code></li>
+<li>Método público <code>point</code></li>
+<li>Método público <code>add</code></li>
+</ol>
+<p>Ou seja: não importa como o usuário passa um nome para nós, este nome sempre vai ser salvo e manipulado em lower-case, dessa forma garantimos que tudo estará case-insenstive.</p>
+<p>Para nossa felicidade nós já escrevemos um método que converte uma String pra lowercase, o <code>lc</code>. Então podemos utilizá-lo no item 1 (método point) e 2 (método add) da nossa lista. Lembre-se de não manipular o parametro original da função. </p>
+<blockquote>
+<p>Warn: nem sempre é uma boa ideia mutar objetos passados como parametro mesmo que não seja diretamente. Isso porque existe uma ideia cognitiva associada a eles. Esse exercício teve um caráter mais pedagógico (e também teve algum sentido par ao que estamos fazendo). Mas não tome esse tipo de prática como regra, entenda que esse tipo de coisa deve ser analisada com cautela e raramente é necessária.</p>
+</blockquote>
+<p>Até aqui nossa lib está assim:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = initialPeople;
+
+  function log(s) {
+    try { console.log(s) } catch {};
+  }
+
+  function keyExists(key, obj) {
+    return hasOwnProperty.call(obj, key);
+  }
+
+  function objEntries(obj, callback) {
+    for (key in obj) {
+      if (keyExists(key, obj)) {
+        callback(key, obj[key]);
+      }
+    }
+  }
+
+  function lc(str) {
+    if (!str) return &quot;&quot;;
+    
+    return str.toLowerCase();
+  }
+
+  function ucFirst(str) {
+    if (!str) return &quot;&quot;;
+
+    return str.charAt(0).toUpperCase() + lc(str.slice(1));
+  }
+
+  // ------ Public ------
+
+  function score() {
+    objEntries(people, function(key, value) {
+      log(ucFirst(key) + &quot;: &quot; + value);
+    });
+  }
+
+  score.add = function(person, points) {
+    if (keyExists(person, people)) {
+      log(&quot;A person named &#39;&quot; + ucFirst(person) + &quot;&#39; is already playing.&quot;);
+
+      return false;
+    }
+
+    people[person] = (points || 0);    
+  }
+
+  score.point = function(person, points) {
+    if (!keyExists(person, people)) {
+      log(&quot;There is no person named &#39;&quot; + ucFirst(person) + &quot;&#39; in the game.&quot;);
+
+      return false;
+    }
+
+    var newValue = (people[person] || 0) + (points || 1);
+    people[person] = newValue;
+  }
+
+  return score;
+}
+</code></pre>
+<p>Vamos refatorar o método <code>add</code> para:</p>
+<pre><code class="language-js">score.add = function(person, points) {
+  var lcPerson = lc(person);
+
+  if (keyExists(lcPerson, people)) {
+    log(&quot;A person named &#39;&quot; + ucFirst(person) + &quot;&#39; is already playing.&quot;);
+    
+    return false;
+  }
+
+  people[lcPerson] = (points || 0);
+}
+</code></pre>
+<p>E o método <code>point</code> para:</p>
+<pre><code class="language-js">score.point = function(person, points) {
+  var lcPerson = lc(person);
+
+  if (!keyExists(lcPerson, people)) {
+    log(&quot;There is no person named &#39;&quot; + ucFirst(person) + &quot;&#39; in the game.&quot;);
+
+    return false;
+  }
+
+  var newValue = (people[lcPerson] || 0) + (points || 1);
+  people[lcPerson] = newValue;
+}
+</code></pre>
+<p>Bom, como vc pôde ver, todos os nossos dados de input estão normalizados, com exceção do objeto <code>initialPeople</code>. Isso porque teremos que tratar ele de forma especial: vamos iterar esse objeto gerando um novo objeto normalizado.</p>
+<h2 id="normalizando-o-parametro-initialpeople">Normalizando o parametro <code>initialPeople</code></h2>
+<p>Até aqui, nosso objeto people (o qual é manipulado por nossa lib) é inicialmente derivado diretamente do dado que o consumer passou pra nós:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = initialPeople;
+
+  /** ... **/
+}
+</code></pre>
+<p>Neste ponto, o que queremos que aconteça é: a variavel people deve conter os dados de inicialPeople, porém com todas as keys (nomes de pessoas) normalizadas. Pra isso vamos criar uma função que itera o objeto e converte as keys para lower case, retornando um novo objeto:</p>
+<pre><code class="language-js">function objKeysToLower(obj) {
+  var result = {};
+
+  objEntries(obj, function(key, value) {
+    result[lc(key)] = value;
+  });
+
+  return result;
+}
+</code></pre>
+<p>Pronto, agora basta utilizar nosso novo método para normalizar o valor em <code>people</code>, que deriva de <code>initialPeople</code>:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  var people = objKeysToLower(initialPeople);
+
+  /** ... **/
+}
+</code></pre>
+<p>Pronto, agora não importa como o consumer insira os dados, nossa lib vai sempre lidar com eles em formato lowercase.</p>
+<h2 id="validando-o-objeto-initialpeople">Validando o objeto <code>initialPeople</code></h2>
+<p>Agora nos resta uma ultima pendencia: validar existe 2 ou mais pessoas passadas inicialmente ao iicializar nossa lib. Para isso vamos fazer nosso último método que conta o número de chaves em um Objeto. Note que esta função é uma variação da função <code>objKeysToLower</code>, mas invés de gerar um novo objeto, nós geramos um array com as keys do objeto atual ou um array vazio caso o parameto não seja um objeto;</p>
+<pre><code class="language-js">function objKeys(obj) {
+  // Este if utiliza uma tecnica antiga para 
+  // assegurar que um valor é um objeto e não é um Array
+  if (typeof obj !== &#39;object&#39; || hasOwnProperty.call(obj, &#39;length&#39;)) {
+    return [];
+  }
+
+  var result = [];
+
+  objEntries(obj, function(key) {
+    result.push([lc(key)]);
+  });
+
+  return result;
+}
+</code></pre>
+<p>Pronto, agora antes de inicializar nossa lib, nós validamos se temos um <code>initialPeople</code> valido:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  if (objKeys(initialPeople).length &lt;= 1) {
+    throw Error(&#39;You need at least two people to start&#39;);
+  }
+
+  var people = objKeysToLower(initialPeople);
+
+  /** ... **/
+}
+</code></pre>
+<p>Se tivermos um parametro inicial inválido, lançamos um erro.</p>
+<h2 id="resultado">Resultado</h2>
+<p>Pronto, nossa lib está feita e contempla todos os requisitos passados pelo desafio:</p>
+<pre><code class="language-js">function scoreboard(initialPeople) {
+  if (objKeys(initialPeople).length &lt;= 1) {
+    throw Error(&#39;You need at least two people to start&#39;);
+  }
+
+  var people = objKeysToLower(initialPeople);
+
+  function log(s) {
+    try { console.log(s) } catch {};
+  }
+
+  function keyExists(key, obj) {
+    return hasOwnProperty.call(obj, key);
+  }
+
+  function objEntries(obj, callback) {
+    for (key in obj) {
+      if (keyExists(key, obj)) {
+        callback(key, obj[key]);
+      }
+    }
+  }
+
+  function lc(str) {
+    if (!str) return &quot;&quot;;
+    
+    return str.toLowerCase();
+  }
+
+  function ucFirst(str) {
+    if (!str) return &quot;&quot;;
+
+    return str.charAt(0).toUpperCase() + lc(str.slice(1));
+  }
+
+  function objKeysToLower(obj) {
+    var result = {};
+
+    objEntries(obj, function(key, value) {
+      result[lc(key)] = value;
+    });
+
+    return result;
+  }
+
+  function objKeys(obj) {
+    if (typeof obj !== &#39;object&#39; || hasOwnProperty.call(obj, &#39;length&#39;)) {
+      return [];
+    }
+
+    var result = [];
+
+    objEntries(obj, function(key) {
+      result.push([lc(key)]);
+    });
+
+    return result;
+  }  
+
+  // ------ Public ------
+
+  function score() {
+    objEntries(people, function(key, value) {
+      log(ucFirst(key) + &quot;: &quot; + value);
+    });
+  }
+
+  score.add = function(person, points) {
+    var lcPerson = lc(person);
+
+    if (keyExists(lcPerson, people)) {
+      log(&quot;A person named &#39;&quot; + ucFirst(person) + &quot;&#39; is already playing.&quot;);
+      
+      return false;
+    }
+
+    people[lcPerson] = (points || 0);
+  }
+
+  score.point = function(person, points) {
+    var lcPerson = lc(person);
+
+    if (!keyExists(lcPerson, people)) {
+      log(&quot;There is no person named &#39;&quot; + ucFirst(person) + &quot;&#39; in the game.&quot;);
+
+      return false;
+    }
+
+    var newValue = (people[lcPerson] || 0) + (points || 1);
+    people[lcPerson] = newValue;
+  }
+
+  return score;
+}
+</code></pre>
+<p>Você pode rodar os casos abaixo para testar:</p>
+<pre><code class="language-js">const score = scoreboard({ felippe: 0, lorenzo: 0 });
+
+score.point(&#39;felippe&#39;);
+score.point(&#39;lorenzo&#39;, 2);
+score.add(&#39;flavia&#39;);
+score.add(&#39;joana&#39;, 3);
+score.point(&#39;fLaViA&#39;, 3);
+
+score();
+// Felippe: 1
+// Lorenzo: 2
+// Flavia: 3
+// Joana: 3
+</code></pre>
+<p>Você pode rodar os casos baixo para testar verificações de error:</p>
+<pre><code class="language-js">const score = scoreboard({});
+// VM394:3 Uncaught Error: You need at least two people to start
+// at scoreboard (&lt;anonymous&gt;:3:11)
+// at &lt;anonymous&gt;:1:15
+
+const score = scoreboard({ felippe: 0 });
+// VM441:3 Uncaught Error: You need at least two people to start
+// at scoreboard (&lt;anonymous&gt;:3:11)
+// at &lt;anonymous&gt;:1:15
+
+const score = scoreboard({ felippe: 0, lorenzo: 0 });
+score.point(&#39;joana&#39;, 10)
+// VM472:9 There is no person named &#39;Joana&#39; in the game.
+// false
+</code></pre>
+<p>Embora bastante funcional, nosso código ainda possui infinitas imperfeições que você pode querer ou não arrumar. Porém o importante aqui é que ele cumpriu um papel principal: Ser didático. Como é um código de complexidade média, existe ainda margem para muita refatoração. Sinta-se livre pra brincar com isso.</p>
+<h2 id="conclusão">Conclusão</h2>
+<p>A ideia aqui nunca foi escrever um código pra IE na verdade, essa era apenas uma desculpa para examinarmos conceitos e práticas de base. Não importa se o código roda no IE ou não porque o IE morreu, o que importa é que escrevendo esse código com essa premissa você foi forçado/a a verificar como funciona cada aspecto do que você estava fazendo. Logo você aprendeu muitas coisas novas sobre o que você já sabia.</p>
+<p>Ninguém precisa saber escrever código assim hoje em dia, e mesmo se souber, ainda utilizaríamos os recursos mais recentes ainda assim. Porém, as tecnicas e conceitos demonstrados aqui podem ser utilizados em qualquer código, em qualquer aplicação. Por exemplo: depois desse exercício você não olhará para uma classe da mesma forma nunca mais, você saberá a dinamica entre Objetos privados e públicos dessa classe, propriedades e a relação delas com seu escopo. Você olhará para componentes React sabendo que são Higher Order Functions dentro de outras Higher Order Functions, cada um podendo manter e manipular escopos internos com propriedades (estados) próprias, etc.</p>
+<p>Outro ponto importante sobre este exercício: Atualmente os diversos frameworks e syntax sugars escondem complexidades em métodos mágicos, isso nos dá velocidade e simplifica semanticamente o código, porém no momento em que um bug ocorre os motivos podem ficar ocultos e obscuros dentro desses mesmos métodos mágicos. Portanto, conhecer conceitos de base e o maquinário que derivou o que utilizamos hoje é importante para debugarmos e entendermos melhor as relações entre os componentes que utilizamos para contruir nossas aplicações.</p>
+<p>Uma sugestão de estudo a partir daqui seria: reescreva essa mesma lib em ES6 utilizando classes. Você verá na prática como o ecossistema JavaScript evoluiu, e o mais importante: o motivo disso. As diferenças de escopo e comportamento entre var, let e const. As diferenças de escopo entre functions e arrow functions. Os comportamentos gerados pelo hoisting, etc.</p>
+<p><br/><br/><br/></p>
+
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Enviando eventos para diferentes abas de um mesmo domínio sem precisar de um Backend</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="Imagine que vc tem diversas abas de um mesmo site abertas e vc quer enviar um evento pra todas essas abas sem precisar de nenhum backend, pure front">
+  <meta property="og:title" content="Enviando eventos para diferentes abas de um mesmo domínio sem precisar de um Backend">
+  <meta property="og:description" content="Imagine que vc tem diversas abas de um mesmo site abertas e vc quer enviar um evento pra todas essas abas sem precisar de nenhum backend, pure front">
+  <meta property="og:site_name" content="Web Development & anything else">
+  <meta property="og:url" content="https://felipperegazio.com/posts/event-between-tabs">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Web Development & anything else">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Enviando eventos para diferentes abas de um mesmo domínio sem precisar de um Backend">
+  <meta name="twitter:description" content="Imagine que vc tem diversas abas de um mesmo site abertas e vc quer enviar um evento pra todas essas abas sem precisar de nenhum backend, pure front">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Enviando eventos para diferentes abas de um mesmo domínio sem precisar de um Backend</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      11/9/2022, 3:28:26 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+
+<p>Imagine que vc tem diversas abas de um mesmo site abertas e vc quer enviar um evento pra todas essas abas sem precisar de nenhum backend, pure front. </p>
+<p>Ex: user clicou em &quot;Sair&quot; e todas as abas abertas devem mostrar uma mensagem discreta: &quot;Usuário deslogado&quot;</p>
+<p>Existem algumas formas de fazer, mas não tão simples quanto a que vou mostrar aqui:</p>
+<p>Vamos utilizar o evento &quot;storage&quot; da window.</p>
+<p>Esse evento escuta toda vez que um dado é modificado na storage (local/session) é modificado num mesmo contexto: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event">https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event</a></p>
+<p>O que significa isso: Quer dizer que se eu tenho 10 abas de um site abertas e eu modificar a local storage em qualquer uma dessa abas, o evento &quot;storage&quot; será imediatamente executado nas 10 abas.</p>
+<p>Isso nos permite utilizar o evento &quot;storage&quot; pra criar um sistema de &quot;broadcast&quot; que funciona inteiro via Front End, sem a necessidade de Backend. </p>
+<p>Embora bem limitado, pode ser bem util pra todo tipo de notificação efemera, como o usuário &quot;sair&quot; e todas as abas saberem disso.</p>
+<p>Basicamente o evento &quot;storage&quot; é descrito dessa forma:</p>
+<pre><code class="language-js">window.addEventListener(&quot;storage&quot;, (e) =&gt; { ... });
+</code></pre>
+<p>Toda vez que a storage é modificada vamos escutar e receber algumas informações como qual chave foi modificada, o valor antigo e o valor novo da nossa modificação.</p>
+<p>Isso é o suficiente pra construirmos uma função &quot;listener&quot;. É essa função que vai escutar as modificações da nossa storage. Ou seja: essa função vai escutar nossas &quot;mensagens&quot;.</p>
+<pre><code class="language-js">const BROADCAST_TRANSFER_KEY = &#39;broadcast-message&#39;;
+
+function listen () {
+  if (!window.BROADCAST_LISTENER) {
+    window.BROADCAST_LISTENER = window.addEventListener(&#39;storage&#39;, (e) =&gt; {
+      if (e.key !== BROADCAST_TRANSFER_KEY ) {
+        return false;
+      }
+        
+      const message = JSON.parse(e.newValue);
+      
+      if (message &amp;&amp; message.broadcast) {
+        alert(message.payload);
+      }
+    });
+  }
+}
+</code></pre>
+<p>Pra acessar o código acima basta clicar no &quot;ALT&quot; contido na imagem e vc vai conseguir copia-lo como texto. </p>
+<p>Essa função basicamente escuta nossa storage, e toda vez que a chave &quot;broadcast-message&quot; for modificada no nosso contexto ela executará nosso callback.</p>
+<p>O callback por sua vez faz o parse do dos dados modificados na chave &quot;broadcast-message&quot; da storage, e verifica se os dados inseridos tem um parametro broadcast: true (por segurança). Se sim, dá um alert passando os dados de &quot;payload&quot;.</p>
+<p>Pra testar é simples:</p>
+<ol>
+<li><p>Abra varias abas de um mesmo site (umas 3).  </p>
+</li>
+<li><p>Abra o console, cole esse codigo em todas e chame a função listen() em seguida pra ativar nosso listener</p>
+</li>
+</ol>
+<p>Agora vamos enviar mensagens.</p>
+<p>Agora que vc executou o listener em todas as suas abas, para enviar uma mensagem vc vai precisar dessa função (Clique no parametro ALT pra pega-la em modo texto).</p>
+<p>Obs: A BROADCAST_TRANSFER_KEY foi declarada no snippet anterior. Se precisar, declare ela de novo com o mesmo valor</p>
+<pre><code class="language-js">function send (payload) {
+  localStorage.setItem(BROADCAST_TRANSFER_KEY, JSON.stringify({ 
+    payload, 
+    broadcast: true 
+  }));
+
+  localStorage.removeItem(BROADCAST_TRANSFER_KEY);
+}
+</code></pre>
+<p>Agora va em qualquer uma das abas que vc deixou abertas (as mesmas em que colou o snippet com a função listen)</p>
+<p>Cole essa nova função (send) e chame-a enviando uma mensagem, ex:</p>
+<pre><code class="language-js">send(&quot;Hello from the other side!&quot;);
+</code></pre>
+<p>Pronto, agora visite as outras abas e veja a mágica acontecer 😊 Agora fica fácil mandar uma mensagem de usuário deslogado pra todas as abas, por ex, né haha.</p>
+<p>O browser possui uma API específica para esse fim via Worker também, caso você queira saber mais: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API">https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API</a></p>
+
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

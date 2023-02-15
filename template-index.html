@@ -55,7 +55,7 @@
       fetch('https://cvkeep-backend.herokuapp.com/curriculum/get?username=felipperegazio', { cache: 'force-cache' })
         .then(r => r.json())
         .then(data => {
-          about.textContent = data.presentation.description;
+          about.innerHTML = data.presentation.description;
         })
         .catch(console.error);
     </script>

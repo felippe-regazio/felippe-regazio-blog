@@ -48,33 +48,27 @@
     <h2 class="pm-text-primary pm-h4">Howdy! My name is Felippe Regazio and I fucking love coding</h2>
     <hr>
   
-    <p>
-      I'm a passionate web developer - Front End Specialist, Development Generalist and 
-      Open sourcerer. In short: a strange carbon-based lifeform. I'm the creator of 
-      <a href="https://cvkeep.com/" target="_blank">CvKeep</a>,       
-      and other open source projects like 
-      <a href="https://felippe-regazio.github.io/plume-css/" target="_blank">PlumeCSS</a>, 
-      <a href="https://github.com/felippe-regazio/1post" target="_blank">1Post</a>, 
-      <a href="https://github.com/felippe-regazio/logflake" target="_blank">LogFlake</a>,
-      <a href="https://github.com/felippe-regazio/express-rest-i18n" target="_blank">Express-i18n-Middleware</a> 
-      and others, in addition to being an active FOSS community member.
-    </p>
+    <p id="about"></p>
+    
+    <script>
+      const about = document.getElementById('about');
+
+      fetch('https://cvkeep-backend.herokuapp.com/curriculum/get?username=felipperegazio', { cache: 'force-cache' })
+        .then(r => r.json())
+        .then(data => {
+          about.textContent = data.presentation.description
+        })
+        .catch(() => {
+          about.textContent = 'Howdy! I\'m Felippe Regazio, a passionate web developer - Front End Specialist/Architect, Development Generalist and Open sourcerer. In short: a strange carbon-based lifeform';
+        });
+    </script>
+
+    <h2>Social</h2>
 
     <p>
-      I usually write code for large apps with mixed stacks | JS, Node, React, Vue, S[CSS], Mongo, SQL, Go, etc | 
-      and high traffic such as content portals, Software as a Service apps, industrial scale CMSes, Banking dashboards 
-      and even End to End Products. I'm also a Front End Architecture having architected and helped to evolve systems with strong cache 
-      and service working policies, agnostic design systems, micro-frontends environments, ui-kits, and many in-house 
-      and open source tools to help products to grow. I have worked and  collaborated with companies like Pismo.IO, mLabs, TSC BR/France, 
-      Havaianas BR/USA, HBO, Dell and many others.
-    </p>
-
-    <h2>Find me at</h2>
-
-    <p>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank">My Resumé</a> | 
       <a href="https://github.com/felippe-regazio" target="_blank">GitHub</a> | 
       <a href="https://twitter.com/felipperegazio" target="_blank">Twitter</a> | 
-      <a href="https://cvkeep.com/felipperegazio" target="_blank">CvKeep</a> | 
       <a href="https://www.linkedin.com/in/felippe-regazio/" target="_blank">LinkedIn</a>
     </p>
     

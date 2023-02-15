@@ -47,7 +47,7 @@
     <h2 class="pm-text-primary pm-h4">{{blog_description}}</h2>
     <hr>
   
-    <p id="about"></p>
+    <p id="about">I'm a passionate software engineer - Front End Specialist and Architect, Development Generalist and Open sourcerer. In short: a strange carbon-based lifeform.</p>
     
     <script>
       const about = document.getElementById('about');
@@ -57,9 +57,7 @@
         .then(data => {
           about.textContent = data.presentation.description;
         })
-        .catch(() => {
-          about.textContent = 'I\'m a passionate software engineer - Front End Specialist and Architect, Development Generalist and Open sourcerer. In short: a strange carbon-based lifeform';
-        });
+        .catch(console.error);
     </script>
 
     <h2>Social</h2>

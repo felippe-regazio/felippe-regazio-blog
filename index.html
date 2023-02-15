@@ -48,7 +48,7 @@
     <h2 class="pm-text-primary pm-h4">Howdy! My name is Felippe Regazio and I fucking love coding</h2>
     <hr>
   
-    <p id="about"></p>
+    <p id="about">I'm a passionate software engineer - Front End Specialist and Architect, Development Generalist and Open sourcerer. In short: a strange carbon-based lifeform.</p>
     
     <script>
       const about = document.getElementById('about');
@@ -56,11 +56,9 @@
       fetch('https://cvkeep-backend.herokuapp.com/curriculum/get?username=felipperegazio', { cache: 'force-cache' })
         .then(r => r.json())
         .then(data => {
-          about.textContent = data.presentation.description
+          about.textContent = data.presentation.description;
         })
-        .catch(() => {
-          about.textContent = 'Howdy! I\'m Felippe Regazio, a passionate web developer - Front End Specialist/Architect, Development Generalist and Open sourcerer. In short: a strange carbon-based lifeform';
-        });
+        .catch(console.error);
     </script>
 
     <h2>Social</h2>

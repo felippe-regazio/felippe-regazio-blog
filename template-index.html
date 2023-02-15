@@ -48,17 +48,6 @@
     <hr>
   
     <p id="about">I'm a passionate software engineer - Front End Specialist and Architect, Development Generalist and Open sourcerer. In short: a strange carbon-based lifeform.</p>
-    
-    <script>
-      const about = document.getElementById('about');
-
-      fetch('https://cvkeep-backend.herokuapp.com/curriculum/get?username=felipperegazio', { cache: 'force-cache' })
-        .then(r => r.json())
-        .then(data => {
-          about.innerHTML = data.presentation.description;
-        })
-        .catch(console.error);
-    </script>
 
     <h2>Social</h2>
 

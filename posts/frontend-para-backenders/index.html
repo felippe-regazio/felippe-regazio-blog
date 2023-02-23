@@ -74,27 +74,22 @@
 <p>Antigamente toda vez que vc acessava uma pagina, uma request era feita para um servidor que retornava o conteudo dela para o browser desenhar o HTML e prover os recursos. Hoje isso não funciona mais assim na maior parte das vezes.</p>
 <p>SPA significa: Single Page Application. Isso significa que quando vc abrir um front o que será carregado vai ser um Bundle JS todo fatiado. Aquilo é basicamente a aplicação inteira. É quase como &quot;instalar&quot; um app no navegador. A partir daí tudo é carregado DINAMICAMENTE</p>
 <p>Quando sua pagina for carregada no front, é o front geralmente que vai:</p>
-<ul>
-<li><p>controlar as rotas (URLs e como elas mudam, o backe nem vai enxergar)</p>
-</li>
-<li><p>quase toda request para API será dinamica via http-request e cross domain</p>
-</li>
-<li><p>se vc mudar de pagina o FRONT carrega ela</p>
-</li>
-</ul>
+<p>. controlar as rotas (URLs e como elas mudam, o backe nem vai enxergar)</p>
+<p>.  quase toda request para API será dinamica via http-request e cross domain</p>
+<p>. se vc mudar de pagina o FRONT carrega ela</p>
 <p>Na pratica isso quer dizer que não adianta o back fazer malabarismos de segurança, gateways, sessões mágicas que definem estado de login baseado em requests, redirects rebuscados pq: NAO VAI FUNCIONAR rs.</p>
 <p>Cabe ainda citar que: http-requests são stateless, o front só vai conhecer seu backend no momento da request, assim que a request terminar, seu backend não sabe que o client existe nem vice-versa.</p>
 <p>Se vc decidir INSTALAR mesmo essa aplicação no browser, vc tem uma PWA: Progressive Web App. Ou aplicação web progressiva, isso pq ela carrega toda a casca e vai pedindo recursos pro server PROGRESSIVAMENTE. Ou seja: o back tem pouca governança sobre o funcionamento do Front.</p>
-<h2 id="🟨-bff">🟨 BFF</h2>
+<h2 id="bff">BFF</h2>
 <p>Com esse monte de regras pode ser que o front comece a se meter muito no backend e até a forçar certos modelos. Isso pode ser ruim, daí que entra o &quot;Back For Front&quot;, uma camada backend criada exclusivamente pra fazer a ponte entre um Client e uma API complexa.</p>
 <p>Em organizações mais complexas, com times de backends complexos e grandes um BFF salva muito o tempo dos fronts e dá MUITA liberdade pra ambos os lados, bem como deixa o proprio front cuidar de aspectos de back inerentes ao Front. pra saber mais:</p>
 <p><a href="https://felipperegazio.com/posts/vamos-falar-de-bff-pattern/" target="_blank">Vamos falar de BFF Pattern?</a></p>
-<h2 id="🟨-urldominos-importam">🟨 URL/DOMINOS IMPORTAM!</h2>
+<h2 id="urldominos-importam">URL/DOMINOS IMPORTAM!</h2>
 <p>Muitas vezes em requests de microservices para microservices, um domino ou URL é um mero endpoint para um recurso, e não dita nada mais que isso. (as vezes não, mas geralmente URL pro back são endpoints, não são contratos).</p>
 <p>Para o front a URL é um contrato. Ela é atrelada a uma cacetada de políticas e verificações:</p>
 <p>CORS, CSP, Cookie Policies, Roteamento de SPAs, . Numa SPA então o Front terá pleno domínio da URL, historico e roteamento via Client mesmo.</p>
 <p>Leve isso em conta, dependendo de onde um back coloca um recurso, se muda ele de lugar, ou se resolve enxer de parametros, queries, hashes, isso pode influenciar profundamente o front. Nada ali é &quot;só mover do dominio X pro Y que quando o front bater vai dar no mesmo&quot;. Não vai rs.</p>
-<h2 id="🟨-dado-vem-dado-volta-same-model">🟨 Dado vem, dado volta (same model)</h2>
+<h2 id="dado-vem-dado-volta-same-model">Dado vem, dado volta (same model)</h2>
 <p>Não importa como Forms são construídos no front, uma coisa é certa: Da mesma forma que eles vieram eles tem que voltar pra garantir uma boa UX e uma boa DX.</p>
 <p>Isso deve-se a varios motivos estruturais que não vou discorrer aqui, mas uma coisa deve ser feita:</p>
 <p>Se um recurso é editavel, o back deve procurar fechar um contrato com o front e não fugir dessa estrutura. Ex: Vc vai fazer uma todo list com os seguintes endpoints</p>
@@ -102,12 +97,18 @@
 <p>PUT /item { itemID, itemDescription }</p>
 <p>Vc tem um endpoint que lista e um que insere um novo item. Logo vc teria o de editar, certo?</p>
 <p>Para esses endpoints a estrutura de item deve ser sempre a MESMA. Todos os items retornados em /items devem ser:</p>
-<p> { itemID, itemDescription }</p>
-<p>O dado que vai via PUT?</p>
-<p> { itemID, itemDescription }</p>
+<pre><code> { itemID, itemDescription }
+</code></pre>
+<p>O dado que vai criar?</p>
+<pre><code> { itemDescription }
+</code></pre>
 <p>O que vai pra editar?</p>
-<p> { itemID, itemDescription }</p>
-<p> O contrato pode ter campos decrementais (opcionais), mas não deve mudar de estrutura. Se o contrato muda de acordo com a ação nos endpoints para um mesmo recurso o front vai ter que fazer uma cacetada de malabarismo pra entender quando o user ta tomando cada ação (criar, editar, etc) e mudar o modelo de acordo com isso: bugs a vista e complexidade desnecessária.</p>
+<pre><code> { itemID, itemDescription }
+</code></pre>
+<p>O que vai deletar?</p>
+<pre><code> { itemID }
+</code></pre>
+<p> O contrato pode ter campos decrementais (opcionais), mas não deve mudar de estrutura. Veja que as vezes itemID é opcional, às vezes itemDescription é opcional, mas a estrutura do contrato nunca muda. Se o contrato muda de acordo com a ação nos endpoints para um mesmo recurso o front vai ter que fazer uma cacetada de malabarismo pra entender quando o user ta tomando cada ação (criar, editar, etc) e mudar o modelo de acordo com isso: bugs a vista e complexidade desnecessária.</p>
 <h2 id="thats-all-folks">Thats all folks</h2>
 <p>Importante ter em mente que o front virou um monstrinho, não é mais aquela coisa desarticulada e simplista. Pense numa aplicação Front com basicamente a mesma (ou mais) complexidade que uma aplicação desktop  rodando num SO chamado Browser.</p>
 

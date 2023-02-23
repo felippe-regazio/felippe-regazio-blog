@@ -39,11 +39,11 @@ SPA significa: Single Page Application. Isso significa que quando vc abrir um fr
 
 Quando sua pagina for carregada no front, é o front geralmente que vai:
 
-- controlar as rotas (URLs e como elas mudam, o backe nem vai enxergar)
+. controlar as rotas (URLs e como elas mudam, o backe nem vai enxergar)
 
--  quase toda request para API será dinamica via http-request e cross domain
+.  quase toda request para API será dinamica via http-request e cross domain
 
-- se vc mudar de pagina o FRONT carrega ela
+. se vc mudar de pagina o FRONT carrega ela
 
 Na pratica isso quer dizer que não adianta o back fazer malabarismos de segurança, gateways, sessões mágicas que definem estado de login baseado em requests, redirects rebuscados pq: NAO VAI FUNCIONAR rs.
 
@@ -51,7 +51,7 @@ Cabe ainda citar que: http-requests são stateless, o front só vai conhecer seu
 
 Se vc decidir INSTALAR mesmo essa aplicação no browser, vc tem uma PWA: Progressive Web App. Ou aplicação web progressiva, isso pq ela carrega toda a casca e vai pedindo recursos pro server PROGRESSIVAMENTE. Ou seja: o back tem pouca governança sobre o funcionamento do Front.
 
-## 🟨 BFF
+## BFF
 
 Com esse monte de regras pode ser que o front comece a se meter muito no backend e até a forçar certos modelos. Isso pode ser ruim, daí que entra o "Back For Front", uma camada backend criada exclusivamente pra fazer a ponte entre um Client e uma API complexa.
 
@@ -59,7 +59,7 @@ Em organizações mais complexas, com times de backends complexos e grandes um B
 
 <a href="https://felipperegazio.com/posts/vamos-falar-de-bff-pattern/" target="_blank">Vamos falar de BFF Pattern?</a>
 
-## 🟨 URL/DOMINOS IMPORTAM!
+## URL/DOMINOS IMPORTAM!
 
 Muitas vezes em requests de microservices para microservices, um domino ou URL é um mero endpoint para um recurso, e não dita nada mais que isso. (as vezes não, mas geralmente URL pro back são endpoints, não são contratos).
 
@@ -69,7 +69,7 @@ CORS, CSP, Cookie Policies, Roteamento de SPAs, . Numa SPA então o Front terá 
 
 Leve isso em conta, dependendo de onde um back coloca um recurso, se muda ele de lugar, ou se resolve enxer de parametros, queries, hashes, isso pode influenciar profundamente o front. Nada ali é "só mover do dominio X pro Y que quando o front bater vai dar no mesmo". Não vai rs.
 
-## 🟨 Dado vem, dado volta (same model)
+## Dado vem, dado volta (same model)
 
 Não importa como Forms são construídos no front, uma coisa é certa: Da mesma forma que eles vieram eles tem que voltar pra garantir uma boa UX e uma boa DX.
 
@@ -85,17 +85,29 @@ Vc tem um endpoint que lista e um que insere um novo item. Logo vc teria o de ed
 
 Para esses endpoints a estrutura de item deve ser sempre a MESMA. Todos os items retornados em /items devem ser:
 
+```
  { itemID, itemDescription }
+```
 
-O dado que vai via PUT?
+O dado que vai criar?
 
- { itemID, itemDescription }
+```
+ { itemDescription }
+```
 
 O que vai pra editar?
 
+```
  { itemID, itemDescription }
+```
 
- O contrato pode ter campos decrementais (opcionais), mas não deve mudar de estrutura. Se o contrato muda de acordo com a ação nos endpoints para um mesmo recurso o front vai ter que fazer uma cacetada de malabarismo pra entender quando o user ta tomando cada ação (criar, editar, etc) e mudar o modelo de acordo com isso: bugs a vista e complexidade desnecessária.
+O que vai deletar?
+
+```
+ { itemID }
+```
+
+ O contrato pode ter campos decrementais (opcionais), mas não deve mudar de estrutura. Veja que as vezes itemID é opcional, às vezes itemDescription é opcional, mas a estrutura do contrato nunca muda. Se o contrato muda de acordo com a ação nos endpoints para um mesmo recurso o front vai ter que fazer uma cacetada de malabarismo pra entender quando o user ta tomando cada ação (criar, editar, etc) e mudar o modelo de acordo com isso: bugs a vista e complexidade desnecessária.
 
 ## Thats all folks
 

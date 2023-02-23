@@ -109,6 +109,22 @@ O que vai deletar?
 
  O contrato pode ter campos decrementais (opcionais), mas não deve mudar de estrutura. Veja que as vezes itemID é opcional, às vezes itemDescription é opcional, mas a estrutura do contrato nunca muda. Se o contrato muda de acordo com a ação nos endpoints para um mesmo recurso o front vai ter que fazer uma cacetada de malabarismo pra entender quando o user ta tomando cada ação (criar, editar, etc) e mudar o modelo de acordo com isso: bugs a vista e complexidade desnecessária.
 
+Ex a não se fazer:
+
+criar
+
+```
+{ create: { itemDescription } }
+````
+
+editar
+
+```
+{ edit: { itemId, itemDescription } }
+````
+
+Veja que o contrato muda de um metodo pro outro no mesmo endpoint. Mudar a estrutura/contrato de requisição de um metodo pro outro é torcer o front igual pano de chão :( O ideal é sempre tentar ao máximo manter o contrato consistente em todos os métodos. Se um campo pode ser omitido, ele é opcional e pronto, mas ficar mudando a estrutura das coisas é problema.
+
 ## Thats all folks
 
 Importante ter em mente que o front virou um monstrinho, não é mais aquela coisa desarticulada e simplista. Pense numa aplicação Front com basicamente a mesma (ou mais) complexidade que uma aplicação desktop  rodando num SO chamado Browser.

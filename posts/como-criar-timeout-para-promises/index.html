@@ -1,0 +1,107 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Como adicionar Timeout em Promises não confiáveis</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="Algumas promises podem nunca resolver, a depender de como são construídas ou do que estão fazendo, se possuem unreacheable code, callbacks perdidos, etc etc. Nesse caso vc teria um memory leak e problemas de fluxo... Vc vai ter que arrumar anyway, mas colocar um timeout ajuda">
+  <meta property="og:title" content="Como adicionar Timeout em Promises não confiáveis">
+  <meta property="og:description" content="Algumas promises podem nunca resolver, a depender de como são construídas ou do que estão fazendo, se possuem unreacheable code, callbacks perdidos, etc etc. Nesse caso vc teria um memory leak e problemas de fluxo... Vc vai ter que arrumar anyway, mas colocar um timeout ajuda">
+  <meta property="og:site_name" content="Web Development & anything else">
+  <meta property="og:url" content="https://felipperegazio.com/posts/como-criar-timeout-para-promises">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Web Development & anything else">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Como adicionar Timeout em Promises não confiáveis">
+  <meta name="twitter:description" content="Algumas promises podem nunca resolver, a depender de como são construídas ou do que estão fazendo, se possuem unreacheable code, callbacks perdidos, etc etc. Nesse caso vc teria um memory leak e problemas de fluxo... Vc vai ter que arrumar anyway, mas colocar um timeout ajuda">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Como adicionar Timeout em Promises não confiáveis</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      2/28/2023, 4:11:52 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>Algumas promises podem nunca resolver, a depender de como são construídas ou do que estão fazendo, se possuem unreacheable code, callbacks perdidos, etc etc. Nesse caso vc teria um memory leak e problemas de fluxo... Vc vai ter que arrumar anyway, mas colocar um timeout ajuda.</p>
+<p>Isso significa que a Promise terá o tempo que vc estipular para ser resolvida ou rejeitada, se nada disso acontecer, ela será automaticamente rejeitada. Pra fazer isso usamos &quot;Promise.race&quot;</p>
+<p>Eis o código:</p>
+<pre><code class="language-javascript">/**
+ * Adiciona um callback (tieout) para qualquer promise
+ * Função &quot;timeout&quot; que recebe qualquer promise como parametro, e um &quot;time&quot; em ms
+ * 
+ * A função cria uma chamada Promise.race passando nossa &quot;promise&quot; e em seguida
+ * passando uma Promise dinamica que é automaticamente rejeitada após o &quot;time&quot;
+ * estipulado; como a Promise.race resolve para a promise que for processada
+ * primeiro, se nossa promise demorar mais que o tempo estipulado o callback
+ * dinamico vai triggar um reject resolvendo o racing e liberando a meória
+ * 
+ * Exemplos de uso:
+ * 
+ * timeout(new Promise(() =&gt; {}), 1000);
+ * timeout(new Promise((r) =&gt; r(true)), 1000);
+ * const anything = await timeout(new Promise(() =&gt; {}), 1000);
+ * 
+ * @param promise : Promise&lt;any&gt;
+ * @param time : Number
+ * @returns Promise&lt;unknown&gt;
+ */
+const timeout = (promise, time) =&gt; Promise.race([
+  promise,
+  new Promise((_, reject) =&gt; setTimeout(() =&gt; reject(&#39;Promise timedout&#39;), time))
+]);
+</code></pre>
+<p>Promise.race aceita um array de Promises e resolve o valor da Promise que se resolver primeiro. Pra saber mais sobre Promise.race: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race" target="_blank">MDN Promise.race()</a></p>
+<p>No nosso snippet nós passamos para o Promise.race a nossa promise (callback) e criamos uma segunda Promise dinamica que será rejeitada após o tempo estipulado. Ou seja: nós forçamos nossa primeira Promise a resolver no timeout especificado ou vamos trigar um reject a força haha</p>
+<p>O que acontece é que se nossa promise original não resolver ou falhar, a que setamos com timeout vai trigar um reject e o race vai ser resolvido, liberarando a memória.</p>
+<p>Uso:</p>
+<pre><code class="language-javascript">timeout(new Promise((resolve, reject) =&gt; { ... }), 5000);
+</code></pre>
+<p>A promise acima terá 5 seg pra ser processada (seja com sucesso ou não) ou será liberada da fila de execução pelo timeout trigado via Promise.race.</p>
+<p>Vc pode usar essa tecnica com qualquer tipo de &quot;Promisable&quot;, inclusive awaits.</p>
+<pre><code class="language-javascript">const anything = await timeout(new Promise((resolve, reject) =&gt; { ... }), 5000);
+</code></pre>
+<p>É isso.</p>
+
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

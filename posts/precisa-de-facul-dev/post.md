@@ -35,6 +35,12 @@ se você consegue encarar ritmo X ou Y agora, se pra vc a prioridade é arrumar 
 ninguém vai poder de dar as respostas das decições que vc tem que tomar pra sua vida. O que pode ser feito - no máx - é o que to fazendo agora: jogar a real: não se ache muito esperto/a por se abster definitivamente 
 de assuntos importantes que vc ACHA desnecessários ou que não parecem prioritários no momento, como se vc fosse espertão, vc pode acabar se estagnando ou perdendo capacidade competitiva no mercado muito rápido e nem notar.
 
+E não se engane, todo mundo que fez facul e seguiu trilha academica vai defender a facul (pq não quer sentir que perdeu tempo). E todo mundo que não fez vai dizer que não precisa e foda-se, quando a questão correta é: vc aprendeu o que tinha que aprender, com ou sem facul?
+
+A questão correta é essa pq esse é o verdadeiro gate-keeper. Grandes empresas não pedem facul para se candidatar, mas pedem conhecimento (adquirido da forma que for).
+
+Quem tem facul geralmente entra pois foi exposto a estudos e temas que pessoas que não cursaram uma facul inocentemente ignoraram, daí a facul leva todo o onus. Mas no fim das contas é algo mais simples: Vc sabe isso, seja lá onde for que vc aprendeu? Ou seja: estude, se não agora, depois... mas estude ao invés de apenas reproduzir, seja numa facul ou fora dela.
+
 Comece fazendo o que for possível, depois faça o que for necessário. 
 
 No mais, boa sorte e bons estudos!

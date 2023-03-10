@@ -1,0 +1,103 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Utilizar Type Coercion para criticar JS não te faz parecer inteligente</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="Coerce é um aspecto legado do JS que visava trazer resiliencia a linguagem. Vamos entender melhor porque essa coisa contra-intuitiva existe no JS e porque tanta gente entende isso errado.">
+  <meta property="og:title" content="Utilizar Type Coercion para criticar JS não te faz parecer inteligente">
+  <meta property="og:description" content="Coerce é um aspecto legado do JS que visava trazer resiliencia a linguagem. Vamos entender melhor porque essa coisa contra-intuitiva existe no JS e porque tanta gente entende isso errado.">
+  <meta property="og:site_name" content="Web Development & anything else">
+  <meta property="og:url" content="https://felipperegazio.com/posts/coerce-is-not-a-crime">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Web Development & anything else">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Utilizar Type Coercion para criticar JS não te faz parecer inteligente">
+  <meta name="twitter:description" content="Coerce é um aspecto legado do JS que visava trazer resiliencia a linguagem. Vamos entender melhor porque essa coisa contra-intuitiva existe no JS e porque tanta gente entende isso errado.">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Utilizar Type Coercion para criticar JS não te faz parecer inteligente</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      3/10/2023, 3:50:04 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>Type Coercion (ou coerce, para os intimos) é o cast automático ou implícito entre diferentes tipos em uma expressão. Basicamente o que acontece quando vc faz <code>11 + &quot;1&quot; === &quot;111&quot; // true</code> em JS. E sim, essa expressão está correta. Veja o quadrinho abaixo:</p>
+<img style="max-width: 100%; display: block" src="./coerce.jpeg" /> 
+
+<p>O que aconteceu aí é o seguinte:</p>
+<p>O JS vai ler a expressão para resolver o resultado, o type coerce vai tentar forçar a resolução da expressão custe o que custar pra manter sua pág funcionando mesmo que haja uma pequena inconsistencia conceitual da sua parte.</p>
+<p>Quando o parser encontrar um operador valido numa expressão multi-typing, vai normalizar os tipos até resolver a expressão. Como vc somou uma string com um numero, o tipo que prevalece é a String e o operador + vai forçar o coerce de 1 para &quot;1&quot; fazendo concatenação afim de resolver a expressão.</p>
+<p>Mas quando se trata de subtração vc não pode forçar &quot;desconcatenação&quot; com um operador negativo numa expressão que começa com uma String, o JS não pode arrancar char da string (até pq ela é constante e imutable). Como vc não pode &quot;decrementar&quot; de String, então o coerce é esperto o bastante para fazer o cast da String para Number afim de resolver a expressão a qualquer custo:</p>
+<p>&quot;11&quot; + 1 = String(11) coerce(&quot;11&quot;+1) = String(11) + String(1) = &quot;111&quot;</p>
+<p>e</p>
+<p>&quot;11&quot; - 1 = String(11) coerce(&quot;11&quot;-1) = Number(11) - 1 = 10</p>
+<p>Isso é definido pela premissa &quot;Dont break the web&quot;, o que significa que a linguagem deve ser flexivel o bastante para deixar a runtime continuar mesmo que o dev aparentemente não saiba o que está fazendo como o caso dos codigos nos exemplos. Isso pq JS é singlethread by design e no começo da web nem se falava em multithread, daí ja pensou sua pagina inteira quebrando e sem carregar pq um nocego tacou um &quot;11&quot; + 1 em algum lugar? hahaha</p>
+<p>Lembrando que: type coercion não é pra ser usado como feature. É &quot;errado&quot; sair tacando multi-typed expressions no seu codigo, vai ser contra intuitivo, vai te dar problemas. Isso existe por conta do historico evolucional da web e só. Na dúvida, prefira TS então.</p>
+<p>Referencia se vc quiser saber mais sobre type coercion:</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Glossary/Type_coercion">https://developer.mozilla.org/en-US/docs/Glossary/Type_coercion</a></p>
+<p>Eu não quero aqui defender JS a todo custo, pq tem varios pontos bostas e langs MUITO mais robustas mesmo. Mas não é interessante clamar uma virtude que não existe sobre um aspecto que não é de fato o problema que parece ser. Por isso vc não vai parecer inteligente tentando danificar a imagem de uma linguagem de programação estabelecida criticando esse aspecto, na verdade vai mostrar que você não sabe muito bem do que está falando. &quot;Ah mas piadas sobre coerce são engraçadas ué!&quot;. Sim, são mesmo hehuehuehue, o que é complicado é levar elas a sério e achar que são demonstração de perícia técnica quando: bem, não.</p>
+<p>&quot;Mas então eu sou obrigado/a a gostar do coerce sendo que esse troço é contra intuitivo, esquisito e me parece muito errado?&quot;&quot;</p>
+<p>Não, você não é. Ninguém é, e de fato coerce é complicado e leva a problemas reais. A questão do coerce não é que alguem vai colocar na runtime <code>1 + &quot;11&quot;</code> mas é que expressões como essa podem surgir expontaneamente e não vão estourar erros na runtime. Isso é complicado porque leva a comportamentos inesperados e bugs difíceis de tracker. E sim: isso é uma merda. Porém, antes de fazer uma piada para parecer o mais inteligente dos Devs, isso também teve uma razão de existir:</p>
+<p>O motivo por detrás disso na época era o &quot;dont break the web&quot;, ou seja: sua pagina deveria rodar o maximo possivel sem freeze mesmo com erro (senão seria muito ruim a experiencia de navegação). Desse modo o coerce surgiu como um dispositivo de &quot;resiliencia&quot;. </p>
+<p>Considere que o JS rodava a principio &quot;client-only&quot;, assim considere também: multi device, backward-compatibility, multiple vendors, runtimes diferentes (lembra ter que dar suporte pra IE, Firefox e Chrome que rodavem runtimes diferentes), nenhuma padronização, nenhuma governança, etc. Era quase impossivel garantir um codigo web 100% sem erros, se tudo estourasse nehuma pagina abriria</p>
+<p>eu acho que o melhor mais proximo disso teria sido implementar error boundaries então (o que é ok), de resto complica mais ainda o JS sendo single threaded by default, é simples pra um erro besta causado pq nao havia coerce derrubar uma pag. inteira por ex :( Seria impossivel garantir que um codigo iria rodar EM TODO lugar de forma limpa e sem erros igual no seu ambiente, mesmo com testes, mesmo com type checking, porque poderia haver uma variação de runtime e pronto, sua página não abre mais.</p>
+<p>Olhando por esse lado quando porcaria ou desatenção quebraria uma página no meio ou geraria um freeze nela. Sendo JS single threaded então, isso se agrava. Se vc abrir qualquer pagina web e acompanhar o console dando permisssão pra ele mostrar todos os erros e warnings, verá que a internet é na verdade uma grande gambiarra. Ao trazer uma robustez absurda, talvez fosse impossível manter uma pagina navegável por muito tempo... Daí o coerce ser essa faca de dois gumes: ele fode sua experiencia de desenvolvimento, mas garante resiliencia para o software no meio de uma terra sem lei.</p>
+<p>Conforme a internet evoluiu e JS foi ganhando importancia, padronização, governança, isso começou a fazer menos sentido. E agora o coerce é apenas um entulho que enxe o saco ali no meio da linguagem. Com a vinda do TS então, isso ficou ainda mais latente. E daí entra um novo clamor:</p>
+<p><code>Seria bom se tivéssimos outra linguagem para o Front então</code></p>
+<p>Esse é um segundo clamor ingênuo. Uma vez eu fiz uma thread sobre isso e o proprio brendan eich respondeu algo bem interessante sobre: todas as langs terminariam macetadas igual o JS: <a href="/posts/what-brendan-eich-said-about-js-replacement/" target="_blank">O que Brendan Eich disse sobre a hipotese imaginária de substituir o JS por outra linguagem no Front, uma Aula gratuita via Twitter</a>.</p>
+<p>Basicamente o ponto do Brendan é que qualquer linguagem seria amaldiçoada pelo fardo de rodar num client multi-device com <code>backeward compatibility</code> e <code>dont break the web</code> principles nas costas. Fatalmente todas terminariam mais ou menos igual o JS (umas melhores, outras piores, mas bem próximas).</p>
+<p>TS é o próprio exemplo disso. TS dá certo pq é mantido por um unico vendor e compila pra JS que já garante backward compatibility. Quer matar o TS? Coloca ele nativo nos browsers forçando cada vendor pra manter sua própria runtime: ta feita a merda.</p>
+<p>Espera só pra ver o que a Apple ia fazer com um TS nativo no Safari HAHAHA, o que a Google ia implementar de diferente para tudo que ela não concorda, ou como a mozilla ia criar uma nova SPEC de tipos para o TS no browser pq não concorda com a visão da google. Some a isso: Multi device, backward compatibility e dont break the web para o mantenimento e voilá: fodeu. JS carrega isso nas costas e TS pode trabalhar em pás (digo, paz...).</p>
+<p>Aliás, essa é uma das maiores forças do TS, tão importante quando o próprio type system: É mantido por um UNICO vendor e tem uma especificação centralizada com um output padrão não importa quem rode, desde que propriamente configurado.</p>
+<p>Novamente: não quero aqui martirizar e trazer uma visão romantica de que JS é lindo e maravilhoso. Apenas colocar &quot;cada lugar na sua coisa&quot;: algumas merdas tem razão de ser. Se vc quer muito criticar JS, aqui vão alguns pontos interessantes:</p>
+<p>. Single threaded by design (shit)</p>
+<p>. API de datas roubada do Java (acho que da dec. de 90.. 80 sei lá) e nunca mais atualizada. Estão criando uma API nova chamada &quot;Temporal&quot; pra substituir.</p>
+<p>. limite matematico pobre</p>
+<p>. muito tempo sem governança e padronização, portanto carrega um monte de lixo</p>
+<p>. object null é uma aberração (null é um objeto e pode ser entendido como vazio pero no mucho)</p>
+<p>E por aí vai. Tem bastante coisa que dá pra usar pra falar mal de JS de verdade. Tem linguagens muito mais robustas pra se utilizar principalmente no backend a depende da sua necessidade em robustez, type/code safety e da velocidade que vc tem pra dispender. Dá também pra fazer um monte de piadinha sobre JS e o coerce (que é tenso mesmo). O que não da pra fazer é se achar uma virtuosi da programação achando que descobriu um &quot;&quot;&quot;bug&quot;&quot;&quot; quando simplesmente vc tá frente a um comportamento que vc não entende. Se vc ainda for curioso e quiser ver uma cacetada de &quot;problemas&quot; de coerce e comportamentos absurdos e suas explicações, tem um repo só disso: <a href="https://github.com/denysdovhan/wtfjs" target="_blank">WTFJS</a></p>
+
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

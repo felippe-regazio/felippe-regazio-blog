@@ -4,7 +4,7 @@
   "post_created_at": "Wed Apr 26 2023 00:04:28 GMT-0300 (Horário Padrão de Brasília)"
 }:::-->
 
-```
+
 ao meu ver, o profissional "mediocre" tem que conseguir colocar comida na mesa, ter algum conforto, e viver ok.
 
 assim, quem se destaca deve receber algo de destaque, pra não criarmos uma sociedade sem mediocres, onde vc  se destaca pra sobreviver e receber como um mediocre.
@@ -20,4 +20,3 @@ o profissional mediocre não dorme bem, o que não tem "função" formal mal com
 :/
 
 sem contar que mediocridade é relativo. ex: vc não vê devs de destaque comprando casa luxuosa em condominio, tendo 3 carros e uma casa na praia. mas vc vê médicos mediocres fazendo isso
-```

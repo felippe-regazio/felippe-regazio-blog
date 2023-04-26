@@ -4,7 +4,7 @@
   "post_created_at": "Wed Apr 26 2023 00:07:25 GMT-0300 (Horário Padrão de Brasília)"
 }:::-->
 
-```
+
 Este post visa listar conteúdos comumente pertinentes ao backend mas que agregam valor para frontenders. Esse valor pode ser tecnico ou não, como por exemplo: melhorar comunicabilidade, agilidade, tolerancia, entrosamento, etc. 
 
 Este post é voltado para Plenos/Seniores.
@@ -59,4 +59,3 @@ Aprenda a utilizar Postman e ferramentas relacionadas, alguma coisa de Curl / wg
 Bom, esses são os pontos que considero chave e que vão fazer de vc um/a frontender melhor, e com certeza muito mais amigável aos backenders. 
 
 Só o que citei acima já é coisa pra cacete, então não precisa sair vendo tudo de uma vez. Pegue um ponto e vá no seu tempo. Bons estudos!
-```

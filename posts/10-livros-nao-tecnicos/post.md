@@ -4,7 +4,7 @@
   "post_created_at": "Wed Apr 26 2023 00:00:56 GMT-0300 (Horário Padrão de Brasília)"
 }:::-->
 
-```
+
 O velho e o mar; Ernest Hemingway
 
 Poemas; wislawa szymborska
@@ -24,4 +24,3 @@ No mar; Toine heijmans
 Admiravel mundo novo; Huxley  
 
 Meditações; Marco Aurélio
-```

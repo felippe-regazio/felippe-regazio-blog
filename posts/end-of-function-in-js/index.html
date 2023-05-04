@@ -1,0 +1,114 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Quando uma função acaba para o interpretador JS?</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="Vamos tratar aqui de 3 questões simples: 1. ASI - Automatic Semicolon Insertion. 2. 'End of Function' e maneiras de interpreta-las. 3. Unreachable Code">
+  <meta property="og:title" content="Quando uma função acaba para o interpretador JS?">
+  <meta property="og:description" content="Vamos tratar aqui de 3 questões simples: 1. ASI - Automatic Semicolon Insertion. 2. 'End of Function' e maneiras de interpreta-las. 3. Unreachable Code">
+  <meta property="og:site_name" content="Web Development & anything else">
+  <meta property="og:url" content="https://felipperegazio.com/posts/end-of-function-in-js">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Web Development & anything else">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Quando uma função acaba para o interpretador JS?">
+  <meta name="twitter:description" content="Vamos tratar aqui de 3 questões simples: 1. ASI - Automatic Semicolon Insertion. 2. 'End of Function' e maneiras de interpreta-las. 3. Unreachable Code">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Quando uma função acaba para o interpretador JS?</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      5/4/2023, 4:13:36 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>Sem olhar em lugar nenhum, sem testar, simplesmente batendo o olho na função JS abaixo, se vc a executasse, o que ela retornaria?</p>
+<pre><code class="language-javascript">function fn() {
+  return 
+      1 
+      2
+}
+</code></pre>
+<p>Bom, fiz essa pergunta e 65% dos votantes responderam incorretamente. A resposta correta é &quot;undefined&quot;. Nessa thread eu vou explicar em detalhes o que tá acontecendo aí e mostrar umas doideiras do JS interpreter.</p>
+<img src="./img-1.png" style="max-width: 600px; display: block; margin: 0 auto; margin-bottom: 24px; padding: 0 8px" />
+
+<p>A ideia dessa poll não foi mostrar gambiarra em JS, mas abrir precedente para explicação de conceitos avançados. Vamos tratar aqui de 3 questões simples:</p>
+<ol>
+<li>ASI - Automatic Semicolon Insertion</li>
+<li>&quot;End of Function&quot; - Quando uma função termina?</li>
+<li>Unreachable Code</li>
+</ol>
+<p>Bom, o primeiro ponto é: JS por padrão necessita de ; porém elas são colocadas automaticamente pela ASI - Automatic Semicolon Insertion - então podemos simplesmente omiti-las. Porém, para a ASI, o código que vc viu seria interpretado assim:</p>
+<pre><code class="language-javascript">function fn() {
+  return ;
+      1;
+      2;
+}
+</code></pre>
+<p>Se vc notar então, temos um return vazio, seguido de valores arbitrários. Esses valores são lexicalmente validos, então o interpretador caga pra eles. </p>
+<p>Mas não é só isso. Aqui temos o seguindo ponto: END OF FUNCTION.</p>
+<p>Basicamente em JS um return significa o fim daquele bloco. O que vem depois será solenemente ignorado, a não ser que o interpretador julgue que há alguma possibilidade de que os valores após o return sejam parte da expressão retornada.</p>
+<p>Veja o código abaixo:</p>
+<p>Aqui o interpretador lê a função, encontra o + e infere que há uma expressão retornada e que tudo isso é parte do que está sendo retornado, portando a linha após o return não é ignorada. Há diversas regras e heurísticas pra determinar isso</p>
+<img src="./img-2.jpeg" style="max-width: 600px; display: block; margin: 0 auto; margin-bottom: 24px; padding: 0 8px" />
+
+<p>Porém, NA MENOR possibilidade de ser uma expressão, o interpreter irá adicionar as linhas ao resultado, mesmo que elas resultem em erro, veja</p>
+<img src="./img-3.jpeg" style="max-width: 600px; display: block; margin: 0 auto; margin-bottom: 24px; padding: 0 8px" />
+
+<p>Porém se o interpreter ler a função e não identificar resquícios de que os valores após o return não fazem parte do que está sendo retornado, tudo será solenemente ignorado até mesmo do ponto de vista de error thrown</p>
+<img src="./img-4.jpeg" style="max-width: 600px; display: block; margin: 0 auto; margin-bottom: 24px; padding: 0 8px" />
+
+<p>E quando falamos que o que vem após o return será solenemente ignorado é pq será MESMO. Veja o exemplo:</p>
+<img src="./img-5.jpeg" style="max-width: 600px; display: block; margin: 0 auto; margin-bottom: 24px; padding: 0 8px" />
+
+<p>A isso damos o nome de UNREACHABLE CODE. Ou CÓDIGO INALCANÇÁVEL.</p>
+<p>Diferentes linguagens lidam de formas diferentes com UNREACHABLES, e há diferentes tipos disso, mas a essencia é uma só: Um código que por determinadas razões existe porém nunca será executado.</p>
+<p>BONUS: Em JS existem algumas tecnicas para rodar coisas após returns, e essas tecnicas estão relacionadas a hacking e código malicioso. Basicamente fundamentam-se no usso de try/finally e asyncs. A ideia é burlar sistemas de segurança e ofuscar códigos. Veja o exemplo abaixo:</p>
+<p>Não vou me estender aqui pra não contribuir negativamente para o ecossistema web. Não entrarei em detalhes nem em contextos dessas tecnicas. Porem, veja a doideira:</p>
+<img src="./img-6.jpeg" style="max-width: 600px; display: block; margin: 0 auto; margin-bottom: 24px; padding: 0 8px" />
+
+<p>E como um extra, aqui <a src="https://felipperegazio.com/posts/preciso-colocar-ponto-virgula-javascript/" target="_blank">Um post meu a respeito da ASI</a>.</p>
+
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

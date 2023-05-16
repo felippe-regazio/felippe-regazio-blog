@@ -1,0 +1,106 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>CSS-In-JS nativo com Object.assign e objetos simples</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="Vc pode assinar Objetos CSS (CSS in JS) nativamente em JS utilizando: Object.assign(element.style, <StyleObject>); e o motivo é a parte mais legal">
+  <meta property="og:title" content="CSS-In-JS nativo com Object.assign e objetos simples">
+  <meta property="og:description" content="Vc pode assinar Objetos CSS (CSS in JS) nativamente em JS utilizando: Object.assign(element.style, <StyleObject>); e o motivo é a parte mais legal">
+  <meta property="og:site_name" content="Web Development & anything else">
+  <meta property="og:url" content="https://felipperegazio.com/posts/native-css-in-js">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Web Development & anything else">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="CSS-In-JS nativo com Object.assign e objetos simples">
+  <meta name="twitter:description" content="Vc pode assinar Objetos CSS (CSS in JS) nativamente em JS utilizando: Object.assign(element.style, <StyleObject>); e o motivo é a parte mais legal">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>CSS-In-JS nativo com Object.assign e objetos simples</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      5/16/2023, 1:38:30 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>Pois é, vc pode assinar Objetos CSS (CSS in JS) nativamente em JS utilizando:</p>
+<pre><code class="language-javascript">Object.assign(element.style, &lt;StyleObject&gt;);
+</code></pre>
+<p>Ou seja, vc pode extender a propriedade style de qualquer elemento JS e essa propriedade será espelhada para o atributo style da tag. É melhor do que fazer ligação direta via <code>element.style = &#39;...&#39;</code> rs. Ex:</p>
+<pre><code class="language-javascript">// div sem estilo &lt;div&gt;&lt;/div&gt;
+const div = document.createElement(&#39;div&#39;);
+
+// estilizando a div
+Object.assign(div.style, {
+  display: &#39;flex&#39;,
+  alignItems: &#39;center&#39;,
+  justifyContent: &#39;center&#39;
+});
+
+// pronto, atribuimos novos valores a interface 
+// CSSStyleDeclaration que se refletirá em estilo na div:
+console.log(div);
+// &lt;div style=&quot;display: flex; align-items: center; justify-content: center&quot;&gt;
+</code></pre>
+<p>Porém se vc fizer atribuição direta de um objeto, não vai funcionar</p>
+<pre><code class="language-javascript">// criando uma div qualquer
+// &lt;div&gt;&lt;/div&gt;
+const div = document.createElement(&#39;div&#39;);
+
+// Isso NÃO vai funcionar
+div.style = {
+  display: &#39;flex&#39;,
+  alignItems: &#39;center&#39;,
+  justifyContent: &#39;center&#39;
+};
+
+// a saída seria &lt;div&gt;&lt;/div&gt;
+console.log(div);
+</code></pre>
+<p>Isso tem uma explicação bacana: a propriedade &quot;style&quot; dos elementos é um objeto com uma interface <code>CSSStyleDeclaration</code>.</p>
+<p>Usando o <code>Object.assign</code> vc extende o ObjectStyle de forma elegante e segura sem sobre-escrever a interface, ao invés de fazer override pra uma string com <code>element.style = &#39;...&#39;</code>.</p>
+<p>Quando vc faz <code>element.style=&quot;display: flex&quot;</code> vc faz o override da interface de style pra uma string que será diretamente refletida no estilo. E quando vc faz <code>element.style = {...}</code> vc faz o override da interface de style para um objeto simples que não será traduzido para o atributo style.</p>
+<p>Vide bula: <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style" target="_blank">MDN: HTMLElement: style property</a>.</p>
+
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

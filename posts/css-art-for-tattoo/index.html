@@ -103,7 +103,8 @@
                 
       .box .c,
       .box .o,
-      .box .d {
+      .box .d,
+      .box .e {
         border: solid var(--stroke) var(--color);
         border-radius: 100%;
         position: relative;
@@ -122,8 +123,9 @@
 
       .box .e {
         position: relative;
-        border-top: solid var(--stroke) var(--color);
-        border-bottom: solid var(--stroke) var(--color);
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
       }
 
       .box .e::after {

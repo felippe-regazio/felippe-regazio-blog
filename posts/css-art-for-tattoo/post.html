@@ -1,0 +1,111 @@
+<!--:::{
+  "post_title": "CSS Art for a real Tattoo",
+  "post_description": "This is a very simple CSS art for a real tattoo that will be inked in my arm :)",
+  "post_created_at": "Tue May 16 2023 15:58:12 GMT-0300 (Brasilia Standard Time)",
+  "blog_theme": "default"
+}:::-->
+
+<p>CSS art which I made to tattoo on my arm.</p>
+
+<div class="box">
+  <span class="c"></span>
+  <span class="o"></span>
+  <span class="d"></span>
+  <span class="e"></span>
+</div>
+
+<pre>
+  <style class="style-visible" contenteditable>
+    /* 
+      You can directly edit the specs. Try to change 
+      the --box-size from 200px to 400px for example.
+    */
+
+    :root {
+      --box-size: 300px;
+      --gap: 16px;
+      --stroke: 38px;
+      --color: #444;
+    }
+  </style>
+</pre>
+
+<pre>
+  <code>
+    <style class="style-visible style-visible--readonly">
+      /* This is the tattoo code. Not editable */
+
+      .box * {
+        box-sizing: border-box;
+      }
+
+      .box {
+        width: var(--box-size);
+        height: var(--box-size);
+        grid-gap: var(--gap);
+        display: grid;
+        margin: 100px auto;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows:    1fr 1fr;
+      }
+                
+      .box .c,
+      .box .o,
+      .box .d {
+        border: solid var(--stroke) var(--color);
+        border-radius: 100%;
+        position: relative;
+      }
+
+      .box .c,
+      .box .d {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: none;
+      }
+
+      .box .d {
+        transform: scale(-1);
+      }
+
+      .box .e {
+        position: relative;
+        border-top: solid var(--stroke) var(--color);
+        border-bottom: solid var(--stroke) var(--color);
+      }
+
+      .box .e::after {
+        content: '';
+        width: 100%;
+        height: var(--stroke);
+        background-color: var(--color);
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }        
+    </style>
+
+  </code>
+</pre>
+
+<style>
+  body {
+    margin: 0;
+  }
+
+  .container {
+    max-width: 760px;
+    padding: 100px 16px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .style-visible {
+    display: block; 
+    padding: 16px;
+  }
+
+  .style-visible--readonly {
+    color: #888;
+  }
+</style>  

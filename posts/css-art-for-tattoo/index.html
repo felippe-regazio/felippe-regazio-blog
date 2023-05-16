@@ -1,0 +1,172 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>CSS Art for a real Tattoo</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="This is a very simple CSS art for a real tattoo that will be inked in my arm :)">
+  <meta property="og:title" content="CSS Art for a real Tattoo">
+  <meta property="og:description" content="This is a very simple CSS art for a real tattoo that will be inked in my arm :)">
+  <meta property="og:site_name" content="Web Development & anything else">
+  <meta property="og:url" content="https://felipperegazio.com/posts/css-art-for-tattoo">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Web Development & anything else">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="CSS Art for a real Tattoo">
+  <meta name="twitter:description" content="This is a very simple CSS art for a real tattoo that will be inked in my arm :)">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>CSS Art for a real Tattoo</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      5/16/2023, 3:58:12 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>CSS art which I made to tattoo on my arm.</p>
+
+<div class="box">
+  <span class="c"></span>
+  <span class="o"></span>
+  <span class="d"></span>
+  <span class="e"></span>
+</div>
+
+<pre>
+  <style class="style-visible" contenteditable>
+    /* 
+      You can directly edit the specs. Try to change 
+      the --box-size from 200px to 400px for example.
+    */
+
+    :root {
+      --box-size: 300px;
+      --gap: 16px;
+      --stroke: 38px;
+      --color: #444;
+    }
+  </style>
+</pre>
+
+<pre>
+  <code>
+    <style class="style-visible style-visible--readonly">
+      /* This is the tattoo code. Not editable */
+
+      .box * {
+        box-sizing: border-box;
+      }
+
+      .box {
+        width: var(--box-size);
+        height: var(--box-size);
+        grid-gap: var(--gap);
+        display: grid;
+        margin: 100px auto;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows:    1fr 1fr;
+      }
+                
+      .box .c,
+      .box .o,
+      .box .d {
+        border: solid var(--stroke) var(--color);
+        border-radius: 100%;
+        position: relative;
+      }
+
+      .box .c,
+      .box .d {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: none;
+      }
+
+      .box .d {
+        transform: scale(-1);
+      }
+
+      .box .e {
+        position: relative;
+        border-top: solid var(--stroke) var(--color);
+        border-bottom: solid var(--stroke) var(--color);
+      }
+
+      .box .e::after {
+        content: '';
+        width: 100%;
+        height: var(--stroke);
+        background-color: var(--color);
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }        
+    </style>
+
+  </code>
+</pre>
+
+<style>
+  body {
+    margin: 0;
+  }
+
+  .container {
+    max-width: 760px;
+    padding: 100px 16px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .style-visible {
+    display: block; 
+    padding: 16px;
+  }
+
+  .style-visible--readonly {
+    color: #888;
+  }
+</style>  
+
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

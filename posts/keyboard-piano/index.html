@@ -1,0 +1,146 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Transformando seu teclado num pianinho infantil com algumas linhas de JS</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="Apenas uma brincadeira simples com vanilla js e oscillators">
+  <meta property="og:title" content="Transformando seu teclado num pianinho infantil com algumas linhas de JS">
+  <meta property="og:description" content="Apenas uma brincadeira simples com vanilla js e oscillators">
+  <meta property="og:site_name" content="Web Development & anything else">
+  <meta property="og:url" content="https://felipperegazio.com/posts/keyboard-piano">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Web Development & anything else">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Transformando seu teclado num pianinho infantil com algumas linhas de JS">
+  <meta name="twitter:description" content="Apenas uma brincadeira simples com vanilla js e oscillators">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Transformando seu teclado num pianinho infantil com algumas linhas de JS</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      8/24/2023, 12:17:24 AM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>O código abaixo transforma seu teclado em um Piano. Vá no ALT da imagem, copie o código, cole no seu console, clique num lugar vazio da pagina, e só apertar as teclinhas rs. Se travar em um som, aperte &quot;n&quot; pra mutar. As teclas sonoras serão <code>A...L</code> e <code>Q...P</code>.</p>
+<pre><code class="language-javascript">const getKeyFrequency = n =&gt; Math.pow(2, (n - 49) / 12) * 440;
+const audioCtx = new AudioContext();
+const playing = {};
+
+window.addEventListener(&#39;keydown&#39;, e =&gt; {
+  &#39;qawsedrftgyhujikolp&#39;.split(&#39;&#39;).forEach((k, i) =&gt; {
+    if (e.key === k &amp;&amp; !playing[k]) {
+      const frequency = getKeyFrequency(30 + i);
+      const oscillator = audioCtx.createOscillator();
+      playing[k] = oscillator;
+      oscillator?.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+      oscillator.connect(audioCtx.destination);
+      oscillator?.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+      oscillator.type = &quot;triangle&quot;;
+      oscillator.start();
+    }
+  });
+});
+
+window.addEventListener(&#39;keyup&#39;, e =&gt; {
+  const k = e.key;
+  
+  const stop = x =&gt; {
+    try {
+      playing[x].stop();
+      playing[x].disconnect;    
+      playing[x] = false;
+    }catch{}
+  }
+  
+  if (e.key === &#39;n&#39;) {
+    Object.keys(playing).forEach(x =&gt; stop(x));
+  }
+  
+  stop(k);
+});
+</code></pre>
+<p>getKeyFrequency define a frequencia de cada tecla com n = 30+x. faça a conta e vc tera a frequencia da primeira tecla, agora só ver a que nota ela pertence. adicione +1 na equação pra cada prox. tecla e vc saberá as notas. mude o 30 e vc muda a escala, assim que &quot;afina&quot; isso rs.</p>
+<p>Se preferir, clique no botão abaixo:</p>
+<p><button onclick="piano()">Piano</button></p>
+<script>
+  const getKeyFrequency = n => Math.pow(2, (n - 49) / 12) * 440;
+  const audioCtx = new AudioContext();
+  const playing = {};
+
+  window.addEventListener('keydown', e => {
+    'qawsedrftgyhujikolp'.split('').forEach((k, i) => {
+      if (e.key === k && !playing[k]) {
+        const frequency = getKeyFrequency(30 + i);
+        const oscillator = audioCtx.createOscillator();
+        playing[k] = oscillator;
+        oscillator?.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+        oscillator.connect(audioCtx.destination);
+        oscillator?.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+        oscillator.type = "triangle";
+        oscillator.start();
+      }
+    });
+  });
+
+  window.addEventListener('keyup', e => {
+    const k = e.key;
+    
+    const stop = x => {
+      try {
+        playing[x].stop();
+        playing[x].disconnect;    
+        playing[x] = false;
+      }catch{}
+    }
+    
+    if (e.key === 'n') {
+      Object.keys(playing).forEach(x => stop(x));
+    }
+    
+    stop(k);
+  });
+</script>
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

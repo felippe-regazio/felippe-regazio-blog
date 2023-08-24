@@ -1,0 +1,174 @@
+<!-- This is an automatically generated file, do not edit it directly -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Joguinho de Digitar em 50 linhas de JS puro</title>
+  <meta charset="UTF-8">
+  
+  <!-- SEO -->
+  <meta name="author" content="Felippe Regazio">
+  <meta name="description" content="Um joguinho divertido que roda em qualquer lugar :)">
+  <meta property="og:title" content="Joguinho de Digitar em 50 linhas de JS puro">
+  <meta property="og:description" content="Um joguinho divertido que roda em qualquer lugar :)">
+  <meta property="og:site_name" content="Web Development & anything else">
+  <meta property="og:url" content="https://felipperegazio.com/posts/hit-keys-game-code-js">
+  <meta property="og:image" content="https://felipperegazio.com/card.jpg"/>
+  <meta property="og:type" content="Website"/>
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Web Development & anything else">
+  <meta name="twitter:creator" content="Felippe Regazio">
+  <meta name="twitter:title" content="Joguinho de Digitar em 50 linhas de JS puro">
+  <meta name="twitter:description" content="Um joguinho divertido que roda em qualquer lugar :)">
+  <meta name="twitter:image:src" content="https://felipperegazio.com/card.jpg">
+  <!--  -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="../../favicon.png">
+  <link href="https://unpkg.com/plume-css@1.0.13/lib/plume-all.css" rel="stylesheet" rel="preload" as="style" media="all" defer>
+  <link rel="stylesheet" href="https://unpkg.com/1post@1.0.3/themes/default-dark.css">
+  <link href="https://unpkg.com/prismjs@1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --pm-paragraph-font-size: 1.2em
+    }
+
+    .plume .pm-link, .plume a {
+      font-size: var(--pm-paragraph-font-size);
+    }
+  </style>
+</head>
+<body class="plume">
+  <div class="pm-container">
+    <h1>Joguinho de Digitar em 50 linhas de JS puro</h1>
+
+    <p>
+      <a href="../..">← ← ←</a> &nbsp; 
+      8/23/2023, 11:47:36 PM | <strong>Posted by:</strong>
+      <a href="https://cvkeep.com/felipperegazio" target="_blank" rel="noreferrer noopener">Felippe Regazio</a>
+    </p>
+
+    <hr>
+
+    
+
+<p>Copie o código abaixo e cole no console de qualquer página para iniciar o joguinho. Clique na página e basta digitar as teclas conforme aparecem. Seu score está no title da tab. O &quot;2&quot; em startGame é a velocidade em segundos da mudança de teclas, varie esse numero para alterar a dificuldade. </p>
+<pre><code class="language-javascript">function startGame(interval) {
+    let char;
+    let hits = 0;
+    let errors = 0;
+    
+    const letters = &#39;abcdefghijklmnopqrstuvwxyz&#39;.split(&#39;&#39;);
+    const holder = document.createElement(&#39;div&#39;)
+    
+    Object.assign(holder.style, {
+      position: &#39;fixed&#39;,  
+      height: &#39;100vh&#39;,
+      width: &#39;100vw&#39;,
+      zIndex: 99999,
+      top: 0,
+      left: 0,
+      fontSize: &#39;200px&#39;,
+      color: &#39;#fff&#39;,
+      display: &#39;grid&#39;,
+      placeItems: &#39;center&#39;,
+      backgroundColor: &#39;rgba(0,0,0,.5)&#39;
+    });
+
+    document.body.append(holder);    
+    
+    const score = (h, x) =&gt; {
+        holder.textContent = &#39;&#39;;
+        document.title = `hits: ${h} - errors: ${x}`;
+    }
+    
+    window.addEventListener(&#39;keydown&#39;, e =&gt; {
+       e.key.toLowerCase() === char
+        ? score(++hits, errors) 
+        : score(hits, ++errors);
+    });
+
+    setInterval(() =&gt; {
+        char = letters[Math.floor(Math.random()*letters.length)];
+        holder.textContent = char;
+    }, interval * 1000);
+}
+
+startGame(2);
+</code></pre>
+<p>Se preferir, clique no botão abaixo pra iniciar o joguinho aqui mesmo:</p>
+<form onsubmit="start(); return false">
+  <label>Velocidade em Secs</label>
+  <input type="number" name="interval" value="2"/>
+  <br/>
+
+  <button type="submit">
+    Iniciar
+  </button>
+</form>
+
+<script>
+  function start() {
+    const interval = Number(document.querySelector('[name=interval]').value);
+
+    function startGame(interval) {
+        let char;
+        let hits = 0;
+        let errors = 0;
+        
+        const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+        const holder = document.createElement('div')
+        
+        Object.assign(holder.style, {
+          position: 'fixed',  
+          height: '100vh',
+          width: '100vw',
+          zIndex: 99999,
+          top: 0,
+          left: 0,
+          fontSize: '200px',
+          color: '#fff',
+          display: 'grid',
+          placeItems: 'center',
+          backgroundColor: 'rgba(0,0,0,.5)'
+        });
+
+        document.body.append(holder);    
+        
+        const score = (h, x) => {
+            holder.textContent = '';
+            document.title = `hits: ${h} - errors: ${x}`;
+        }
+        
+        window.addEventListener('keydown', e => {
+          e.key.toLowerCase() === char
+            ? score(++hits, errors) 
+            : score(hits, ++errors);
+        });
+
+        setInterval(() => {
+            char = letters[Math.floor(Math.random()*letters.length)];
+            holder.textContent = char;
+        }, interval * 1000);
+    }
+
+    if (typeof interval !== 'number' || interval < 0.5 || interval > 3) {
+      alert('Escolha uma velocidade entre 0.5 e 3')
+    } else {
+      startGame(interval);
+    }
+  }
+</script>
+
+  </div>
+
+  <!-- Prism Code Highlighting -->
+  <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

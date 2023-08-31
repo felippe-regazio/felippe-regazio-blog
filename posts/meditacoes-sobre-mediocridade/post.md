@@ -1,5 +1,5 @@
 <!--:::{
-  "post_title": "Meditações a cerca da mediocridade",
+  "post_title": "Meditações acerca da mediocridade",
   "post_description": "Alguns pensamentos despretenciosos sobre profissionalismo e mediocridade",
   "post_created_at": "Wed Apr 26 2023 00:04:28 GMT-0300 (Horário Padrão de Brasília)"
 }:::-->

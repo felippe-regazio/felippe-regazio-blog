@@ -1,5 +1,5 @@
 <!--:::{
-  "post_title": "Como que funciona o teclado dinamico de senhas do Banco?",
+  "post_title": "Como funciona o teclado dinâmico de senhas do Banco?",
   "post_description": "Acho que essa curiosidade ou duvida já deve ter passado na cabeça de alguns/mas devs por aí. Vou tentar responder nessa thread de maneira bem resumida uma das técnicas de fazer um teclado desse.",
   "post_created_at": "Mon Nov 06 2023 15:33:44 GMT-0300 (Horário Padrão de Brasília)"
 }:::-->
